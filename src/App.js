@@ -1,21 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import request from './Utils/request';
 
 function App() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://localhost:7096/WeatherForecast');
-        setData(response.data);
+        const response = await request({
+          method: 'get',
+          url: 'WeatherForecast',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        setData(response);
       } catch (error) {
+        setError(error);
         console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div>
