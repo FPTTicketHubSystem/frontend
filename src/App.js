@@ -1,52 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, {useContext} from 'react';
+import { Fragment } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import request from './Utils/request';
+import Login from './Component/Authentication/Login';
+import { UserContext } from './Context/UserContext';
 
 function App() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await request({
-          method: 'get',
-          url: 'WeatherForecast',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        setData(response);
-      } catch (error) {
-        setError(error);
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
+  const { token, user } = useContext(UserContext);
   return (
-    <div>
-      <h1>Weather Forecast</h1>
-      <ul>
-        {data.map((item, index) => (
-          <li key={index}>
-            <strong>Date: </strong>{item.date}, <strong>Temperature: </strong>{item.temperatureC}°C, <strong>Summary: </strong>{item.summary}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Fragment>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+        </Routes>
+      </Router>
+    </Fragment>
   );
 }
 
