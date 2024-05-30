@@ -1,15 +1,18 @@
 import React, { useState, useContext } from 'react';
 import { Container, Row, Col, Form, Button, Modal } from 'react-bootstrap';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { LoginService, LoginByGoogleService, RegisterService, ForgotPasswordService } from '../../Services/UserService';
-import { UserContext } from '../../Context/UserContext';
+import { LoginService, LoginByGoogleService, RegisterService, ForgotPasswordService } from '../services/UserService';
+import { UserContext } from '../context/UserContext';
 import { jwtDecode } from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { hover } from '@testing-library/user-event/dist/hover';
-
+import { useNavigate } from 'react-router-dom';
+//import { useToast } from '../../Context/ToastContext';
 
 function Login() {
+
+  //const { showSuccessToast, showErrorToast } = useToast();
 
   const [isHovered, setIsHovered] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -21,6 +24,8 @@ function Login() {
     background: isHovered ? '#81360b' : '#EC6C21'
   }
   const { token, user, render, onSetRender, onSetUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const [loginInput, setLoginInput] = useState({
     inputEmail: '',
     inputPassword: '',
@@ -69,13 +74,14 @@ function Login() {
         toast.success('Admin đăng nhập thành công');
       } else if (result.roleId === 2) {
         toast.success('User đăng nhập thành công');
+        navigate('/');
       } else if (result.roleId === 3) {
         toast.success('BTC đăng nhập thành công');
       } else if (result.roleId === 4) {
         toast.success('Staff đăng nhập thành công');
       }
-    } else {
-      toast.error('Email hoặc mật khẩu không chính xác');
+    } else if (result.status === 400 && result.message === 'Please check your email to confirm your account') {
+      toast.error('Vui lòng kiểm tra email của bạn để xác thực email!');
     }
   };
 
@@ -89,17 +95,19 @@ function Login() {
         status: 'Đang hoạt động',
       };
       const result = await LoginByGoogleService(data);
-      if (result.status === 400) {
+      if (result.status === 400 && result.message === 'Create A New Account Successfully') {
         onSetUser(result);
         localStorage.setItem('authToken', result.token);
-        toast.success('Google login thành công');
-      } else if (result.status === 200) {
+        toast.success('Đăng nhập thành công, chào mừng người dùng mới!');
+        navigate('/');
+      } else if (result.status === 200 && result.message === 'Login success!') {
         onSetUser(result);
         localStorage.setItem('authToken', result.token);
         if (result.roleId === 1) {
           toast.success('Admin login thành công');
         } else if (result.roleId === 2) {
           toast.success('User login thành công');
+          navigate('/');
         }
         else if (result.roleId === 3) {
           toast.success('BTC login thành công');
@@ -165,9 +173,8 @@ function Login() {
             Chưa có tài khoản?
             <a
               onClick={() => setShowRegisterModal(true)}
-              style={{ color: '#EC6C21', cursor: 'pointer', textDecoration: 'underline' }}
+              style={{ color: '#EC6C21', cursor: 'pointer', textDecoration: 'underline' , fontWeight : 'bold', marginLeft:'7px'}}
             >
-              {' '}
               Đăng ký
             </a>
           </p>
@@ -310,7 +317,7 @@ function Login() {
           </Form>
         </Modal.Body>
       </Modal>
-      <ToastContainer position='top-right' />
+      {/* <ToastContainer position='top-right' /> */}
     </Container>
 
   );

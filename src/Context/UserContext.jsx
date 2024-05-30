@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { GetInforService } from '../Services/UserService';
+import { GetInforService } from '../services/UserService';
 
 export const UserContext = createContext();
 const UserContextProvider = (props) => {

@@ -1,5 +1,5 @@
-import 'bootstrap/dist/css/bootstrap.css';
-import '../../Assets/css/bootstrap.min.css'
+//import 'bootstrap/dist/css/bootstrap.css';
+//import '../../assets/css/bootstrap.min.css'
 
 export default function Footer() {
     return (

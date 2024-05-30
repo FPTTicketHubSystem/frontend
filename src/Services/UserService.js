@@ -1,4 +1,4 @@
-import request from '../Utils/request';
+import request from '../utils/request';
 
 export const LoginService = async (data) => {
     try {

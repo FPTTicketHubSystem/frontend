@@ -3,14 +3,19 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import UserContextProvider from './Context/UserContext';
+import UserContextProvider from './context/UserContext';
 import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { ToastProvider } from './context/ToastContext';
+//import { ToastContainer } from 'react-toastify';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <UserContextProvider>
-    <App />
-  </UserContextProvider>
+  <ToastProvider>
+    <UserContextProvider>
+      <App />
+    </UserContextProvider>
+  </ToastProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
