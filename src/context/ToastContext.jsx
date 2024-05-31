@@ -16,7 +16,7 @@ export const ToastProvider = ({ children }) => {
   return (
     <ToastContext.Provider value={{ showSuccessToast, showErrorToast }}>
       {children}
-      <ToastContainer />
+      <ToastContainer autoClose = {3000}/>
     </ToastContext.Provider>
   );
 };
