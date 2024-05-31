@@ -76,7 +76,7 @@ export default function Header() {
                                 ) : (
 
                                     <div className="dropdown">
-                                        <a className="btn custom-btn dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <a className="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                             <img src="https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg" alt="Avatar" className="rounded-circle" width="40" height="40" />
                                         </a>
                                         <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
