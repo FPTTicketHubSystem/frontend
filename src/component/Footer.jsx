@@ -1,101 +1,56 @@
-//import 'bootstrap/dist/css/bootstrap.css';
-//import '../../assets/css/bootstrap.min.css'
+import logoSrc from "../assets/images/logo/paymentLogo.png";
+import logoSrc2 from "../assets/images/logo/paymentLogo2.png";
+import logoSrc3 from "../assets/images/logo/bocongthuong.png";
 
-export default function Footer() {
+function Footer() {
     return (
-        <>
-        <footer class="site-footer">
-        <div class="container">
-            <div class="row">
+        <footer className="bg-dark text-white py-5">
+            <div className="container">
+                <div className="row row-cols-1 row-cols-md-3 g-4">
+                    <div className="col mb-4">
+                        <h5 className="mb-2 fw-bold">Hỗ trợ</h5>
+                        <p> <i class="bi bi-calendar"></i> Thứ 2 - Thứ 6 (8:30 - 18:30)</p>
+                        <a href="tel:0961774218" className="fw-bold mb-2" style={{ textDecoration: 'none', color: '#EC6C21' }}><i class="bi bi-telephone"></i> 0961774218</a>
+                        <h5 className="mt-4 fw-bold">Email</h5>
+                        <p class="text-white fw-bold"><i class="bi bi-envelope"></i> fpttickethub@gmail.com</p>
+                    </div>
 
-                <div class="col-lg-6 col-12 mb-4 pb-2">
-                    <h5 class="site-footer-title mb-3">Links</h5>
+                    <div className="col mb-4">
+                        <h5 className="mb-4 fw-bold">Dành cho Khách hàng</h5>
+                        <ul className="list-unstyled">
+                            <li><a href="#" className="text-white" style={{ textDecoration: 'none' }}>Điều khoản sử dụng cho khách hàng</a></li>
+                        </ul>
+                        <h5 className="mb-4 fw-bold">Dành cho Ban Tổ chức</h5>
+                        <ul className="list-unstyled">
+                            <li><a href="#" className="text-white" style={{ textDecoration: 'none' }}>Điều khoản sử dụng cho ban tổ chức</a></li>
+                        </ul>
+                    </div>
+                    <div className="col mb-4">
+                        <h5 className="mb-4 fw-bold">Về chúng tôi</h5>
+                        <ul className="list-unstyled">
+                            <li><a href="#" className="text-white" style={{ textDecoration: 'none' }}>Quy chế hoạt động</a></li>
+                            <li><a href="#" className="text-white" style={{ textDecoration: 'none' }}>Chính sách bảo mật thông tin</a></li>
+                            <li><a href="#" className="text-white" style={{ textDecoration: 'none' }}>Cơ chế giải quyết tranh chấp, khiếu nại</a></li>
+                            <li><a href="#" className="text-white" style={{ textDecoration: 'none' }}>Chính sách bảo mật thanh toán</a></li>
+                            <li><a href="#" className="text-white" style={{ textDecoration: 'none' }}>Chính sách đổi trả</a></li>
+                            <li><a href="#" className="text-white" style={{ textDecoration: 'none' }}>Điều kiện vận chuyển và giao nhận</a></li>
+                            <li><a href="#" className="text-white" style={{ textDecoration: 'none' }}>Phương thức thanh toán</a></li>
+                            <li>                            
+                                <img className="me-2" src={logoSrc} height={50} alt="logo" />
+                                <img className="me-2" src={logoSrc2} height={50} alt="logo" />
+                                <img src={logoSrc3} height={50} alt="logo" />
 
-                    <ul class="site-footer-links">
-                        <li class="site-footer-link-item">
-                            <a href="#" class="site-footer-link">Home</a>
-                        </li>
 
-                        <li class="site-footer-link-item">
-                            <a href="#" class="site-footer-link">About</a>
-                        </li>
-
-                        <li class="site-footer-link-item">
-                            <a href="#" class="site-footer-link">Artists</a>
-                        </li>
-
-                        <li class="site-footer-link-item">
-                            <a href="#" class="site-footer-link">Schedule</a>
-                        </li>
-
-                        <li class="site-footer-link-item">
-                            <a href="#" class="site-footer-link">Pricing</a>
-                        </li>
-
-                        <li class="site-footer-link-item">
-                            <a href="#" class="site-footer-link">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-3 col-md-6 col-12 mb-4 mb-lg-0">
-                    <h5 class="site-footer-title mb-3">Have a question?</h5>
-
-                    <p class="text-white d-flex mb-1">
-                        <a href="tel: 090-080-0760" class="site-footer-link">
-                            090-080-0760
-                        </a>
-                    </p>
-
-                    <p class="text-white d-flex">
-                        <a href="mailto:hello@company.com" class="site-footer-link">
-                            hello@company.com
-                        </a>
-                    </p>
-                </div>
-
-                <div class="col-lg-3 col-md-6 col-11 mb-4 mb-lg-0 mb-md-0">
-                    <h5 class="site-footer-title mb-3">Location</h5>
-
-                    <p class="text-white d-flex mt-3 mb-2">
-                        Silang Junction South, Tagaytay, Cavite, Philippines</p>
-
-                    <a class="link-fx-1 color-contrast-higher mt-3" href="#">
-                        <span>Our Maps</span>
-                        <svg class="icon" viewBox="0 0 32 32" aria-hidden="true">
-                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="16" cy="16" r="15.5"></circle>
-                                <line x1="10" y1="18" x2="16" y2="12"></line>
-                                <line x1="16" y1="12" x2="22" y2="18"></line>
-                            </g>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="site-footer-bottom">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-12 mt-lg-5">
-                        <ul class="site-footer-links">
-                            <li class="site-footer-link-item">
-                                <a href="#" class="site-footer-link">Terms &amp; Conditions</a>
-                            </li>
-
-                            <li class="site-footer-link-item">
-                                <a href="#" class="site-footer-link">Privacy Policy</a>
-                            </li>
-
-                            <li class="site-footer-link-item">
-                                <a href="#" class="site-footer-link">Your Feedback</a>
                             </li>
                         </ul>
                     </div>
                 </div>
+                <div className="text-center mt-4">
+                    &copy;2024 FPTTicketHub. All rights reserved.
+                </div>
             </div>
-        </div>
-    </footer>
-        </>
-    )
+        </footer>
+    );
 }
+
+export default Footer;
