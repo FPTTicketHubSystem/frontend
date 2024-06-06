@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 function Login() {
 
   //const { showSuccessToast, showErrorToast } = useToast();
-
+  
   const [isHovered, setIsHovered] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showForgotPasswordModal, setShowForgortPasswordModal] = useState(false);
@@ -83,6 +83,17 @@ function Login() {
     } else if (result.status === 400 && result.message === 'Please check your email to confirm your account') {
       toast.error('Vui lòng kiểm tra email của bạn để xác thực email!');
     }
+    else if (result.status === 400 && result.message === 'The account is not found') {
+      toast.error('Tài khoản không tồn tại!');
+    }
+    else if (result.status === 400 && result.message === 'Password is wrong') {
+      toast.error('Mật khẩu sai!');
+    }
+    else if (result.status === 400 && result.message === 'Your account is blocked. Please contact admin!') {
+      toast.error('Tài khoản đang bị khóa. Liên hệ fpttickethub@gmai.com để được hỗ trợ!');
+    }
+    
+
   };
 
   const onLoginWithGoogle = async (value) => {
