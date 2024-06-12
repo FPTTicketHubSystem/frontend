@@ -93,3 +93,49 @@ export const ForgotPasswordService = async (email) => {
         return e;
     }
 }
+
+export const UpdateUserService = async (data) => {
+    try {
+        const response = await request({
+            method: "post",
+            url: "user/updateUser",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify(data),
+        })
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const GetInforByEmailService = async (email) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `home/search?email=${email}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const ChangePassowrdService = async (accountId, newPassword) => {
+    try {
+        const response = await request({
+            method: "post",
+            url: `user/changePassword?accountId=${accountId}&newPassword=${newPassword}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch(e){
+        return e;
+    }
+}
