@@ -5,9 +5,9 @@ import '../../assets/vendor/overlay-scroll/OverlayScrollbars.min.css'
 import '../../assets/images/favicon.svg'
 import Header from '../../components/Admin/Header'
 import Navbar from '../../components/Admin/Navbar'
-import UserList from '../../components/Admin/UserList'
+import Eventopen from '../../components/Admin/Eventopen'
 
-const User = () => {
+const Eventapproval = () => {
 
   return (
     <div class="page-wrapper">
@@ -36,7 +36,7 @@ const User = () => {
                                 <i class="icon-home lh-1"></i>
                                 <a href="/" class="text-decoration-none">Home</a>
                             </li>
-                            <li class="breadcrumb-item text-light">User</li>
+                            <li class="breadcrumb-item text-light">Event Approval</li>
                         </ol>
 
                     </div>
@@ -51,25 +51,30 @@ const User = () => {
                                         <thead>
                                             <tr>
                                                 <th>id</th>
-                                                <th></th>
-                                                <th>Họ và tên</th>
-                                                <th>Email</th>
-                                                <th>Mật khẩu</th>
-                                                <th>Trạng thái</th>
-                                                <th>Số điện thoại</th>
-                                                <th>Giới tính</th>
-                                                <th>Gold</th>
-                                                <th>Hành động</th>
+                                                <th>Event Name</th>
+                                                <th>Organizer</th>
+                                                <th>Category</th>
+                                                <th>Decription</th>
+                                                <th>Location</th>
+                                                <th>Ticket Quantity</th>
+                                                <th>Status</th>
+                                                <th>TIme</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <UserList/>
-                                            <UserList/>
-                                            <UserList/>
-                                            <UserList/>
-                                            <UserList/>
-                                            <UserList/>
-                                            <UserList/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+                                            <Eventopen/>
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -90,4 +95,4 @@ const User = () => {
   )
 }
 
-export default User
+export default Eventapproval

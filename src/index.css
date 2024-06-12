@@ -240,13 +240,13 @@ strong {
 }
 
 .tab-content {
-  background-color: var(--white-color);
+  background-color: var(--bs-card-spacer-y);
   border-radius: var(--border-radius-medium);
   padding: 45px;
 }
 
 .nav-tabs {
-  background-color: var(--section-bg-color);
+  background-color: var( --bs-card-spacer-y);
   border-radius: var(--border-radius-large);
   border-bottom: 0;
   padding: 15px;

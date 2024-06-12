@@ -9,6 +9,7 @@ import { UserContext } from './context/UserContext';
 import './App.css';
 import User from './pages/Admin/User';
 import EditUser from './pages/Admin/EditUser';
+import Eventapproval from './pages/Admin/Eventapproval';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -20,6 +21,7 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/user" element={<User />} />
+          <Route path="/eventapproval" element={<Eventapproval />} />
           <Route path="/user/edituser" element={<EditUser />} />
         </Routes>
       </Router>

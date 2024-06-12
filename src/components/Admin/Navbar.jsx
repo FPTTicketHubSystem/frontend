@@ -36,14 +36,14 @@ const Navbar = () => {
                 </li>
               </ul>
             </li>
-            <li className={`nav-item dropdown ${isActive('/tickets')}`}>
+            <li className={`nav-item dropdown ${isActive('/events')}`}>
               <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Tickets
+                Events
               </a>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="all-tickets.html">
-                    <span>All Tickets</span>
+                  <a className="dropdown-item" href="/eventapproval">
+                    <span>Event Approval</span>
                   </a>
                 </li>
                 <li>
