@@ -1,48 +1,53 @@
 import { useParams } from "react-router-dom";
 import { ConfirmAccountService } from "../services/UserService";
-import { Container, Alert, Button } from "react-bootstrap";
+import { Container, Alert } from "react-bootstrap";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
+import { useEffect, useState } from "react";
+import { Result } from "antd";
 
 export default function ConfirmAccount() {
     const { email } = useParams();
-    if (email !== undefined) {
-        const response = async () => {
-            const result = await ConfirmAccountService(email);
-            return result;
+    const [confirmationStatus, setConfirmationStatus] = useState(null);
+    
+
+    useEffect(() => {
+        const confirmAccount = async () => {
+            try {
+                const result = await ConfirmAccountService(email);
+                setConfirmationStatus(result.status);
+            } catch (error) {
+                console.error("Error confirming account:", error);
+            }
         };
-        response();
-        return (
-            <>
-                <div style={{ backgroundColor: 'black' }}>
-                    <Header />
-                </div>
-                <Container className="mt-5">
-                    <Alert variant="success">
-                        <Alert.Heading>Xác thực tài khoản {email} thành công.</Alert.Heading>
-                        <p>
-                            Chào mừng bạn đến với trang web của chúng tôi. Bây giờ bạn đã có thể đăng nhập. Chúc bạn có trải nghiệm tốt!
-                        </p>
-                    </Alert>
-                </Container>
-            </>
-        );
-    }
+
+        if (email !== undefined) {
+            confirmAccount();
+        }
+    }, [email]);
 
     return (
         <>
-            <div style={{ backgroundColor: 'black' }}>
+            <div className="bg bg-dark">
                 <Header />
             </div>
-            <Container className="mt-5">
-                <Alert variant="danger">
-                    <Alert.Heading>Xác thực tài khoản.</Alert.Heading>
-                    <p>
-                        Kiểm tra email của bạn để xác thực tài khoản!
-                    </p>
-                </Alert>
+            <Container className="mt-5 py-5">
+                {confirmationStatus === 404 && (
+                    <Result
+                    status="error"
+                    title="Xác thực tài khoản không thành công"
+                    subTitle="Hãy thử xác thực lại bằng các truy cập fth.com/emaicuaban" 
+                  />
+                )}
+                {confirmationStatus === 200 && (
+                    <Result
+                    status="success"
+                    title="Xác thực tài khoản thành công"
+                    subTitle="Bây giờ bạn đã có thể đăng nhập!" 
+                  />
+                )}
             </Container>
-            
+            <Footer />
         </>
     );
 }
