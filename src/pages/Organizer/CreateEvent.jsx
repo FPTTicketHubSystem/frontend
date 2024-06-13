@@ -10,6 +10,8 @@ import { InboxOutlined } from '@ant-design/icons';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import LocationPicker from '../../component/LocationPicker';
+import styled from "styled-components";
+
 
 const { Dragger } = Upload;
 const { Option } = Select;
@@ -37,6 +39,16 @@ function CustomUploadAdapterPlugin(editor) {
     return new MyUploadAdapter(loader);
   };
 }
+
+const CustomButton = styled(Button)`
+  background-color: #EC6C21;
+  border-color: #EC6C21;
+
+  &:hover {
+    background-color: #81360b !important;
+    border-color: #81360b !important;
+  }
+`;
 
 const CreateEvent = () => {
   const { user } = useContext(UserContext);
@@ -239,7 +251,7 @@ const CreateEvent = () => {
                       <InboxOutlined style={{ color: '#EC6C21' }} />
                     </p>
                     <p className="ant-upload-text">Thêm ảnh nền sự kiện</p>
-                    <p className="ant-upload-hint">Ảnh nền ở tỷ lệ 16:9</p>
+                    <p className="ant-upload-hint">Kích thước 1280x720</p>
                   </>
                 )}
               </Dragger>
@@ -392,9 +404,9 @@ const CreateEvent = () => {
             )}
           />
         </Table>
-        <Button type="primary" onClick={handleAddTicketType}>
+        <CustomButton type="primary" onClick={handleAddTicketType}>
           Thêm loại vé
-        </Button>
+        </CustomButton>
         <h3>Mã giảm giá</h3>
         <Table
           dataSource={formData.discountCodes}
@@ -455,13 +467,13 @@ const CreateEvent = () => {
             )}
           />
         </Table>
-        <Button type="primary" onClick={handleAddDiscountCode}>
+        <CustomButton type="primary" onClick={handleAddDiscountCode}>
           Thêm mã giảm giá
-        </Button>
+        </CustomButton>
         <Form.Item className="mt-4">
-          <Button type="primary" htmlType="submit">
+          <CustomButton type="primary" htmlType="submit">
             Tạo sự kiện
-          </Button>
+          </CustomButton>
         </Form.Item>
       </Form>
     </div>
