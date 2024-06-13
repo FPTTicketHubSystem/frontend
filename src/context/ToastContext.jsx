@@ -1,6 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import '../assets/css/toast.css';
 
 const ToastContext = createContext();
 
@@ -16,7 +17,7 @@ export const ToastProvider = ({ children }) => {
   return (
     <ToastContext.Provider value={{ showSuccessToast, showErrorToast }}>
       {children}
-      <ToastContainer autoClose = {3000}/>
+      <ToastContainer autoClose = {2000} position='top-center'/>
     </ToastContext.Provider>
   );
 };

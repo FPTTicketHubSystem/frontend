@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import HomePage from './pages/HomePage';
 import Profile from './pages/User/Profile';
 import ConfirmAccount from './pages/AccountConfirm';
+import CreateEvent from './pages/Organizer/CreateEvent';
 import { UserContext } from './context/UserContext';
 import './App.css';
 import EventDetail from './pages/EventDetail';
@@ -21,6 +22,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/confirmaccount/:email" element={<ConfirmAccount/>} />
           <Route path="/event-detail" element={<EventDetail />} />
+          <Route path="/organizer/create-event" element={<CreateEvent/>}/>
         </Routes>
       </Router>
     </>

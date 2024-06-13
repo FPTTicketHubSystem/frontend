@@ -73,49 +73,88 @@ export default function Header() {
 
             <div className="d-flex align-items-center order-lg-2 order-1">
               {!token ? (
-                <Link to="/login" className="btn custom-btn d-lg-none me-4">
+                <Link to="/login" className="btn custom-btn d-lg-block d-none">
                   Đăng nhập
                 </Link>
               ) : (
-                <div className="dropdown d-lg-none">
-                  <a
-                    className="ms-auto me-4"
-                    id="dropdownMenuLink"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                <>
+                  <Link
+                    to="/tickets"
+                    className="btn custom-btn d-lg-block d-none me-3"
                   >
-                    <img
-                      src="https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
-                      alt="Avatar"
-                      className="rounded-circle"
-                      width="40"
-                      height="40"
-                    />
-                  </a>
-                  <ul
-                    className="dropdown-menu dropdown-menu-end"
-                    aria-labelledby="dropdownMenuLink"
-                  >
-                    <li>
-                      <Link className="dropdown-item" to="/profile">
-                        Hồ sơ người dùng
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item" to="/tickets">
-                        Vé đã mua
-                      </Link>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-                    <li>
-                      <a className="dropdown-item" onClick={handleLogout}>
-                        Đăng xuất
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                    <i className="bi-ticket-perforated me-2"></i>
+                    Vé của tôi
+                  </Link>
+                  <div className="dropdown">
+                    <a
+                      className="dropdown"
+                      role="button"
+                      id="dropdownMenuLink"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {!user.avatar ? (
+                        <img
+                          src="https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
+                          alt="Avatar"
+                          className="rounded-circle"
+                          width="50"
+                          height="50"
+                        />
+                      ) : (
+                        <img
+                          src={user.avatar}
+                          alt="Avatar"
+                          className="rounded-circle"
+                          width="50"
+                          height="50"
+                          style={{border: 'solid #ffffff'}}
+                        />
+                      )}
+                    </a>
+                    <ul
+                      className="dropdown-menu dropdown-menu-end"
+                      aria-labelledby="dropdownMenuLink"
+                    >
+                      <li>
+                        {user.roleId === 3 ? (
+                          <Link className="dropdown-item" to="/profile">
+                            <span>
+                              <i className="bi bi-person-circle"></i>
+                            </span>{" "}
+                            Hồ sơ ban tổ chức
+                          </Link>
+                        ) : (
+                          <Link className="dropdown-item" to="/profile">
+                            <span>
+                              <i className="bi bi-person-circle"></i>
+                            </span>{" "}
+                            Hồ sơ người dùng
+                          </Link>
+                        )}
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/tickets">
+                          <span>
+                            <i className="bi bi-ticket-perforated"></i>
+                          </span>{" "}
+                          Vé của tôi
+                        </Link>
+                      </li>
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <a className="dropdown-item" onClick={handleLogout}>
+                          <span>
+                            <i className="bi bi-box-arrow-right"></i>
+                          </span>{" "}
+                          Đăng xuất
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </>
               )}
 
               {!token ? (
@@ -131,7 +170,7 @@ export default function Header() {
                     <i className="bi-ticket-perforated me-2"></i>
                     Vé của tôi
                   </Link>
-                  <div className="dropdown d-lg-block d-none">
+                  <div className="dropdown">
                     <a
                       className="dropdown"
                       role="button"
@@ -139,26 +178,52 @@ export default function Header() {
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
-                      <img
-                        src="https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
-                        alt="Avatar"
-                        className="rounded-circle"
-                        width="40"
-                        height="40"
-                      />
+                      {!user.avatar ? (
+                        <img
+                          src="https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
+                          alt="Avatar"
+                          className="rounded-circle"
+                          width="50"
+                          height="50"
+                        />
+                      ) : (
+                        <img
+                          src={user.avatar}
+                          alt="Avatar"
+                          className="rounded-circle"
+                          width="50"
+                          height="50"
+                          style={{border: 'solid #ffffff'}}
+                        />
+                      )}
                     </a>
                     <ul
                       className="dropdown-menu dropdown-menu-end"
                       aria-labelledby="dropdownMenuLink"
                     >
                       <li>
-                        <Link className="dropdown-item" to="/profile">
-                          Hồ sơ người dùng
-                        </Link>
+                        {user.roleId === 3 ? (
+                          <Link className="dropdown-item" to="/profile">
+                            <span>
+                              <i className="bi bi-person-circle"></i>
+                            </span>{" "}
+                            Hồ sơ ban tổ chức
+                          </Link>
+                        ) : (
+                          <Link className="dropdown-item" to="/profile">
+                            <span>
+                              <i className="bi bi-person-circle"></i>
+                            </span>{" "}
+                            Hồ sơ người dùng
+                          </Link>
+                        )}
                       </li>
                       <li>
                         <Link className="dropdown-item" to="/tickets">
-                          Vé đã mua
+                          <span>
+                            <i className="bi bi-ticket-perforated"></i>
+                          </span>{" "}
+                          Vé của tôi
                         </Link>
                       </li>
                       <li>
@@ -166,6 +231,9 @@ export default function Header() {
                       </li>
                       <li>
                         <a className="dropdown-item" onClick={handleLogout}>
+                          <span>
+                            <i className="bi bi-box-arrow-right"></i>
+                          </span>{" "}
                           Đăng xuất
                         </a>
                       </li>
