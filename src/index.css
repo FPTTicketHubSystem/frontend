@@ -48,7 +48,68 @@ body {
   font-family: var(--body-font-family) !important; 
 }
 
+/*---------------------------------------
+  EventCard In Each Category          
+-----------------------------------------*/
+.events-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
+.event-card {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  background-color: #1c1c1c;
+  color: #fff;
+  margin: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.event-image {
+  width: 100%;
+  height: auto;
+}
+
+.event-info {
+  padding: 15px;
+}
+
+.event-info h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.event-price {
+  color: #EC6C21;
+  margin: 10px 0;
+}
+
+.event-date {
+  font-size: 14px;
+  color: #bbb;
+}
+
+/*---------------------------------------
+  UpComing          
+-----------------------------------------*/
+
+
+.set-bg{
+  background-size: cover;
+  background-position: center;
+}
+
+.slick-slide > div{
+  margin: 0 10px;
+}
+
+.tag-date span{
+  background: #EC6C21;
+}
 /*---------------------------------------
   TYPOGRAPHY               
 -----------------------------------------*/
@@ -228,7 +289,7 @@ strong {
   left: 0;
   pointer-events: none;
   width: 100%;
-  height: 700px;
+  height: 100%;
   opacity: 0.35;
 }
 
@@ -346,7 +407,7 @@ strong {
   left: 0;
   object-fit: cover;
   width: 100%;
-  height: 700px;
+  height: 100%;
 }
 
 
@@ -424,9 +485,10 @@ strong {
 }
 
 .hero-section {
+
   overflow: hidden;
   padding-top: 100px;
-  height: 700px;
+  height: calc(100vh - 51px);
 }
 
 .hero-section small {
@@ -725,3 +787,17 @@ strong {
     transform: rotate(360deg);
   }
 }
+
+/*---------------------------------------
+  UpComing          
+-----------------------------------------*/
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+.card img {
+  height: 200px;
+  object-fit: cover;
+}
+
