@@ -7,16 +7,23 @@ import {jwtDecode} from 'jwt-decode';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import styled from "styled-components";
+
+const CustomButton = styled(Button)`
+  background-color: #EC6C21;
+  border-color: #EC6C21;
+
+  &:hover {
+    background-color: #81360b !important;
+    border-color: #81360b !important;
+  }
+`;
 
 function Login() {
-  const [isHovered, setIsHovered] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showForgotPasswordModal, setShowForgortPasswordModal] = useState(false);
 
-  const ButtonCSS = {
-    border: isHovered ? '1px solid #81360b' : '1px solid #EC6C21',
-    background: isHovered ? '#81360b' : '#EC6C21'
-  };
+
   const { token, user, render, onSetRender, onSetUser } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -245,16 +252,13 @@ function Login() {
               />
             </Form.Group>
 
-            <Button
+            <CustomButton
               variant="primary"
               type="submit"
               className="w-100 mb-4"
-              style={ButtonCSS}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
             >
               Đăng nhập <i class="bi bi-box-arrow-in-left"></i>
-            </Button>
+            </CustomButton>
 
             <div className="d-flex justify-content-center align-items-center mb-4">
               <a
@@ -340,9 +344,9 @@ function Login() {
                 required
               />
             </Form.Group>
-            <Button type="submit" className="w-100 mb-3" style={ButtonCSS} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+            <CustomButton type="submit" className="w-100 mb-3">
               Đăng ký
-            </Button>
+            </CustomButton>
           </Form>
         </Modal.Body>
       </Modal>
@@ -364,13 +368,12 @@ function Login() {
                 required
               />
             </Form.Group>
-            <Button type="submit" className="w-100 mb-3" style={ButtonCSS} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+            <CustomButton type="submit" className="w-100 mb-3">
               Nhận mật khẩu mới <i class="bi bi-envelope-at"></i>
-            </Button>
+            </CustomButton>
           </Form>
         </Modal.Body>
       </Modal>
-      {/* <ToastContainer position='top-right' /> */}
     </Container>
   );
 }

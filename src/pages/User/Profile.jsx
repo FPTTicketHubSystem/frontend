@@ -24,6 +24,16 @@ const CustomRadio = styled(Form.Check)`
   }
 `;
 
+const CustomButton = styled(Button)`
+  background-color: #EC6C21;
+  border-color: #EC6C21;
+
+  &:hover {
+    background-color: #81360b !important;
+    border-color: #81360b !important;
+  }
+`;
+
 function Profile() {
 
     const { user, setUser, onSetRender } = useContext(UserContext);
@@ -45,7 +55,6 @@ function Profile() {
         });
     }, [user]);
 
-    const [isHovered, setIsHovered] = useState(false);
     const [showAvatarModal, setShowAvatarModal] = useState(false);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
@@ -145,10 +154,7 @@ function Profile() {
         }
     };
 
-    const ButtonCSS = {
-        border: isHovered ? '1px solid #81360b' : '1px solid #EC6C21',
-        background: isHovered ? '#81360b' : '#EC6C21'
-    };
+    
 
     // const radioCheckStyle = {
     //     border: '#EC6C21',
@@ -306,16 +312,13 @@ function Profile() {
                             </Form.Group>
                         )
                     }
-                    <Button
+                    <CustomButton
                         type="submit"
-                        style={ButtonCSS}
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
                         className="mb-3 d-block mx-auto"
                         block
                     >
                         Hoàn thành
-                    </Button>
+                    </CustomButton>
                 </Form>
                 <Modal show={showChangePasswordModal} onHide={() => setShowChangePasswordModal(false)}>
                     <Modal.Header closeButton onClick={() => setShowChangePasswordModal(false)}>
@@ -345,9 +348,9 @@ function Profile() {
                                     required
                                 />
                             </Form.Group>
-                            <Button type="submit" className="w-100 mb-3" style={ButtonCSS} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+                            <CustomButton type="submit" className="w-100 mb-3">
                                 Đổi mật khẩu
-                            </Button>
+                            </CustomButton>
                         </Form>
                     </Modal.Body>
                 </Modal>
