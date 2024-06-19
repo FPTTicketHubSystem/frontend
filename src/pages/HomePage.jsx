@@ -1,8 +1,8 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 //import '../../assets/css/header.css';
-import Header from '../components/Homepage/Header';
-import Footer from '../components/Homepage/Footer';
+import Header from '../component/Homepage/Header';
+import Footer from '../component/Homepage/Footer';
 import 'bootstrap/dist/css/bootstrap.css';
 import { useContext } from 'react';
 import videoBg from '../assets/css/Thumel.mp4';

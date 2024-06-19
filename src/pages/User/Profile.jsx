@@ -1,4 +1,4 @@
-import Header from '../../components/Homepage/Header';
+import Header from '../../component/Homepage/Header';
 import { Form, Button, Col } from 'react-bootstrap';
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
