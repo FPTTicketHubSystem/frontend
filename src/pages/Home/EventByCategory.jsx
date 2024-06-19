@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import EventCard from "./EventCard";
 import { Link } from "react-router-dom";
 
+
 function EventByCategory() {
     const events = [
         {
