@@ -4,8 +4,8 @@ import '../../assets/css/main.min.css';
 import '../../assets/vendor/overlay-scroll/OverlayScrollbars.min.css';
 import '../../assets/images/favicon.svg';
 import '../../assets/vendor/dropzone/dropzone.min.css';
-import Header from '../../components/Admin/Header';
-import Navbar from '../../components/Admin/Navbar';
+import Header from '../../component/Admin/Header';
+import Navbar from '../../component/Admin/Navbar';
 import Duc from '../../assets/images/Duc.jpg'
 
 
@@ -89,8 +89,8 @@ const EditUser = () => {
                                                                 </div>
                                                                 <div className="col-6">
                                                                     <div className="mb-3">
-                                                                        <label htmlFor="emailId" className="form-label">Email</label>
-                                                                        <input type="email" className="form-control" id="emailId" placeholder="Email ID" />
+                                                                        <label htmlFor="birthday" className="form-label">BirthDay</label>
+                                                                        <input type="birthday" className="form-control" id="birthdayId" placeholder="birthday" />
                                                                     </div>
 
 																	<div className="mb-3">

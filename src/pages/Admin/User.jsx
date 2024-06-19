@@ -3,9 +3,9 @@ import '../../assets/font/icomoon/style.css'
 import '../../assets/css/main.min.css'
 import '../../assets/vendor/overlay-scroll/OverlayScrollbars.min.css'
 import '../../assets/images/favicon.svg'
-import Header from '../../components/Admin/Header'
-import Navbar from '../../components/Admin/Navbar'
-import UserList from '../../components/Admin/UserList'
+import Header from '../../component/Admin/Header'
+import Navbar from '../../component/Admin/Navbar'
+import UserList from '../../component/Admin/UserList'
 
 const User = () => {
 

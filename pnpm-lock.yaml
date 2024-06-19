@@ -27,7 +27,7 @@ dependencies:
     specifier: ^13.5.0
     version: 13.5.0(@testing-library/dom@10.1.0)
   axios:
-    specifier: ^1.6.8
+    specifier: ^1.7.2
     version: 1.7.2
   bootstrap:
     specifier: ^5.3.3

@@ -3,9 +3,9 @@ import '../../assets/font/icomoon/style.css'
 import '../../assets/css/main.min.css'
 import '../../assets/vendor/overlay-scroll/OverlayScrollbars.min.css'
 import '../../assets/images/favicon.svg'
-import Header from '../../components/Admin/Header'
-import Navbar from '../../components/Admin/Navbar'
-import Eventopen from '../../components/Admin/Eventopen'
+import Header from '../../component/Admin/Header'
+import Navbar from '../../component/Admin/Navbar'
+import Eventopen from '../../component/Admin/Eventopen'
 
 const Eventapproval = () => {
 
