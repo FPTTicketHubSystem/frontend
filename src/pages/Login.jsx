@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
+import '../assets/css/CustomForm.css'
 
 const CustomButton = styled(Button)`
   background-color: #EC6C21;
@@ -215,7 +216,7 @@ function Login() {
     <Container>
       <Row className="justify-content-center align-items-center min-vh-100">
         <Col lg={6} md={8} sm={10} className="text-center p-5 border rounded shadow" style={{ backgroundColor: '#f8f9fa' }}>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Đăng nhập</h1>
+          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', color: 'black' }}>Đăng nhập</h1>
           <p style={{ fontSize: '1.2rem' }}>
             Chưa có tài khoản?
             <a
@@ -227,7 +228,7 @@ function Login() {
           </p>
           <Form noValidate onSubmit={handleLogin}>
             <Form.Group controlId="formEmail" className="mb-4 text-start">
-              <Form.Label style={{ fontSize: '1.1rem' }}>Email</Form.Label>
+              <Form.Label style={{ fontSize: '1.1rem', color: 'black' }}>Email</Form.Label>
               <Form.Control
                 type="email"
                 placeholder="Nhập email"
@@ -235,12 +236,18 @@ function Login() {
                 value={loginInput.inputEmail}
                 onChange={handleInputLogin}
                 required
-                style={{ fontSize: '1.1rem', padding: '10px' }}
-              />
+                style={{
+                  fontSize: '1.1rem',
+                  padding: '10px',
+                  color:'black',
+                  border: '1px solid #ced4da',
+                   
+  }}
+/>
             </Form.Group>
 
             <Form.Group controlId="formPassword" className="mb-4 text-start">
-              <Form.Label style={{ fontSize: '1.1rem' }}>Mật khẩu</Form.Label>
+              <Form.Label style={{ fontSize: '1.1rem', color: 'black' }}>Mật khẩu</Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Nhập mật khẩu"
@@ -248,7 +255,10 @@ function Login() {
                 value={loginInput.inputPassword}
                 onChange={handleInputLogin}
                 required
-                style={{ fontSize: '1.1rem', padding: '10px' }}
+                style={{ fontSize: '1.1rem',
+                  padding: '10px',
+                  color:'black',
+                  border: '1px solid #ced4da'}}
               />
             </Form.Group>
 
@@ -271,7 +281,7 @@ function Login() {
 
             <div className="d-flex align-items-center my-4">
               <hr className="flex-grow-1" />
-              <span className="mx-2" style={{ fontSize: '1.1rem' }}>Hoặc</span>
+              <span className="mx-2" style={{ fontSize: '1.1rem', color: 'black' }}>Hoặc</span>
               <hr className="flex-grow-1" />
             </div>
             <div className='d-flex justify-content-center align-items-center'>

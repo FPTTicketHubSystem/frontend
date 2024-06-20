@@ -1,6 +1,7 @@
 import logoSrc from "../assets/images/logo/paymentLogo.png";
 import logoSrc2 from "../assets/images/logo/paymentLogo2.png";
 import logoSrc3 from "../assets/images/logo/bocongthuong.png";
+import logowebSrc from "../assets/images/logo/3.png"
 
 function Footer() {
     return (
@@ -49,7 +50,7 @@ function Footer() {
                         </ul>
                     </div>
                 </div>
-                <div className="text-center mt-4">
+                <div className="text-center">
                     &copy;2024 FPTTicketHub. All rights reserved.
                 </div>
             </div>

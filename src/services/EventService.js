@@ -4,7 +4,7 @@ export const GetEventsService = async () => {
     try {
         const response = await request({
             method: "get",
-            url: "event",
+            url: "event/getAllEvent",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -19,7 +19,22 @@ export const GetEventByIdService = async (id) => {
     try {
         const response = await request({
             method: "get",
-            url: `event/${id}`,
+            url: `event/getEventById?eventId=${id}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const GetEventByCategoryService = async (id) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `event/getEventByCategory?categoryId=${id}`,
             headers: {
                 "Content-Type": "application/json",
             },
@@ -50,7 +65,7 @@ export const UpdateEventService = async (id, data) => {
     try {
         const response = await request({
             method: "put",
-            url: `event/${id}`,
+            url: `event/editEvent?eventId=${id}`,
             headers: {
                 "Content-Type": "application/json",
             },
@@ -62,11 +77,11 @@ export const UpdateEventService = async (id, data) => {
     }
 }
 
-export const DeleteEventService = async (id) => {
+export const GetUpcomingEventService = async () => {
     try {
         const response = await request({
-            method: "delete",
-            url: `event/${id}`,
+            method: "get",
+            url: "event/getUpcomingEvent",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -76,3 +91,18 @@ export const DeleteEventService = async (id) => {
         return e;
     }
 }
+
+// export const DeleteEventService = async (id) => {
+//     try {
+//         const response = await request({
+//             method: "delete",
+//             url: `event/${id}`,
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//         });
+//         return response;
+//     } catch (e) {
+//         return e;
+//     }
+// }
