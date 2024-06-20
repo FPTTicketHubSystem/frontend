@@ -89,7 +89,6 @@ const LocationPicker = ({ onLocationChange }) => {
           onChange={handleProvinceChange}
           placeholder="Chọn Tỉnh/Thành"
         >
-          <Option value="">Chọn Tỉnh/Thành</Option>
           {provinces.map(province => (
             <Option key={province.province_id} value={province.province_id}>{province.province_name}</Option>
           ))}
@@ -103,7 +102,6 @@ const LocationPicker = ({ onLocationChange }) => {
           placeholder="Chọn Quận/Huyện"
           disabled={!selectedProvince}
         >
-          <Option value="">Chọn Quận/Huyện</Option>
           {districts.map(district => (
             <Option key={district.district_id} value={district.district_id}>{district.district_name}</Option>
           ))}
@@ -117,7 +115,6 @@ const LocationPicker = ({ onLocationChange }) => {
           placeholder="Chọn Phường/Xã"
           disabled={!selectedDistrict}
         >
-          <Option value="">Chọn Phường/Xã</Option>
           {wards.map(ward => (
             <Option key={ward.ward_id} value={ward.ward_id}>{ward.ward_name}</Option>
           ))}

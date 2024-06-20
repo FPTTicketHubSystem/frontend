@@ -8,8 +8,8 @@ import Profile from './pages/User/Profile';
 import ConfirmAccount from './pages/AccountConfirm';
 import CreateEvent from './pages/Organizer/CreateEvent';
 import { UserContext } from './context/UserContext';
-import './App.css';
 import EventDetail from './pages/EventDetail';
+import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
 import EditUser from './pages/Admin/EditUser';
 import Eventapproval from './pages/Admin/Eventapproval';
@@ -32,6 +32,7 @@ function App() {
           <Route path="/confirmaccount/:email" element={<ConfirmAccount/>} />
           <Route path="/event-detail/:encodedId" element={<EventDetail />} />
           <Route path="/organizer/create-event" element={<CreateEvent/>}/>
+          <Route path="/organizer/events" element={<Events/>}/>
         </Routes>
       </Router>
     </>
