@@ -21,7 +21,7 @@ function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/confirmaccount/:email" element={<ConfirmAccount/>} />
-          <Route path="/event-detail" element={<EventDetail />} />
+          <Route path="/event-detail/:encodedId" element={<EventDetail />} />
           <Route path="/organizer/create-event" element={<CreateEvent/>}/>
         </Routes>
       </Router>
