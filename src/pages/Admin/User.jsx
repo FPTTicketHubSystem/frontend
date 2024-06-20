@@ -25,19 +25,17 @@ const User = () => {
       avatar: Duc,
       isLocked: false,
     },
-  
-
   ]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(5); // Số người dùng trên mỗi trang
-  const [filterStatus, setFilterStatus] = useState('All'); // Trạng thái để lọc người dùng
 
-  // Hàm để xử lý thay đổi trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(5);
+  const [filterStatus, setFilterStatus] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
+
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  // Hàm để xử lý thay đổi trạng thái khóa
   const handleLockChange = (id, newLockStatus) => {
     const updatedUsers = users.map(user =>
       user.id === id ? { ...user, isLocked: newLockStatus } : user
@@ -45,21 +43,26 @@ const User = () => {
     setUsers(updatedUsers);
   };
 
-  // Hàm để xử lý lọc người dùng theo trạng thái
   const handleFilterChange = (status) => {
     setFilterStatus(status);
-    setCurrentPage(1); // Reset về trang đầu tiên khi thay đổi bộ lọc
+    setCurrentPage(1);
   };
 
-  // Lọc người dùng dựa trên trạng thái
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1);
+  };
+
   const filteredUsers = users.filter(user => {
-    if (filterStatus === 'All') {
-      return true;
+    if (filterStatus !== 'All' && user.status !== filterStatus) {
+      return false;
     }
-    return user.status === filterStatus;
+    if (searchTerm && !user.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+      return false;
+    }
+    return true;
   });
 
-  // Tính chỉ mục bắt đầu và chỉ mục kết thúc của người dùng trên trang hiện tại
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -87,31 +90,42 @@ const User = () => {
                       <li className="breadcrumb-item text-light">User</li>
                     </ol>
                   </div>
-                  <div className="btn-group">
-                    <button
-                      className={`btn ${filterStatus === 'All' ? 'btn-primary' : 'btn-outline-primary'}`}
-                      onClick={() => handleFilterChange('All')}
-                    >
-                      All
-                    </button>
-                    <button
-                      className={`btn ${filterStatus === 'Online' ? 'btn-primary' : 'btn-outline-primary'}`}
-                      onClick={() => handleFilterChange('Online')}
-                    >
-                      Online
-                    </button>
-                    <button
-                      className={`btn ${filterStatus === 'Offline' ? 'btn-primary' : 'btn-outline-primary'}`}
-                      onClick={() => handleFilterChange('Offline')}
-                    >
-                      Offline
-                    </button>
-                    <button
-                      className={`btn ${filterStatus === 'Pending' ? 'btn-primary' : 'btn-outline-primary'}`}
-                      onClick={() => handleFilterChange('Pending')}
-                    >
-                      Pending
-                    </button>
+                  <div className="d-flex">
+                    <div className="btn-group me-3">
+                      <button
+                        className={`btn ${filterStatus === 'All' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        onClick={() => handleFilterChange('All')}
+                      >
+                        All
+                      </button>
+                      <button
+                        className={`btn ${filterStatus === 'Online' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        onClick={() => handleFilterChange('Online')}
+                      >
+                        Online
+                      </button>
+                      <button
+                        className={`btn ${filterStatus === 'Offline' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        onClick={() => handleFilterChange('Offline')}
+                      >
+                        Offline
+                      </button>
+                      <button
+                        className={`btn ${filterStatus === 'Pending' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        onClick={() => handleFilterChange('Pending')}
+                      >
+                        Pending
+                      </button>
+                    </div>
+                    <div className="search-bar">
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -119,7 +133,7 @@ const User = () => {
 
             <div className="row">
               <div className="col-12">
-                <div className="card mb-2">
+                <div className="card2 mb-2">
                   <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-bordered table-striped align-middle m-0">
@@ -160,7 +174,6 @@ const User = () => {
                               <td>{user.gender}</td>
                               <td>{user.gold}</td>
                               <td>
-                                {/* Hiển thị nút LockButton chỉ khi trạng thái khác "Chờ duyệt" */}
                                 {filterStatus !== 'Pending' && (
                                   <>
                                     <EditButton />
@@ -185,13 +198,11 @@ const User = () => {
 
             <div className="row">
               <div className="col-12 d-flex justify-content-center">
-                {/* Phân trang */}
                 <nav>
                   <ul className="pagination">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                       <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Previous</button>
                     </li>
-                    {/* Hiển thị các nút trang */}
                     {[...Array(Math.ceil(filteredUsers.length / usersPerPage)).keys()].map(number => (
                       <li key={number} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
                         <button className="page-link" onClick={() => handlePageChange(number + 1)}>{number + 1}</button>
