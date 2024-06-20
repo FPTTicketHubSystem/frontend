@@ -1,7 +1,5 @@
-import "bootstrap/dist/css/bootstrap.css";
 import { useContext, useState, useEffect, useRef } from "react";
 import "../assets/css/header.css";
-import "../assets/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
