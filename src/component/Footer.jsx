@@ -4,7 +4,7 @@ import logoSrc3 from "../assets/images/logo/bocongthuong.png";
 
 function Footer() {
     return (
-        <footer className="bg-dark text-white py-5 mt-5">
+        <footer className="bg-dark text-white py-5">
             <div className="container">
                 <div className="row row-cols-1 row-cols-md-3 g-4">
                     <div className="col mb-4">

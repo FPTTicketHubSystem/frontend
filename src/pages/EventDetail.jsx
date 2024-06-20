@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
+import '../assets/css/ticket.css'
 
 const EventDetail = ({ image, title, price, date }) => {
   return (

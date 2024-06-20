@@ -8,8 +8,8 @@ import Profile from './pages/User/Profile';
 import ConfirmAccount from './pages/AccountConfirm';
 import CreateEvent from './pages/Organizer/CreateEvent';
 import { UserContext } from './context/UserContext';
-import './App.css';
 import EventDetail from './pages/EventDetail';
+import Events from './pages/Organizer/Events';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -23,6 +23,7 @@ function App() {
           <Route path="/confirmaccount/:email" element={<ConfirmAccount/>} />
           <Route path="/event-detail" element={<EventDetail />} />
           <Route path="/organizer/create-event" element={<CreateEvent/>}/>
+          <Route path="/organizer/events" element={<Events/>}/>
         </Routes>
       </Router>
     </>
