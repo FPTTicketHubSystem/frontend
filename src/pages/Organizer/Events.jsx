@@ -4,7 +4,7 @@ import Navbar from "../../component/Organizer/Navbar";
 import { UserContext } from '../../context/UserContext';
 import { Input, Segmented, Table, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { GetEventsService, GetEventByAccountService } from '../../services/EventService';
+import { GetEventsService } from '../../services/EventService';
 import Footer from '../../component/Footer';
 
 const { Search } = Input;
@@ -58,10 +58,10 @@ const Events = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await GetEventByAccountService(user.accountId);
-                //const filteredEvents = response.filter(event => event.accountId === user.accountId);
+                const response = await GetEventsService();
+                const filteredEvents = response.filter(event => event.accountId === user.accountId);
                 setEvents(response);
-                setFilteredEvents(response);
+                setFilteredEvents(filterEvents);
             } catch (error) {
                 console.error("Failed to fetch events:", error);
             } finally {
