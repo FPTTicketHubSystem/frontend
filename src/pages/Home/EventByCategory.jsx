@@ -1,57 +1,79 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import EventCard from "./EventCard";
 import { Link } from "react-router-dom";
+import { GetEventByCategoryService } from "../../services/EventService";
+import { encodeId } from "../../utils/utils";
 
+function EventByCategory({ categoryId, categoryName }) {
+  const [events, setEvents] = useState([]);
 
-function EventByCategory() {
-    const events = [
-        {
-          image: 'https://dnuni.fpt.edu.vn/wp-content/uploads/2022/05/Thumnails-16x9-PNG-min.png',
-          title: 'BIG OPEN DAY',
-          price: '50.000',
-          date: '19 tháng 08, 2024',
-        },
-        {
-          image: 'https://i.ytimg.com/vi/g-mBrs2MDoE/maxresdefault.jpg',
-          title: 'OPEN MIC',
-          price: '100.000',
-          date: '15 tháng 06, 2024',
-        },
-        {
-          image: 'https://btmedia.vn/wp-content/uploads/2021/12/fuda-music-show-1.jpg',
-          title: 'FPT TALENT 2024',
-          price: '10.000',
-          date: '06 tháng 07, 2024',
-        },
-        {
-          image: 'https://btmedia.vn/wp-content/uploads/2021/12/fuda-music-show-1.jpg',
-          title: 'MINISHOW NYS CLUB',
-          price: '50.000',
-          date: '28 tháng 07, 2024',
-        },
-      ];
-    return (
-      <>
-        <div className="app">
-          <h1 style={{color: "white", marginLeft: "15px"}}>Nghệ thuật</h1>
-          <div className="events-list">
-            {events.map((event, index) => (
-              <Link style={{textDecoration:'none'}} to="/event-detail">
-                <EventCard
-                className=""
-                key={index}
-                image={event.image}
-                title={event.title} 
-                price={event.price}
-                date={event.date}
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await GetEventByCategoryService(categoryId);
+        if (Array.isArray(response)) {
+          setEvents(response);
+        }
+        else {
+          console.error ("response is not an array", response)
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, [categoryId]);
+
+  return (
+    <div className="app">
+      <div>
+      <h1 style={{ color: "white", marginLeft: "128px", fontSize: "2rem" }}>
+        {categoryName}
+      </h1>
+      <Link to={`/events/${categoryId}`} className="see-more-button">
+        Xem thêm <i class="bi bi-chevron-right"></i>
+      </Link>
+      </div>
+      
+      <div className="events-list">
+        {events.slice(0, 4).map((event) => {
+          const lowestPrice = event.tickettypes.reduce(
+            (min, ticketType) => Math.min(min, ticketType.price),
+            event.tickettypes[0]?.price || 0
+          );
+
+          const priceDisplay =
+            lowestPrice === 0
+              ? "Miễn phí"
+              : `Từ ${lowestPrice.toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}`;
+
+          return (
+            <Link
+              key={event.eventId}
+              style={{ textDecoration: "none" }}
+              to={`/event-detail/${encodeId(event.eventId)}`}
+            >
+              <EventCard
+                image={event.themeImage}
+                title={event.eventName}
+                price={priceDisplay}
+                date={new Date(event.startTime).toLocaleDateString("vi-VN", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                })}
               />
-              </Link>
-            ))}
-          </div>
-        </div>
-      </>
-    );
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 export default EventByCategory;

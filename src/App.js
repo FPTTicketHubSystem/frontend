@@ -29,6 +29,9 @@ function App() {
           <Route path="/user" element={<User />} />
           <Route path="/eventapproval" element={<Eventapproval />} />
           <Route path="/user/edituser" element={<EditUser />} />
+          <Route path="/confirmaccount/:email" element={<ConfirmAccount/>} />
+          <Route path="/event-detail/:encodedId" element={<EventDetail />} />
+          <Route path="/organizer/create-event" element={<CreateEvent/>}/>
         </Routes>
       </Router>
     </>

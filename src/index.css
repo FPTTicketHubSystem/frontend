@@ -253,6 +253,13 @@ body {
   height: auto;
 }
 
+.event-title {
+  width: 280px;           
+  white-space: nowrap;     
+  overflow: hidden;      
+  text-overflow: ellipsis;
+}
+
 .event-info {
   padding: 15px;
 }
@@ -270,6 +277,12 @@ body {
 .event-date {
   font-size: 14px;
   color: #bbb;
+}
+.see-more-button {
+  margin-left: 128px;
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
 }
 
 /*---------------------------------------
@@ -664,7 +677,6 @@ strong {
 }
 
 .hero-section {
-
   overflow: hidden;
   padding-top: 100px;
   height: calc(100vh - 51px);
