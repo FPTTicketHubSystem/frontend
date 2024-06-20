@@ -1,5 +1,4 @@
 import { useContext, useState, useEffect, useRef } from "react";
-import videoBg from "../assets/css/Thumel.mp4";
 import "../assets/css/header.css";
 import { Link } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
@@ -22,9 +21,7 @@ export default function Header() {
       }
     };
   }, []);
-  useEffect(() => {
-    window.scrollTo(0, 0); 
-  }, []);
+
 
   const navigate = useNavigate();
 
@@ -45,7 +42,7 @@ export default function Header() {
 
   return (
     <>
-      <div className={"fixed-top mt-0" + (isNotAtTop ? " bg-black" : "")}>
+      <div className={"sticky-top mt-0" + (isNotAtTop ? " bg-black" : "")}>
         <nav className="navbar navbar-expand-lg pt-0 pb-0">
           <div className="container">
             <div className="d-flex align-items-center">
@@ -71,7 +68,7 @@ export default function Header() {
 
             <div className="d-flex align-items-center order-lg-2 order-1">
               {!token ? (
-                <Link to="/login" className="btn custom-btn d-lg-block d-none">
+                <Link to="/login" className="btn custom-btn d-lg-block">
                   Đăng nhập
                 </Link>
               ) : (
