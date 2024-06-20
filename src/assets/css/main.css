@@ -13286,7 +13286,7 @@ a:hover {
   margin-bottom: -1px;
 }
 
-.card2 {
+.card {
   background: rgba(0, 0, 0, 0.1);
 }
 
@@ -13377,26 +13377,26 @@ a:hover {
     right: 0;
   }
 }
-.navbar {
+.navbar2 {
   background: #101316;
   position: sticky;
   top: 65px;
   z-index: 90;
 }
-.navbar .nav-item .dropdown-item {
+.navbar2 .nav-item .dropdown-item {
   font-size: 0.85rem;
 }
-.navbar .nav-item.active-link a.nav-link {
+.navbar2 .nav-item.active-link a.nav-link {
   color: #a87a50;
 }
-.navbar .nav-item.active-link .current-page {
+.navbar2 .nav-item.active-link .current-page {
   background: rgba(255, 255, 255, 0.1);
 }
-.navbar .nav-link {
+.navbar2 .nav-link {
   color: rgba(255, 255, 255, 0.8);
   padding: 13px 25px 13px 0 !important;
 }
-.navbar .nav-link.show {
+.navbar2 .nav-link.show {
   color: rgb(255, 255, 255);
 }
 
@@ -13516,9 +13516,18 @@ a:hover {
   margin: 0.75rem 0;
 }
 .app-brand .logo {
-  max-width: 200px;
-  max-height: 50px;
+  max-width: 300px;
+  max-height: 60px;
+  width: 120px;
+  height: 60px;
 }
+.app-brand .logo2 {
+  max-width: 300px;
+  max-height: 60px;
+  width: 90px;
+  height: 60px;
+}
+
 
 .search-container {
   margin: 0.975rem 1rem 0.975rem 0;

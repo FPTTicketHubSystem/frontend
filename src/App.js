@@ -11,7 +11,6 @@ import { UserContext } from './context/UserContext';
 import EventDetail from './pages/EventDetail';
 import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
-import EditUser from './pages/Admin/EditUser';
 import Eventapproval from './pages/Admin/Eventapproval';
 
 function App() {
@@ -28,11 +27,10 @@ function App() {
           <Route path="/organizer/create-event" element={<CreateEvent />} />
           <Route path="/user" element={<User />} />
           <Route path="/eventapproval" element={<Eventapproval />} />
-          <Route path="/user/edituser" element={<EditUser />} />
-          <Route path="/confirmaccount/:email" element={<ConfirmAccount/>} />
+          <Route path="/confirmaccount/:email" element={<ConfirmAccount />} />
           <Route path="/event-detail/:encodedId" element={<EventDetail />} />
-          <Route path="/organizer/create-event" element={<CreateEvent/>}/>
-          <Route path="/organizer/events" element={<Events/>}/>
+          <Route path="/organizer/create-event" element={<CreateEvent />} />
+          <Route path="/organizer/events" element={<Events />} />
         </Routes>
       </Router>
     </>

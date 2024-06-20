@@ -13,11 +13,11 @@ const Header = () => {
   
   
               <div class="app-brand">
-                  <a href="/" class="d-lg-block d-none">
+                  <a href="/" class="d-lg-block d-none" >
                       <img src={logo} class="logo" alt="FPTTicketHub" />
                   </a>
                   <a href="/" class="d-lg-none d-md-block">
-                      <img src={logo2} class="logo" alt="FPTTicketHub" />
+                      <img src={logo2} class="logo2" alt="FPTTicketHub" />
                   </a>
               </div>
   
@@ -35,8 +35,8 @@ const Header = () => {
                   <div class="dropdown ms-2">
                       <a class="dropdown-toggle d-flex align-items-center user-settings" href="#!" role="button"
                           data-bs-toggle="dropdown" aria-expanded="false">
-                          <span class="d-none d-md-block">Violeta Escobar</span>
-                          <img src="assets/images/user.png" class="img-3x m-2 me-0 rounded-5" alt="Bootstrap Gallery" />
+                          <span class="d-none d-md-block">User1</span>
+                          <img src="https://th.bing.com/th/id/OIP.HHVUf3TYqncgpJXyCMmxyAHaHa?w=192&h=192&c=7&r=0&o=5&dpr=1.3&pid=1.7" class="img-3x m-2 me-0 rounded-5" alt="Bootstrap Gallery" />
                       </a>
                       <div class="dropdown-menu dropdown-menu-end dropdown-menu-sm shadow-sm gap-3" style={{}}>
                           <a class="dropdown-item d-flex align-items-center py-2" href="agent-profile.html"><i
