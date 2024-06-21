@@ -9,7 +9,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar2 navbar-expand-lg p-0">
+    <nav className="navbar navbar-expand-lg p-0">
       <div className="container">
         <div className="offcanvas offcanvas-end" id="MobileMenu">
           <div className="offcanvas-header">

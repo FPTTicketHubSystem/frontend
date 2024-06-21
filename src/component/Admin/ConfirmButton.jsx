@@ -1,26 +1,24 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import '../../assets/css/button.css';
 
-const ConfirmButon = ({ onRemove }) => {
+const ConfirmButton = ({ onRemove }) => {
   const [showModal, setShowModal] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   const handleConfirm = () => {
-    // Handle confirmation logic, e.g., call onRemove()
     setIsConfirmed(true); // Set isConfirmed to true when confirmed
     setShowModal(false); // Close the modal after confirmation
+    // Perform further logic, e.g., call onRemove() to remove user
   };
 
   return (
     <>
-      {!isConfirmed && ( // Render the button only if not confirmed
+      {!isConfirmed && (
         <button
           onClick={() => setShowModal(true)}
-          className="btn btn-outline-success btn-sm"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          data-bs-custom-class="custom-tooltip-danger"
-          data-bs-title="Duyet"
+          className="btn-tooltip btn btn-outline-success btn-sm"
+          title="Duyệt"
         >
           <i className="icon-check1"></i>
         </button>
@@ -44,5 +42,4 @@ const ConfirmButon = ({ onRemove }) => {
   );
 }
 
-export default ConfirmButon;
-
+export default ConfirmButton;
