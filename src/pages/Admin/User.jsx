@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../assets/fonts/icomoon/style.css';
 import '../../assets/css/main.css';
+import '../../assets/css/editprofile.css';
 import '../../assets/vendor/overlay-scroll/OverlayScrollbars.min.css';
 import '../../assets/images/favicon.svg';
 import Duc from '../../assets/images/user/Duc.jpg';
@@ -21,16 +22,156 @@ const User = () => {
       status: 'Online',
       phone: '0900009900',
       gender: 'Nam',
+      birthday: '01/01/2001',
+      role: 'Người dùng',
       gold: 0,
       avatar: Duc,
       isLocked: false,
     },
+    {
+      id: 2,
+      name: 'Nguyễn Thanh Tùng',
+      email: 'MTP@fpt.edu.vn',
+      password: '••••••',
+      status: 'Offline',
+      phone: '0900111222',
+      gender: 'Nam',
+      birthday: '02/02/2002',
+      role: 'Người dùng',
+      gold: 0,
+      avatar: 'https://th.bing.com/th/id/OIP.Hb2hl5OF1XFHOfUId6Q9qAHaKA?w=196&h=264&c=7&r=0&o=5&dpr=1.3&pid=1.7',
+      isLocked: true,
+    },
+    {
+      id: 3,
+      name: 'Nguyen Xuan Khiem',
+      email: 'Khiem@fpt.edu.vn',
+      password: '••••••',
+      status: 'Online',
+      phone: '0900333444',
+      gender: 'Nam',
+      birthday: '03/03/2003',
+      role: 'Người dùng',
+      gold: 0,
+      avatar: 'Khiem',
+      isLocked: false,
+    },
+    {
+      id: 4,
+      name: 'Hoang Thi Lan',
+      email: 'lan@fpt.edu.vn',
+      password: '••••••',
+      status: 'Offline',
+      phone: '0900444555',
+      gender: 'Nữ',
+      birthday: '04/04/2004',
+      role: 'Người dùng',
+      gold: 0,
+      avatar: 'Lan',
+      isLocked: true,
+    },
+    {
+      id: 5,
+      name: 'Trịnh Trần Phương Tuấn',
+      email: 'j97@fpt.edu.vn',
+      password: '••••••',
+      status: 'Đợi duyệt',
+      phone: '0900555666',
+      gender: 'Nam',
+      birthday: '05/05/2005',
+      role: 'Người dùng',
+      gold: 0,
+      avatar: 'https://th.bing.com/th?id=OSK.26UA3aG0VvTWTj_f3KZ4a6CUIs6ZiVkuCPA0Bw5nAzs&w=155&h=200&c=7&rs=1&o=6&dpr=1.3&pid=SANGAM',
+      isLocked: '',
+    },
+    {
+      id: 6,
+      name: 'Nguyen Thanh Thao',
+      email: 'thao@fpt.edu.vn',
+      password: '••••••',
+      status: 'Offline',
+      phone: '0900666777',
+      gender: 'Nữ',
+      birthday: '06/06/2006',
+      role: 'Người dùng',
+      gold: 0,
+      avatar: 'Thao',
+      isLocked: true,
+    },
+    {
+      id: 7,
+      name: 'Tran Quang Nam',
+      email: 'nam@fpt.edu.vn',
+      password: '••••••',
+      status: 'Online',
+      phone: '0900777888',
+      gender: 'Nam',
+      birthday: '07/07/2007',
+      role: 'Người dùng',
+      gold: 0,
+      avatar: 'Nam',
+      isLocked: false,
+    },
+    {
+      id: 8,
+      name: 'Pham Thi Hoa',
+      email: 'hoa@fpt.edu.vn',
+      password: '••••••',
+      status: 'Đợi duyệt',
+      phone: '0900888999',
+      gender: 'Nữ',
+      birthday: '08/08/2008',
+      role: 'Người dùng',
+      gold: 0,
+      avatar: 'Hoa',
+      isLocked: '',
+    },
+    {
+      id: 9,
+      name: 'Nguyen Van Tuan',
+      email: 'tuan@fpt.edu.vn',
+      password: '••••••',
+      status: 'Online',
+      phone: '0900999000',
+      gender: 'Nam',
+      birthday: '09/09/2009',
+      role: 'Người dùng',
+      gold: 0,
+      avatar: 'Tuan',
+      isLocked: false,
+    },
+    {
+      id: 10,
+      name: 'Tran Thi Bich',
+      email: 'bich@fpt.edu.vn',
+      password: '••••••',
+      status: 'Offline',
+      phone: '0900101010',
+      gender: 'Nữ',
+      birthday: '10/10/2010',
+      role: 'Người dùng',
+      gold: 0,
+      avatar: 'Bich',
+      isLocked: true,
+    }
+  
   ]);
-
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(5);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    if (showModal) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+  }, [showModal]);
+  
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -51,6 +192,15 @@ const User = () => {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     setCurrentPage(1);
+  };
+
+  const handleEditButtonClick = (user) => {
+    setCurrentUser(user);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   const filteredUsers = users.filter(user => {
@@ -112,9 +262,9 @@ const User = () => {
                       </button>
                       <button
                         className={`btn ${filterStatus === 'Pending' ? 'btn-primary' : 'btn-outline-primary'}`}
-                        onClick={() => handleFilterChange('Pending')}
+                        onClick={() => handleFilterChange('Đợi duyệt')}
                       >
-                        Pending
+                        Đợi duyệt
                       </button>
                     </div>
                     <div className="search-bar">
@@ -133,7 +283,7 @@ const User = () => {
 
             <div className="row">
               <div className="col-12">
-                <div className="card2 mb-2">
+                <div className="card mb-2">
                   <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-bordered table-striped align-middle m-0">
@@ -159,15 +309,19 @@ const User = () => {
                                 <input className="form-check-input" type="checkbox" value="option1" />
                               </th>
                               <td>
-                                <img src={user.avatar || Duc} className="me-2 img-3x rounded-3" alt="avt" />
+                                <img src={user.avatar} className="me-2 img-3x rounded-3" alt="avt" />
                                 {user.name}
                               </td>
                               <td className="email">{user.email}</td>
                               <td className="password">{user.password}</td>
                               <td>
                                 <div className="d-flex align-items-center">
-                                  <i className={`icon-circle1 me-2 fs-5 ${user.isLocked ? "text-light" : "text-success"}`}></i>
-                                  {user.isLocked ? "Offline" : "Online"}
+                                  <i className={`icon-circle1 me-2 fs-5 ${user.status === "Đợi duyệt" ? "text-danger" : (user.isLocked ? "text-light" : "text-success")}`}></i>
+                                  {user.status === "Đợi duyệt" ? (
+                                      <span className="text-danger">Đợi duyệt</span>
+                                  ) : (
+                                    user.status
+                                  )}
                                 </div>
                               </td>
                               <td>{user.phone}</td>
@@ -176,7 +330,7 @@ const User = () => {
                               <td>
                                 {filterStatus !== 'Pending' && (
                                   <>
-                                    <EditButton />
+                                    <EditButton onEdit={() => handleEditButtonClick(user)} />
                                     <ConfirmButton />
                                     <CancelButton />
                                     <LockButton
@@ -218,6 +372,84 @@ const User = () => {
           </div>
         </div>
       </div>
+
+      {/* Profile Modal */}
+      {showModal && currentUser && (
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <div className="main">
+              <div className="row">
+                <div className="col-sm-6 picture">
+                  <center>
+                    <img
+                      className="circle responsive-img"
+                      src={currentUser.avatar}
+                      alt="profile"
+                    />
+                    <span>
+                      <a className="btn-floating pulse waves-effect waves-light add">
+                      </a>
+                    </span>
+                  </center>
+                </div>
+                <div className="col-sm-6 details">
+                  <center>
+                    <p className="name">
+                      <b>{currentUser.name}</b>
+                    </p>
+                  </center>
+                  <center>
+                    <p className="email">{currentUser.email}</p>
+                  </center>
+                  <center>
+                    <p className="phone">{currentUser.phone}</p>
+                  </center>
+                </div>
+              </div>
+
+              <table className="table">
+                <tbody>
+                  <tr>
+                    <td class="custom-cell">
+                      <p>
+                        <b>Gender:</b>
+                      </p>
+                      <p>{currentUser.gender}</p>
+                    </td>
+                    <td class="custom-cell">
+                      <p>
+                        <b>Status:</b>
+                      </p>
+                      <p>{currentUser.status}</p>
+                    </td>
+                    <td class="custom-cell">
+                      <p>
+                        <b>Birthday:</b>
+                      </p>
+                      <p>{currentUser.birthday}</p>
+                    </td>
+                    <td class="custom-cell">
+                      <p>
+                        <b>Role:</b>
+                      </p>
+                      <p>{currentUser.role}</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div className="buttons-container">
+                <button className="waves-effect waves-light btn edit back-btn" onClick={handleCloseModal}>
+                  Back
+                </button>
+                <button className="waves-effect waves-light btn edit change-role-btn">
+                  Change Role
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
