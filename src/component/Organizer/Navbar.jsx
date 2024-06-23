@@ -1,12 +1,12 @@
 import { useContext, useState, useEffect, useRef } from "react";
-import "../assets/css/header.css";
+import "../../assets/css/header.css"
 import { Link } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import logoSrc from "../assets/images/logo/3.png";
+import logoSrc from "../../assets/images/logo/3.png";
 
-export default function Header() {
+export default function Navbar() {
   const [isNotAtTop, setIsNotAtTop] = useState(window.scrollY !== 0);
   const eventListener = useRef(null);
 
@@ -21,7 +21,9 @@ export default function Header() {
       }
     };
   }, []);
-
+  useEffect(() => {
+    window.scrollTo(0, 0); 
+  }, []);
 
   const navigate = useNavigate();
 
@@ -49,37 +51,13 @@ export default function Header() {
               <Link to="/" className="navbar-brand text-white">
                 <img src={logoSrc} height={80} alt="logo" />
               </Link>
-              <form className="d-flex">
-                <input
-                  className="form-control d-lg-block d-none me-2"
-                  type="search"
-                  placeholder="Tìm kiếm"
-                  aria-label="Search"
-                />
-                <button
-                  className="btn btn-outline-light"
-                  type="submit"
-                  style={{ backgroundColor: "#EC6C21" }}
-                >
-                  <i className="bi bi-search"></i>
-                </button>
-              </form>
             </div>
 
             <div className="d-flex align-items-center order-lg-2 order-1">
               {!token ? (
-                <Link to="/login" className="btn custom-btn d-lg-block">
-                  Đăng nhập
-                </Link>
+                <></>
               ) : (
                 <>
-                  <Link
-                    to="/tickets"
-                    className="btn custom-btn d-lg-block d-none me-3"
-                  >
-                    <i className="bi-ticket-perforated me-2"></i>
-                    Vé của tôi
-                  </Link>
                   <div className="dropdown">
                     <a
                       className="dropdown"
@@ -128,14 +106,7 @@ export default function Header() {
                           </Link>
                         )}
                       </li>
-                      <li>
-                        <Link className="dropdown-item" to="/tickets">
-                          <span>
-                            <i className="bi bi-ticket-perforated"></i>
-                          </span>{" "}
-                          Vé của tôi
-                        </Link>
-                      </li>
+                      
                       <li>
                         <hr className="dropdown-divider" />
                       </li>
@@ -169,17 +140,29 @@ export default function Header() {
             >
               <ul className="navbar-nav align-items-lg-center mx-auto">
                 <li className="nav-item">
-                  <a className="nav-link click-scroll" href="#section_2">
-                    Nghệ thuật
-                  </a>
+                  {/* <a className="nav-link click-scroll" href="#section_2">
+                    Tạo sự kiện
+                  </a> */}
+                  <Link to = "/organizer/create-event" className="nav-link click-scroll">Tạo sự kiện</Link>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link click-scroll" href="#section_3">
-                    Giáo dục
-                  </a>
+                  {/* <a className="nav-link click-scroll" href="#section_3">
+                    Sự kiện đã tạo
+                  </a> */}
+                  <Link to = "/organizer/events" className="nav-link click-scroll">Sự kiện đã tạo</Link>
                 </li>
-                <li className="nav-item">
+                { user.roleId ===3 ? (
+                  <li className="nav-item">
+                  {/* <a className="nav-link click-scroll" href="#section_3">
+                    Sự kiện đã tạo
+                  </a> */}
+                  <Link to = "/organizer/approve-staff" className="nav-link click-scroll">Duyệt giám sát viên</Link>
+                </li>
+                ) : (
+                  <></>
+                )}
+                {/* <li className="nav-item">
                   <a className="nav-link click-scroll" href="#section_5">
                     Thể thao
                   </a>
@@ -189,16 +172,7 @@ export default function Header() {
                   <a className="nav-link click-scroll" href="#section_6">
                     Khác
                   </a>
-                </li>
-
-                <li className="nav-item">
-                  <a className="nav-link click-scroll" href="#section_6">
-                  <Link className="dropdown-item" to="/forum">
-                    Forum
-                  </Link>
-                  </a>
-                </li>
-                
+                </li> */}
               </ul>
             </div>
           </div>

@@ -1,7 +1,6 @@
 .ticket-background {
   background-color: black;
   padding: 24px;
-  padding-top: 100px;
 }
 
 .ticket-wrapper {
@@ -68,7 +67,7 @@
 }
 
 .title {
-  font-size: 25px;
+  font-size: 22px;
 }
 .date {
   color: #EC6C21;
@@ -90,4 +89,208 @@
 #buy-btn {
   background-color: #EC6C21;
   width: 90%;
+}
+
+
+
+.ticket-info {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.ticket-info h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.ticket-time {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.ticket-list {
+  margin-bottom: 20px;
+}
+
+.ticket-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.ticket-item span {
+  font-size: 1em;
+}
+
+.buy-ticket {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #EC6C21;
+  color: white;
+  text-align: center;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.buy-ticket:hover {
+  background-color: #EC6C21;
+}
+
+/* 
+Giới thiệu */
+.ticket-event-page {
+  background-color: #f5f8fc;
+  padding: 24px 12px;
+  display: flex;
+  gap: 24px;
+}
+.ticket-event-page .left-part {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.ticket-event-page .right-part img {
+  border-radius: 12px;
+  width: 310px;
+}
+.ticket-event-page .card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 0 16px;
+  position: relative;
+  overflow: hidden;
+}
+.ticket-event-page .card.collapsed {
+  height: 380px;
+}
+.ticket-event-page .card.collapsed .gradient-bg {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 86px;
+  background: linear-gradient(to bottom, transparent, white);
+}
+.ticket-event-page .card.dark {
+  color: #fff;
+  background-color: #27272a;
+  padding: 0;
+}
+.ticket-event-page .card.dark .card-header {
+  padding-left: 16px;
+  border-bottom: none;
+  color: #ddd;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-header {
+  border-top: 1px solid #000;
+  padding: 0 16px;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-header .event-time {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  cursor: pointer;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-header .event-time button {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-header .event-time .book-button {
+  background-color: #EC6C21;
+  width: 175px;
+  line-height: 34px;
+  border-radius: 6px;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-header .event-time .book-button:hover {
+  background-color: white;
+  color: black;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-header.collapsed .event-time button:not(.book-button) {
+  transform: rotate(90deg);
+}
+.ticket-event-page .card.dark .ticket-info-collapse-content.collapsed {
+  height: 0;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level {
+  padding: 16px 24px 16px 44px;
+  display: flex;
+  justify-content: space-between;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level .name {
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level .price {
+  color: #EC6C21;
+  font-weight: 700;
+  font-size: 14px;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level:nth-child(even) {
+  background-color: #37373c;
+}
+.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level:nth-child(odd) {
+  background-color: #2e2f32; 
+}
+.ticket-event-page .card .card-header {
+  font-weight: 600;
+  padding: 8px 0;
+  border-bottom: 1px solid gainsboro;
+  color: #000;
+}
+.ticket-event-page .card .about-content {
+  margin-top: 24px;
+  padding: 12px 0;
+  color: #000;
+}
+.ticket-event-page .card img {
+  height: 100%;
+  width: 100%;
+}
+.ticket-event-page .card .collapsed-button {
+  position: absolute;
+  bottom: 0;
+  padding: 12px 0;
+  width: 100%;
+  z-index: 1;
+  color: black;
+}
+.ticket-event-page .card .organizer-content {
+  display: flex;
+  gap: 8px;
+  margin-top: 24px;
+}
+.ticket-event-page .card .organizer-content img {
+  height: 140px;
+  width: 140px;
+  border-radius: 50%;
+}
+.ticket-event-page .card .organizer-content .name {
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.ticket-event-page button {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level .sold-out-button {
+  background-color: red; 
+  color: white; 
+  border: none; 
+  padding: 4px 8px; 
+  border-radius: 12px; 
+  font-size: 12px; 
+  font-weight: bold; 
+  cursor: not-allowed; 
+  display: block;
+  margin-top: 4px;
 }

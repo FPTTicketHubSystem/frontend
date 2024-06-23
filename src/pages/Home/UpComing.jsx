@@ -1,108 +1,126 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { GetUpcomingEventService } from "../../services/EventService";
+import { Link } from "react-router-dom";
+import { encodeId } from "../../utils/utils";
 
 function Upcoming() {
-    var settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 2000,
-        responsive: [
-            {
-              breakpoint: 1024,
-              settings: {
-                slidesToShow: 3,
-                slidesToScroll: 3,
-                infinite: true,
-                dots: true
-              }
-            },
-            {
-              breakpoint: 600,
-              settings: {
-                slidesToShow: 2,
-                slidesToScroll: 2
-              }
-            },
-            {
-              breakpoint: 480,
-              settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1
-              }
-            }
-          ]
-    };
+  const [events, setEvents] = useState([]);
 
-    const data = [
-        {
-            dataTime: 'Ngày 15 Tháng 8, 2024',
-            nameEvent: 'Big Open Day',
-            address: 'FPT University',
-            image: 'https://dnuni.fpt.edu.vn/wp-content/uploads/2020/06/7a190960faa807f65eb9-663x900.jpg',
-        },
-        {
-            dataTime: 'Ngày 15 Tháng 8, 2024',
-            nameEvent: 'Fuda Rest 2024',
-            address: 'FPT University',
-            image: 'https://phuongnamevent.vn/datafiles/3/images/1705053948_5999_FUDA-Fest-2024.jpg',
-        },
-        {
-            dataTime: 'Ngày 15 Tháng 8, 2024',
-            nameEvent: 'Fuda Music Talent',
-            address: 'FPT University',
-            image: 'https://newsmd2fr.keeng.vn/tiin/archive/imageslead/2022/06/08/90_9ca7837083ca7cf05f34a9af50141f0b.jpg',
-        },
-        {
-            dataTime: 'Ngày 15 Tháng 8, 2024',
-            nameEvent: 'Last Day In Fuda',
-            address: 'FPT University',
-            image: 'https://dnuni.fpt.edu.vn/wp-content/uploads/2022/05/Poster-Binz-Gonzo-Revised-PNG-min-1-720x900.png',
+  useEffect(() => {
+    const fetchEvents = async () => {
+        try {
+            const allEvents = await GetUpcomingEventService();
+            if (Array.isArray(allEvents)) {
+                setEvents(allEvents);
+            }
+            else {
+                console.error("Is not array", allEvents)
+                setEvents([]);
+            }
         }
-    ]
-    return (
-        <>
-            <section class="event spad">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="section-title mt-5 mb-3">
-                                <h2 style={{color: "white", marginLeft: "7px"}}>Upcoming Events</h2>
-                            </div>
-                        </div>
+        catch (error) {
+            console.error("Fetching error", error);
+            setEvents([]);
+        }
+    };
+    fetchEvents();
+}, []);
+
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
+
+  return (
+    <>
+      <section className="event spad">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="section-title mt-5 mb-3">
+                <h2 style={{ color: "white", marginLeft: "7px" }}>
+                  Sắp diễn ra
+                </h2>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <Slider {...settings}>
+              {events.map((event) => (
+                <div
+                  className="col-lg-4 col-sm-10"
+                  style={{ margin: "0 10px" }}
+                  key={event.eventId}
+                >
+                  <div className="event__item" style={{ background: "white" }}>
+                    <div
+                      className="event__item__pic set-bg"
+                      style={{ backgroundImage: `url(${event.themeImage})` }}
+                    >
+                      <div className="tag-date">
+                        <span>
+                          {new Date(event.startTime).toLocaleDateString(
+                            "vi-VN"
+                          )}
+                        </span>
+                      </div>
                     </div>
-                    <div class="row">
-                        <Slider {...settings}>
-                            {data.map((d) => (                               
-                                <div class="col-lg-4 col-sm-10" style={{ margin: "0 10px" }}>
-                                    <div class="event__item" style={{background: "white"}}>
-                                        <div class="event__item__pic set-bg" style={{ backgroundImage: `url(${d.image})` }}>
-                                            <div class="tag-date">
-                                                <span>{d.dataTime}</span>
-                                            </div>
-                                        </div>
-                                        <div class="event__item__text">
-                                            <h4>{d.nameEvent}</h4>
-                                            <p>
-                                            <i class="custom-icon bi-geo-alt me-2"></i>
-                                                {d.address}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </Slider>
+                    <div className="event__item__text">
+                      <Link
+                        key={event.eventId}
+                        style={{ textDecoration: "none" }}
+                        to={`/event-detail/${encodeId(event.eventId)}`}
+                      >
+                        <h4>{event.eventName}</h4>
+                      </Link>
+                      <p>
+                        <i className="custom-icon bi-geo-alt me-2"></i>
+                        {event.location}
+                      </p>
                     </div>
+                  </div>
                 </div>
-            </section>
-        </>
-    );
+              ))}
+            </Slider>
+          </div>
+        </div>
+      </section>
+    </>
+  );
 }
 
 export default Upcoming;

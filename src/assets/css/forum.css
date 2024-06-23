@@ -57,7 +57,7 @@
     background-color: #1558b3;
 }
 .posts-container{
-    width: 50%;
+    width: 100%;
     text-align: center;
     margin: 0 auto;
 }
@@ -71,8 +71,9 @@
 }
 .post{
     border-radius: 10px;
-    background-color: #606770;
+    background-color:black;
     margin-bottom: 1%;
+    display: flex;
 }
 .post-content {
     display: block;
@@ -114,3 +115,39 @@
 .filter-form{
     margin-left: 33%;
 }
+.forum-context{
+    height: 80% !important;
+}
+.forum-buy{
+    margin-bottom: -45%;
+}
+.fa-thumbs-up{
+    color: white;
+}
+.heart-icon {
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+    position: relative;
+    margin-top: 6%;
+  }
+  
+  .heart-icon::before,
+  .heart-icon::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 12px; /* Adjust width as needed */
+    height: 20px; /* Adjust height as needed */
+    background-color: red; /* Adjust color as needed */
+    border-radius: 10px 10px 0 0; /* Creates the top half of the heart */
+  }
+  
+  .heart-icon::before {
+    left: 0;
+    transform: rotate(-45deg);
+  }
+  
+  .heart-icon::after {
+    left: 8px; /* Adjust position as needed to create the right side of the heart */
+    transform: rotate(45deg);
+  }

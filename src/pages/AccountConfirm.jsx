@@ -9,7 +9,7 @@ import { Result } from "antd";
 export default function ConfirmAccount() {
     const { email } = useParams();
     const [confirmationStatus, setConfirmationStatus] = useState(null);
-    
+
 
     useEffect(() => {
         const confirmAccount = async () => {
@@ -28,25 +28,23 @@ export default function ConfirmAccount() {
 
     return (
         <>
-            <div className="bg bg-dark">
-                <Header />
-            </div>
-            <Container className="mt-5 py-5">
+            <Header />
+            <div className="bg bg-light">
                 {confirmationStatus === 404 && (
                     <Result
-                    status="error"
-                    title="Xác thực tài khoản không thành công"
-                    subTitle="Hãy thử xác thực lại bằng các truy cập fth.com/emaicuaban" 
-                  />
+                        status="error"
+                        title="Xác thực tài khoản không thành công"
+                        subTitle="Hãy thử xác thực lại bằng các truy cập fth.com/emaicuaban"
+                    />
                 )}
                 {confirmationStatus === 200 && (
                     <Result
-                    status="success"
-                    title="Xác thực tài khoản thành công"
-                    subTitle="Bây giờ bạn đã có thể đăng nhập!" 
-                  />
+                        status="success"
+                        title="Xác thực tài khoản thành công"
+                        subTitle="Bây giờ bạn đã có thể đăng nhập!"
+                    />
                 )}
-            </Container>
+            </div>
             <Footer />
         </>
     );

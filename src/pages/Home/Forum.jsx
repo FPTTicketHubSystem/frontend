@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import '../../../src/assets/css/forum.css';
+import { TrafficDataService } from '../../services/ForumService';
 
 function Forum() {
     const [userid, setUserid] = useState("");
@@ -14,16 +15,14 @@ function Forum() {
 
     const fetchPosts = async () => {
         try {
-            const response = await fetch("/Forum/Index"); 
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            const data = await response.json();
-            setPosts(data);
+          const response = await TrafficDataService();
+          console.log("ssss",response)
+          setPosts(response); // Assuming response contains the array of posts
         } catch (error) {
-            console.error("Error fetching posts:", error);
+          console.error('Error fetching posts:', error);
         }
-    };
+      };
+      
 
     useEffect(() => {
         fetchPosts();
@@ -222,31 +221,67 @@ function Forum() {
                         </div>
                             <div className="posts-container">
                                 {posts.map((post) => (
-                                    <div key={post.PostId} className="post">
-                                        <p>{post.PostUserId}</p>
-                                        <p>{post.PostDate}</p>
-                                        <div className={`post-content ${expandedPosts[post.PostId] ? 'show' : ''}`}>
-                                            {post.PostContent}
+                                <div key={post.postId} className="post">
+                                <div key={post.postId} className="text">
+                                <div className="ticket-content forum-context">
+                                <div className="info mb-5">
+                                    <p className="title titles h4 text-white mt-4 mb-1">
+                                    {post.fullName}
+                                    </p>
+                                    <p className="date">
+                                    <i className="bi bi-calendar3 me-2"></i>{post.createDate}
+                                    </p>
+                                </div>
+                                <div className="price mt-5">
+                                    <div id="ticket-price" className="d-flex align-items-center">
+                                    <div className={`post-content ${expandedPosts[post.postId] ? 'show' : ''}`}>
+                                                                {post.postText}
+                                                            </div>
+                                    </div>
+                                    <div className="btn mt-2 forum-buy" id="buy-btn">
+                                    <a
+                                        href="#buy"
+                                        className="text-white"
+                                        style={{ textDecoration: "none" }}
+                                    >
+                                        Đặt vé ngay{" "}
+                                    </a>
+                                    </div>
+                                </div>
+                                </div>
+                                <div class="heart-icon"></div>
+                                </div>
+                                        {/* <p>{post.fullName}</p>
+                                        <p>{post.createDate}</p>
+                                        <div className={`post-content ${expandedPosts[post.postId] ? 'show' : ''}`}>
+                                            {post.postText}
                                         </div>
-                                        {post.PostContent.length > 200 && (
+                                        {post.postText.length > 200 && (
                                             <span
                                                 className="show-more"
-                                                onClick={() => toggleContent(post.PostId)}
+                                                onClick={() => toggleContent(post.postId)}
                                             >
-                                                {expandedPosts[post.PostId] ? 'Show less' : 'Show more'}
+                                                {expandedPosts[post.postId] ? 'Show less' : 'Show more'}
                                             </span>
                                         )}
-                                        {post.PostImage && (
-                                            <img src={`https://localhost:44373/Forum/GetImage?imageName=${post.PostImage}`} alt="Post" className="post-image" />
+                                        {post.postFile && (
+                                            <img src={`https://www.constructionweekonline.com/cloud/2021/07/07/img-worlds-of-adventure.jpg`} alt="Post" className="post-image" />
                                         )}
-                                        <button onClick={() => handleDelete(post.PostId)} className="delete-btn">
+                                        <button onClick={() => handleDelete(post.postId)} className="delete-btn">
                                             Delete
                                         </button>
                                         <button onClick={() => handleEdit(post)} className="edit-btn">
                                             Edit
                                         </button>
                                         <div className="x1n2onr8">
-                                            {/* <div>like</div> */}
+                                            <div>like</div>
+                                        </div> */}
+                                        <div className="ticket-image">
+                                            <img
+                                            className="post-image"
+                                            src={`https://www.constructionweekonline.com/cloud/2021/07/07/img-worlds-of-adventure.jpg`}
+                                            alt="Banner cover"
+                                            />
                                         </div>
                                     </div>
                                 ))}
