@@ -203,7 +203,7 @@ function EventDetail() {
                 src={event.avatar}
                 alt=""
               />
-              <div>
+              <div style={{color:"black"}}>
                 <div className="name">{event.fullName}</div>
                 <div className="founding">
                   Ngày thành lập: {new Date(event.birthDay).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
@@ -212,12 +212,12 @@ function EventDetail() {
             </div>
           </div>
 
-          <div className="card">
+          <div className="card" style={{color:"black"}}>
             <div className="card-header">Trở thành giám sát viên</div>
-            <div className="staff-content mb-2">
+            <div className="staff-content mt-2 mb-2">
               <div>Bạn muốn trở thành giám sát viên cho sự kiện này?</div>
               <button
-                className="register-button text-white"
+                className="register-button text-white mt-2"
                 style={{
                   backgroundColor: "#EC6C21",
                   width: "175px",
