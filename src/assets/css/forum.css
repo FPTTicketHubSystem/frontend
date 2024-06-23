@@ -1,0 +1,116 @@
+/* src/components/FormPage.css */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    margin-top: 10%;
+    /* background-color: #f0f2f5; */
+}
+.title_post{
+    border-bottom: 1px solid red;
+    margin-bottom: 10%;
+    text-align: center;
+}
+.title_post_context{
+    margin: 10px;
+}
+.form-content {
+    background: #444950;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccd0d5;
+    border-radius: 4px;
+    font-size: 16px;
+    /* display: none; */
+}
+
+.form-textarea {
+    resize: vertical;
+    height: 100px;
+    width: 100%;
+    border: 0 !important;
+    margin-bottom: 5%;
+}
+
+.primary-btn {
+    background-color: #1877f2;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.primary-btn:hover {
+    background-color: #1558b3;
+}
+.posts-container{
+    width: 50%;
+    text-align: center;
+    margin: 0 auto;
+}
+.posts-container p{
+    margin-left: 15px;
+    text-align: left;
+    color: white;
+}
+.post-image{
+    width: 100%;
+}
+.post{
+    border-radius: 10px;
+    background-color: #606770;
+    margin-bottom: 1%;
+}
+.post-content {
+    display: block;
+    max-height: 4.8em; /* Adjust based on line-height and number of lines you want to show */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    word-wrap: break-word;
+    text-align: left !important;
+    color: white;
+    margin-left: 15px
+}
+
+.post-content.show {
+    max-height: none;
+    white-space: normal;
+}
+.show-more {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+    display: inline-block;
+}
+
+.x1n2onr6{
+    justify-content: space-between;
+    display: flex;
+    padding: 20px;
+    border-bottom:1px solid black ;
+}
+.x1n2onr7{
+    display: flex;
+}
+.x1n2onr8{
+    display: flex;
+    justify-content: center;
+}
+.filter-form{
+    margin-left: 33%;
+}

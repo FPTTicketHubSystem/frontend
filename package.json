@@ -2,6 +2,8 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://localhost:44373",
+  "homepage": "http://localhost:3000",
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^41.4.2",
     "@ckeditor/ckeditor5-image": "^41.4.2",
@@ -17,6 +19,7 @@
     "antd": "^5.18.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "firebase": "^10.12.2",
     "jwt-decode": "^4.0.0",

@@ -195,6 +195,15 @@ export default function Header() {
                     Khác
                   </a>
                 </li>
+
+                <li className="nav-item">
+                  <a className="nav-link click-scroll" href="#section_6">
+                  <Link className="dropdown-item" to="/forum">
+                    Forum
+                  </Link>
+                  </a>
+                </li>
+                
               </ul>
             </div>
           </div>
