@@ -8,6 +8,7 @@ import CancelButton from '../../component/Admin/CancelButton';
 import '../../assets/css/editprofile.css';
 import { GetAllUserAccountsService } from '../../services/UserService';
 import { format } from 'date-fns';
+import { Select } from 'antd';
 
 const User = () => {
   const [users, setUsers] = useState([]);
@@ -82,6 +83,7 @@ const User = () => {
     const formattedDate = format(new Date(dateString), 'dd/MM/yyyy');
     return formattedDate;
   };
+  
 
   const filteredUsers = users.filter((user) => {
     if (filterStatus !== 'All' && user.status !== filterStatus) {
@@ -92,6 +94,7 @@ const User = () => {
     }
     return true;
   });
+  
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -277,70 +280,74 @@ const User = () => {
       </div>
 
       {showModal && currentUser && (
-        <div className="modal-backdrop">
-          <div className="modal-content">
-            <div className="main">
-              <div className="row">
-                <div className="col-sm-6 picture">
-                  <center>
-                    <img className="circle responsive-img" src={currentUser.avatar} alt={`Profile picture of ${currentUser.fullName}`} />
-                    <span className="btn-tooltip" title="Add Friend"></span>
-                  </center>
-                </div>
-                <div className="col-sm-6 details">
-                  <center>
-                    <p className="name">
-                      <b>{currentUser.fullName}</b>
-                    </p>
-                  </center>
-                  <center>
-                    <p className="email">{currentUser.email}</p>
-                  </center>
-                  <center>
-                    <p className="phone">{currentUser.phone}</p>
-                  </center>
-                </div>
-              </div>
-
-              <form>
-                <div className="row">
-                  <div className="col-sm-6">
-                    <label htmlFor="gender">Gender:</label>
-                    <input type="text" id="gender" defaultValue={currentUser.gender} className="form-control" />
-                  </div>
-                  <div className="col-sm-6">
-                    <label htmlFor="status">Status:</label>
-                    <input type="text" id="status" defaultValue={currentUser.status} className="form-control" />
-                  </div>
-                </div>
-                <div className="row mt-3">
-                  <div className="col-sm-6">
-                    <label htmlFor="birthday">Birthday:</label>
-                    <input type="text" id="birthday" defaultValue={formatDate(currentUser.birthDay)} className="form-control" />
-                  </div>
-                  <div className="col-sm-6">
-                    <label htmlFor="role">Role:</label>
-                    <select id="role" defaultValue={currentUser.roleId} className="form-control ">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="buttons-container mt-4">
-                  <button type="button" className="waves-effect waves-light btn edit back-btn" onClick={handleCloseModal}>
-                    Trở lại
-                  </button>
-                  <button type="button" className="waves-effect waves-light btn edit change-role-btn" title="Change Role">
-                    Xác nhận
-                  </button>
-                </div>
-              </form>
-            </div>
+  <div className="modal-backdrop">
+    <div className="modal-content">
+      <div className="main">
+        <div className="row">
+          <div className="col-sm-6 picture">
+            <center>
+              <img className="circle responsive-img" src={currentUser.avatar} alt={`Profile picture of ${currentUser.fullName}`} />
+              <span className="btn-tooltip" title="Add Friend"></span>
+            </center>
+          </div>
+          <div className="col-sm-6 details">
+            <center>
+              <p className="name">
+                <b>{currentUser.fullName}</b>
+              </p>
+            </center>
+            <center>
+              <p className="email">{currentUser.email}</p>
+            </center>
+            <center>
+              <p className="phone">{currentUser.phone}</p>
+            </center>
           </div>
         </div>
-      )}
+
+        <form>
+          <div className="row">
+            <div className="col-sm-6">
+              <label htmlFor="gender">Gender:</label>
+              <p id="gender" className="form-control-static">{currentUser.gender}</p>
+            </div>
+            <div className="col-sm-6">
+              <label htmlFor="status">Status:</label>
+              <p id="status" className="form-control-static">{currentUser.status}</p>
+            </div>
+          </div>
+          <div className="row mt-3">
+            <div className="col-sm-6">
+              <label htmlFor="birthday">Birthday:</label>
+              <p id="birthday" className="form-control-static">{formatDate(currentUser.birthDay)}</p>
+            </div>
+            <div className="col-sm-6">
+              <label htmlFor="role">Role:</label>
+              <Select
+                defaultValue={currentUser.roleId.toString()}
+                style={{ width: '100%' }}
+              >
+                <Select.Option value="1">Admin</Select.Option>
+                <Select.Option value="2">User</Select.Option>
+                <Select.Option value="3">Organizer</Select.Option>
+                <Select.Option value="4">Staff</Select.Option>
+              </Select>
+            </div>
+          </div>
+          <div className="buttons-container mt-4">
+            <button type="button" className="waves-effect waves-light btn edit back-btn" onClick={handleCloseModal}>
+              Trở lại
+            </button>
+            <button type="button" className="waves-effect waves-light btn edit change-role-btn" title="Change Role">
+              Xác nhận
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
