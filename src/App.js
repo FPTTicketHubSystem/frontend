@@ -12,6 +12,7 @@ import EventDetail from './pages/EventDetail';
 import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
 import Eventapproval from './pages/Admin/Eventapproval';
+import EditEvent from './pages/Organizer/EditEvent';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -31,6 +32,7 @@ function App() {
           <Route path="/event-detail/:encodedId" element={<EventDetail />} />
           <Route path="/organizer/create-event" element={<CreateEvent />} />
           <Route path="/organizer/events" element={<Events />} />
+          <Route path="/organizer/edit-event/:encodedId" element={<EditEvent />} />
         </Routes>
       </Router>
     </>

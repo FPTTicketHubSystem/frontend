@@ -15,6 +15,21 @@ export const GetEventsService = async () => {
     }
 }
 
+export const GetEventsByAccountService = async (accountId) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `event/getEventByAccount?accountId=${accountId}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
 export const GetEventByIdService = async (id) => {
     try {
         const response = await request({
@@ -61,10 +76,25 @@ export const AddEventService = async (data) => {
     }
 }
 
+export const GetEventForEdit = async (id) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `event/getEventForEdit?eventId=${id}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
 export const UpdateEventService = async (id, data) => {
     try {
         const response = await request({
-            method: "put",
+            method: "post",
             url: `event/editEvent?eventId=${id}`,
             headers: {
                 "Content-Type": "application/json",
