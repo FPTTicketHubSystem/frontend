@@ -3,115 +3,68 @@ import "bootstrap/dist/css/bootstrap.css";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import '../../../src/assets/css/forum.css';
-import { TrafficDataService } from '../../services/ForumService';
+import { TrafficDataService, AddPost, DeletePost, EditPost } from '../../services/ForumService';
 
 function Forum() {
-    const [userid, setUserid] = useState("");
-    const [content, setContent] = useState("");
-    const [date, setDate] = useState("");
-    const [imageFile, setImageFile] = useState(null);
+
+    const [postText, setPostText] = useState("");
+    const [postFile, setPostFile] = useState(null);   
     const [posts, setPosts] = useState([]);
     const [expandedPosts, setExpandedPosts] = useState({});
-
+    const [editingPostId, setEditingPostId] = useState(null);
+    const [editContent, setEditContent] = useState('');
+    const [editImage, setEditImage] = useState(null);
+    const [filterDate, setFilterDate] = useState("");
+    const [filterUserId, setFilterUserId] = useState("");
+    const [showForm, setShowForm] = useState(false); 
+    const [showEditForm, setShowEditForm] = useState(false); 
     const fetchPosts = async () => {
         try {
-          const response = await TrafficDataService();
-          console.log("ssss",response)
-          setPosts(response); // Assuming response contains the array of posts
+            const response = await TrafficDataService();
+            setPosts(response); 
         } catch (error) {
-          console.error('Error fetching posts:', error);
+            console.error('Error fetching posts:', error);
         }
-      };
+    };
       
-
     useEffect(() => {
         fetchPosts();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        let formData = new FormData();
+        formData.append("postText", postText);
+        formData.append("postFile", postFile);
+        formData.append("createDate", "2024-06-24T14:13:57.919Z");
+        formData.append("status", "string");
 
-        const formData = new FormData();
-        formData.append("userid", userid);
-        formData.append("content", content);
-        formData.append("date", date);
-        formData.append("imageFile", imageFile);
+        let jsonObject = {};
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+
+        if (jsonObject.hasOwnProperty('createDate')) {
+            jsonObject['createDate'] = new Date(jsonObject['createDate']).toISOString();
+        }
 
         try {
-            const response = await fetch("/Forum/CreatePost", {  
-                method: "POST",
-                body: formData
-            });
-
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            const data = await response.json();
-            console.log(data);
-            if (data.success) {
-                // Clear form and refresh posts
-                setUserid("");
-                setContent("");
-                setDate("");
-                setImageFile(null);
-                fetchPosts();
-                reloadPage();
-            }
+            const response = await AddPost(jsonObject);
+            setShowForm(false);
+            fetchPosts();
         } catch (error) {
-            console.error("Error:", error);
+            console.error('Error creating post:', error);
         }
     };
-
+    
     const handleFileChange = (e) => {
-        setImageFile(e.target.files[0]);
+        setPostFile(e.target.files[0]);
     };
-
-    const reloadPage = () => {
-        window.location.reload();
-    };
-
-    const toggleContent = (postId) => {
-        setExpandedPosts(prevState => ({
-            ...prevState,
-            [postId]: !prevState[postId]
-        }));
-    };
-
-    const handleDelete = async (postId) => {
-        try {
-            const response = await fetch(`/Forum/DeletePost?postId=${postId}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ postId })
-            });
-
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-
-            const data = await response.json();
-            console.log(data);
-            if (data.success) {
-                // Refresh posts
-                fetchPosts();
-            } else {
-                console.error(data.message);
-            }
-        } catch (error) {
-            console.error("Error deleting post:", error);
-        }
-    };
-
-    const [editingPostId, setEditingPostId] = useState(null);
-    const [editContent, setEditContent] = useState('');
-    const [editImage, setEditImage] = useState(null);
 
     const handleEdit = (post) => {
-        setEditingPostId(post.PostId);
-        setEditContent(post.PostContent);
+        setEditingPostId(post.postId);
+        setEditContent(post.postText);
+        setShowEditForm(true); // Show the edit form as a popup
     };
 
     const handleEditImageChange = (e) => {
@@ -122,43 +75,56 @@ function Forum() {
         e.preventDefault();
         const formData = new FormData();
         formData.append('postId', editingPostId);
-        formData.append('content', editContent);
+        formData.append('postText', editContent);
+        formData.append('postFile', editImage);
+        formData.append('status', "");
+
         if (editImage) {
             formData.append('imageFile', editImage);
         }
 
+        let jsonObject = {};
+        formData.forEach((value, key) => {
+            jsonObject[key] = value;
+        });
+
+        if (jsonObject.hasOwnProperty('createDate')) {
+            jsonObject['createDate'] = new Date(jsonObject['createDate']).toISOString();
+        }
+
         try {
-            console.log(editContent)
-            const response = await fetch(`/Forum/EditPost?postId=${editingPostId}&content=${editContent}&imageFile=${editImage}`, {
-                method: 'POST',
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            if (data.success) {
-                // Refresh posts
-                fetchPosts();
-                setEditingPostId(null);
-                setEditContent('');
-                setEditImage(null);
+            const response = await EditPost(editingPostId, jsonObject);
+            if (response.success) {
+                setPosts(posts.map(post => post.postId === editingPostId ? { ...post, postText: editContent, postFile: editImage } : post));
+                setShowEditForm(false); // Hide the edit form popup
+                window.location.reload()
             } else {
-                console.error(data.message);
+                console.error(response.message); 
             }
         } catch (error) {
             console.error('Error editing post:', error);
         }
     };
-    const [filterDate, setFilterDate] = useState("");
-    const [filterUserId, setFilterUserId] = useState("");
+
+    const handleDelete = async (postId) => {
+        try {
+            const response = await DeletePost(postId);
+            if (response.success) {
+                setPosts(posts.filter(post => post.postId !== postId));
+                window.location.reload()
+            } else {
+                console.error(response.message);
+            }
+        } catch (error) {
+            console.error('Error deleting post:', error);
+        }
+    };
+
     const fetchPostsa = async (date = "", userId = "") => {
         try {
             const queryParams = new URLSearchParams();
             if (date) queryParams.append("date", date);
             if (userId) queryParams.append("idUser", userId);
-            console.log(filterDate)
             const response = await fetch(`/Forum/FindPost?date=${filterDate}&idUser=${filterUserId}`);
             if (!response.ok) {
                 const response = await fetch(`/Forum/FindPost?idUser=${filterUserId}`);
@@ -169,10 +135,20 @@ function Forum() {
             console.error("Error fetching posts:", error);
         }
     };
+
     const handleFilterSubmit = (e) => {
         e.preventDefault();
         fetchPostsa(filterDate, filterUserId);
     };
+
+    const toggleForm = () => {
+        setShowForm(!showForm); 
+    };
+
+    const closeEditForm = () => {
+        setShowEditForm(false); // Close the edit form popup
+    };
+
     return (
         <>
             <Header />
@@ -181,137 +157,124 @@ function Forum() {
                     <div className="row">
                         <div className="about__text">
                             <div className="form-container">
-                                <form onSubmit={handleSubmit} className="form-content">
-                                    <div className="title_post">
-                                        <p className="title_post_context">Tao Bai Viet</p>
-                                    </div>
-                                    <textarea
-                                        placeholder="Content"
-                                        value={content}
-                                        onChange={(e) => setContent(e.target.value)}
-                                        required
-                                        className="form-textarea"
-                                    />
+                                <input
+                                    readOnly
+                                    placeholder="Bạn đang nghĩ gì"
+                                    onClick={toggleForm} 
+                                    className="popup-trigger"
+                                />
+                                <div className={`popup-form ${showForm ? 'active' : ''}`}>
+                                    <form onSubmit={handleSubmit} className="form-content">
+                                        <div className="title_post">
+                                            <p className="title_post_context">Tạo Bài Viết</p>
+                                        </div>
+                                        <textarea
+                                            placeholder="Nội dung bài viết"
+                                            value={postText}
+                                            onChange={(e) => setPostText(e.target.value)}
+                                            required
+                                            className="form-textarea"
+                                        ></textarea>
+                                        <input
+                                            type="file"
+                                            onChange={handleFileChange}
+                                            accept=".jpg,.jpeg,.png"
+                                            className="form-input"
+                                        />
+                                        <button type="submit" className="primary-btn">
+                                            Đăng
+                                        </button>
+                                        <button type="button" onClick={() => setShowForm(false)} className="close-btn close-bt-form">Đóng</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div className="filter-container">
+                                <form onSubmit={handleFilterSubmit} className="filter-form">
                                     <input
-                                        type="file"
-                                        onChange={handleFileChange}
-                                        accept=".jpg,.jpeg,.png"
+                                        type="date"
+                                        value={filterDate}
+                                        onChange={(e) => setFilterDate(e.target.value)}
                                         className="form-input"
                                     />
-                                    <button type="submit" className="primary-btn">Dang</button>
+                                    <input
+                                        type="number"
+                                        placeholder="User ID"
+                                        value={filterUserId}
+                                        onChange={(e) => setFilterUserId(e.target.value)}
+                                        className="form-input"
+                                    />
+                                    <button type="submit" className="primary-btn">Filter</button>
                                 </form>
                             </div>
-                        <div className="filter-container">
-                            <form onSubmit={handleFilterSubmit} className="filter-form">
-                                <input
-                                    type="date"
-                                    value={filterDate}
-                                    onChange={(e) => setFilterDate(e.target.value)}
-                                    className="form-input"
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="User ID"
-                                    value={filterUserId}
-                                    onChange={(e) => setFilterUserId(e.target.value)}
-                                    className="form-input"
-                                />
-                                <button type="submit" className="primary-btn">Filter</button>
-                            </form>
-                        </div>
                             <div className="posts-container">
                                 {posts.map((post) => (
-                                <div key={post.postId} className="post">
-                                <div key={post.postId} className="text">
-                                <div className="ticket-content forum-context">
-                                <div className="info mb-5">
-                                    <p className="title titles h4 text-white mt-4 mb-1">
-                                    {post.fullName}
-                                    </p>
-                                    <p className="date">
-                                    <i className="bi bi-calendar3 me-2"></i>{post.createDate}
-                                    </p>
-                                </div>
-                                <div className="price mt-5">
-                                    <div id="ticket-price" className="d-flex align-items-center">
-                                    <div className={`post-content ${expandedPosts[post.postId] ? 'show' : ''}`}>
-                                                                {post.postText}
-                                                            </div>
-                                    </div>
-                                    <div className="btn mt-2 forum-buy" id="buy-btn">
-                                    <a
-                                        href="#buy"
-                                        className="text-white"
-                                        style={{ textDecoration: "none" }}
-                                    >
-                                        Đặt vé ngay{" "}
-                                    </a>
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="heart-icon"></div>
-                                </div>
-                                        {/* <p>{post.fullName}</p>
-                                        <p>{post.createDate}</p>
-                                        <div className={`post-content ${expandedPosts[post.postId] ? 'show' : ''}`}>
-                                            {post.postText}
-                                        </div>
-                                        {post.postText.length > 200 && (
-                                            <span
-                                                className="show-more"
-                                                onClick={() => toggleContent(post.postId)}
-                                            >
-                                                {expandedPosts[post.postId] ? 'Show less' : 'Show more'}
-                                            </span>
-                                        )}
-                                        {post.postFile && (
-                                            <img src={`https://www.constructionweekonline.com/cloud/2021/07/07/img-worlds-of-adventure.jpg`} alt="Post" className="post-image" />
-                                        )}
-                                        <button onClick={() => handleDelete(post.postId)} className="delete-btn">
-                                            Delete
-                                        </button>
-                                        <button onClick={() => handleEdit(post)} className="edit-btn">
-                                            Edit
-                                        </button>
-                                        <div className="x1n2onr8">
-                                            <div>like</div>
-                                        </div> */}
-                                        <div className="ticket-image">
-                                            <img
-                                            className="post-image"
-                                            src={`https://www.constructionweekonline.com/cloud/2021/07/07/img-worlds-of-adventure.jpg`}
-                                            alt="Banner cover"
-                                            />
+                                    <div key={post.postId} className="post">
+                                        <div className="infomb-5">
+                                            <div>
+                                                <p className="title titles h4 text-white mt-4 mb-1">
+                                                    {post.fullName}
+                                                </p>
+                                                <p className="date">
+                                                    <i className="bi bi-calendar3 me-2"></i>{post.createDate}
+                                                </p>
+                                                <div className={`post-content ${expandedPosts[post.postId] ? 'show' : ''}`}>
+                                                    {post.postText}
+                                                </div>
+                                                <img
+                                                    className="post-image"
+                                                    src={`https://www.constructionweekonline.com/cloud/2021/07/07/img-worlds-of-adventure.jpg`}
+                                                    alt="Banner cover"
+                                                />
+                                            </div>
+                                            <div id="ticket-price" className="d-flex align-items-center">
+                                            </div>
+                                            <button onClick={() => handleDelete(post.postId)} className="delete-btn">
+                                                Delete
+                                            </button>
+                                            <button onClick={() => handleEdit(post)} className="edit-btn">
+                                                Edit
+                                            </button>
+                                            <div className="x1n2onr8">
+                                                <div>like</div>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            {editingPostId && (
-                                <div className="edit-form-container">
-                                    <form onSubmit={handleEditSubmit} className="edit-form-content">
-                                        <textarea
-                                            placeholder="Edit Content"
-                                            value={editContent}
-                                            onChange={(e) => setEditContent(e.target.value)}
-                                            required
-                                            className="form-textarea"
-                                        />
-                                        <input
-                                            type="file"
-                                            onChange={handleEditImageChange}
-                                            accept=".jpg,.jpeg,.png"
-                                            className="form-input"
-                                        />
-                                        <button type="submit" className="primary-btn">Update</button>
-                                        <button onClick={() => setEditingPostId(null)} className="secondary-btn">Cancel</button>
-                                    </form>
-                                </div>
-                            )}
                         </div>
                     </div>
                 </div>
             </section>
-            <Footer />
+            {showEditForm && (
+                <div className="edit-form-popup">
+                    <div className="edit-form-container">
+                        <form onSubmit={handleEditSubmit} className="edit-form-content">
+                            <textarea
+                                placeholder="Edit Content"
+                                value={editContent}
+                                onChange={(e) => setEditContent(e.target.value)}
+                                required
+                                className="form-textarea"
+                            />
+                            <input
+                                type="file"
+                                onChange={handleEditImageChange}
+                                accept=".jpg,.jpeg,.png"
+                                className="form-inputs"
+                            />
+                            <button type="submit" className="primary-btn">
+                                Update
+                            </button>
+                            <button
+                                onClick={closeEditForm}
+                                className="secondary-btn"
+                            >
+                                Cancel
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </>
     );
 }
