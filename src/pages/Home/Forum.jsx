@@ -4,7 +4,9 @@ import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import '../../../src/assets/css/forum.css';
 import { TrafficDataService, AddPost, DeletePost, EditPost } from '../../services/ForumService';
-
+import { imageDb } from '../../services/FirebaseConfig';
+import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 function Forum() {
 
     const [postText, setPostText] = useState("");
@@ -21,6 +23,7 @@ function Forum() {
     const fetchPosts = async () => {
         try {
             const response = await TrafficDataService();
+            console.log(response, "___sa")
             setPosts(response); 
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -33,9 +36,11 @@ function Forum() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        handleClick()
+        console.log(imgUrl, "___s")
         let formData = new FormData();
         formData.append("postText", postText);
-        formData.append("postFile", postFile);
+        formData.append("postFile", imgUrl);
         formData.append("createDate", "2024-06-24T14:13:57.919Z");
         formData.append("status", "string");
 
@@ -73,10 +78,29 @@ function Forum() {
 
     const handleEditSubmit = async (e) => {
         e.preventDefault();
+
+        if (img !== null) {
+            const imgRef = ref(imageDb,`files/${v4()}`)
+            uploadBytes(imgRef, img, { contentType: img.type })
+              .then((snapshot) => {
+                console.log(snapshot);
+      
+                return getDownloadURL(snapshot.ref);
+              })
+              .then((url) => {
+                console.log("File available at", url);
+      
+                setImgUrl((prevData) => [...prevData, url]);
+              
+              })
+              .catch((error) => {
+                console.error("Upload failed:", error);
+              });
+          }
         const formData = new FormData();
         formData.append('postId', editingPostId);
         formData.append('postText', editContent);
-        formData.append('postFile', editImage);
+        formData.append('postFile', imgUrl);
         formData.append('status', "");
 
         if (editImage) {
@@ -87,7 +111,7 @@ function Forum() {
         formData.forEach((value, key) => {
             jsonObject[key] = value;
         });
-
+        // setImgUrl('')
         if (jsonObject.hasOwnProperty('createDate')) {
             jsonObject['createDate'] = new Date(jsonObject['createDate']).toISOString();
         }
@@ -149,6 +173,30 @@ function Forum() {
         setShowEditForm(false); // Close the edit form popup
     };
 
+    const [img,setImg] =useState('')
+    const [imgUrl,setImgUrl] =useState([])
+    
+      const handleClick = () => {
+        if (img !== null) {
+          const imgRef = ref(imageDb,`files/${v4()}`)
+          uploadBytes(imgRef, img, { contentType: img.type })
+            .then((snapshot) => {
+              console.log(snapshot);
+    
+              return getDownloadURL(snapshot.ref);
+            })
+            .then((url) => {
+              console.log("File available at", url);
+    
+              setImgUrl((prevData) => [...prevData, url]);
+            
+            })
+            .catch((error) => {
+              console.error("Upload failed:", error);
+            });
+        }
+      };
+
     return (
         <>
             <Header />
@@ -177,7 +225,7 @@ function Forum() {
                                         ></textarea>
                                         <input
                                             type="file"
-                                            onChange={handleFileChange}
+                                            onChange={(e)=>setImg(e.target.files[0])} 
                                             accept=".jpg,.jpeg,.png"
                                             className="form-input"
                                         />
@@ -222,7 +270,7 @@ function Forum() {
                                                 </div>
                                                 <img
                                                     className="post-image"
-                                                    src={`https://www.constructionweekonline.com/cloud/2021/07/07/img-worlds-of-adventure.jpg`}
+                                                    src={post.postFile}
                                                     alt="Banner cover"
                                                 />
                                             </div>

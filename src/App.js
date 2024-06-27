@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import request from './utils/request';
 import Login from './pages/Login';
 import HomePage from './pages/HomePage';
-import Forum from './pages/Home/Forum';
+// import Forum from './pages/Home/Forum';
 import Profile from './pages/User/Profile';
 import ConfirmAccount from './pages/AccountConfirm';
 import CreateEvent from './pages/Organizer/CreateEvent';
@@ -13,6 +13,7 @@ import EventDetail from './pages/EventDetail';
 import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
 import Eventapproval from './pages/Admin/Eventapproval';
+import Forum from './component/Forum';
 
 function App() {
   const { token, user } = useContext(UserContext);
