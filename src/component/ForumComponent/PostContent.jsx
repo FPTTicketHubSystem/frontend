@@ -1,12 +1,13 @@
 import { Avatar, Modal, notification } from 'antd';
 import 'bootstrap/dist/css/bootstrap.css';
 import { useState, useContext } from 'react';
-import { CommentContext } from '../../../contexts/CommentContext';
+// import { CommentContext } from '../../context/CommentContext';
 import CommentList from '../CommentList';
-import { PostContext } from '../../../contexts/PostContext';
+import { PostContext } from '../../context/PostContext';
 import PostDetails from './PostDetails';
-import { UserContext } from '../../../contexts/UserContext';
+import { UserContext } from '../../context/UserContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { CommentContext } from '../../context/CommentContext';
 
 const defaultAvatar = '../Image/Avatar_null.png';
 const like = '../Image/Forum/like.png';

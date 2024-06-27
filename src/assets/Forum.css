@@ -1,7 +1,7 @@
 .body-forum {
     width: 100%;
     margin-top: 30px;
-    background-color: #eee;
+    background-color: rgb(42, 45, 52);
     height: auto;
 }
 
@@ -13,7 +13,7 @@
 
 .createPost {
     width: 100%;
-    background-color: #fff;
+    background-color: #2A2D34;
     border-radius: 15px;
 }
 
@@ -57,7 +57,7 @@ hr {
 
 .post {
     width: 100%;
-    background-color: #eee;
+    background-color: rgb(42, 45, 52);
     margin-top: 20px;
 }
 
@@ -67,7 +67,7 @@ hr {
 }
 
 .form-post {
-    background-color: #fff;
+    background-color: #222;
     margin: auto;
     padding: 10px;
     margin-bottom: 40px;

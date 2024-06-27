@@ -2,15 +2,15 @@ import { Input, Avatar, Modal, notification } from 'antd';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import { useContext, useState } from 'react';
-import { CommentContext } from '../../../contexts/CommentContext';
+import { CommentContext } from '../../context/CommentContext';
 import CommentList from '../CommentList';
-import { PostContext } from '../../../contexts/PostContext';
+import { PostContext } from '../../context/PostContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { UserContext } from '../../../contexts/UserContext';
+import { UserContext } from '../../context/UserContext';
 
 const defaultAvatar = '../Image/Avatar_null.png';
 const upload = '../Image/Forum/upload.png';
-const send = '../Image/Forum/send.png';
+const send = 'https://media.istockphoto.com/id/1290684294/vector/send-message-icon.jpg?s=612x612&w=0&k=20&c=8vwd4PDMzEELKMUrTQ7LZnpngAN5Bzs55sRJ09sA8FU=';
 const { TextArea } = Input;
 export default function SendComment({ post }) {
     const { comments, addComment, getCommentsByPost } = useContext(CommentContext);
@@ -19,6 +19,7 @@ export default function SendComment({ post }) {
     const [content, setContent] = useState('');
     const [searchParams] = useSearchParams();
     const statusQueryParams = searchParams.get('status');
+    const backg = { backgroundColor: 'rgb(135 135 135)',  color: '#FFFFFF'};
     const navigate = useNavigate();
     const handleSendComment = async () => {
         if (content) {
@@ -90,13 +91,10 @@ export default function SendComment({ post }) {
                             onChange={(e) => setContent(e.target.value)}
                             placeholder='Viết bình luận...'
                             autoSize
+                            style={backg}
                         ></TextArea>
                     </div>
                     <div className='form-comment-right'>
-                        <img
-                            src={upload}
-                            alt='upload'
-                        ></img>
                         <img
                             src={send}
                             alt='send'

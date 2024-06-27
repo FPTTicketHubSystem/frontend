@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Avatar, Modal, notification } from 'antd';
-import { getPointerContentEditable, setEndOfContentEditable } from '../../../utils/focusEditable';
-import { UserContext } from '../../../contexts/UserContext';
-import { CommentContext } from '../../../contexts/CommentContext';
+import { getPointerContentEditable, setEndOfContentEditable } from '../../utils/focusEditable';
+import { UserContext } from '../../context/UserContext';
+import { CommentContext } from '../../context/CommentContext';
 
 const defaultAvatar = '../Image/Avatar_null.png';
 

@@ -13,7 +13,10 @@ export default function Header() {
     const { user, onSetUser, onSetRender } = useContext(UserContext);
     const [cookies, setCookie, removeCookie] = useCookies([]);
     const navigate = useNavigate();
-
+    const styles = {
+        fontSize: '40px', 
+        fontFamily: 'Arial, sans-serif',
+    }
     const onLogOut = () => {
         // removeCookie('token', { path: '/' });
         localStorage.removeItem('authToken');
@@ -62,13 +65,45 @@ export default function Header() {
 
     return (
         <div className='sc-ezrdKe bAYFRD header'>
-            <div className="divHeader" style={{ background: '#85b6ff' }}>
-                <div className="headerLeft" style={{ paddingLeft: '15%' }}>
+            <div className="divHeader">
+            <div>
+                <a
+                        onClick={() => {
+                            navigate('/');
+                        }}
+                    >
+                        <li
+                            class='sc-cTkwdZ degoCR list-inline-item'
+                            style={{ color: '#000000', backgroundColor: '#FF8C00', fontSize:"12px", height:"20px", width:"80px" }}
+                        >
+                            <svg
+                                viewBox='0 0 24 24'
+                                aria-hidden='true'
+                                focusable='false'
+                                fill='currentColor'
+                                xmlns='http://www.w3.org/2000/svg'
+                                class='StyledIconBase-ea9ulj-0 jZGNBW nav-icon'
+                                width='16' /* Adjust width */
+                                height='16'
+                            >
+                                <g data-name='Layer 2'>
+                                    <path
+                                        fill='#000000'
+                                        d='M20.42 10.18L12.71 2.3a1 1 0 00-1.42 0l-7.71 7.89A2 2 0 003 11.62V20a2 2 0 001.89 2h14.22A2 2 0 0021 20v-8.38a2.07 2.07 0 00-.58-1.44zM10 20v-6h4v6zm9 0h-3v-7a1 1 0 00-1-1H9a1 1 0 00-1 1v7H5v-8.42l7-7.15 7 7.19z'
+                                        data-name='home'
+                                    ></path>
+                                </g>
+                            </svg>
+                            Trang chủ
+                        </li>
+                    </a>
+                </div>
+                <div className="headerLeft" style={{ paddingLeft: '5%' }}>
                     <div className="imgLogo" onClick={() => { navigate("/"); }}>
                         <img src="../Image/Logo.png" alt="" />
                     </div>
                     <div className="slogun">
-                        <span>Đồng hành cùng bạn trong học tập</span>
+                        <span style={styles}>Cộng Đồng Sự Kiện</span>
                     </div>
                 </div>
                 <div className="headerRight">
@@ -97,7 +132,6 @@ export default function Header() {
                             <a className="btnDangNhap" onClick={() => { navigate('/login'); }}>Đăng nhập</a>
                         </>
                     }
-
 
                 </div>
             </div>

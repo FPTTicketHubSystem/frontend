@@ -2,15 +2,18 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '../assets/Forum.css';
 import '../assets/Style.css';
 import Header from '../Layout/User/Header';
+import Footer from './Footer';
 import CreatePost from './ForumComponent/CreatePost';
-import PostList from './PostList';
+// import PostList from './PostList';
 import { useContext, useEffect } from 'react';
-import { PostContext } from '../../contexts/PostContext';
+import { PostContext } from '../context/PostContext';
 import FilterPost from './ForumComponent/FilterPost';
 import { useSearchParams } from 'react-router-dom';
-import { UserContext } from '../contexts/UserContext';
+import { UserContext } from '../context/UserContext';
 import PostStatusTab from './ForumComponent/PostStatusTab';
 import Spinner from '../common/Spinner/Spinner';
+import PostList from './PostList';
+// import { Footer } from 'antd/es/layout/layout';
 
 export default function Forum() {
     const { loading, posts, getAllPost, getPostByStatus, getSavedPost } = useContext(PostContext);
@@ -65,6 +68,7 @@ export default function Forum() {
                     <div className='post-container'>{loading ? <Spinner /> : <PostList posts={posts} />}</div>
                 </div>
             </div>
+            <Footer/>
         </>
     );
 }

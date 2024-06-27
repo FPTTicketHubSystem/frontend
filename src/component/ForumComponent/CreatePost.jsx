@@ -2,16 +2,16 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Avatar, Button, Form, Input, Select, Upload, Modal, Space, notification } from 'antd';
 import 'bootstrap/dist/css/bootstrap.css';
 import { useEffect, useState, useContext, useRef } from 'react';
-import '../../../assets/Forum.css';
-import '../../../assets/Style.css';
+import '../../assets/Forum.css';
+import '../../assets/Style.css';
 import TextArea from 'antd/es/input/TextArea';
-import { SubjectContext } from '../../../contexts/SubjectContext';
-import { PostContext } from '../../../contexts/PostContext';
-import { storage } from '../../../firebase';
+import { SubjectContext } from '../../context/SubjectContext';
+import { PostContext } from '../../context/PostContext';
+import { storage } from '../../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../../../contexts/UserContext';
+import { UserContext } from '../../context/UserContext';
 import Spinner from './../../common/Spinner/Spinner';
 const defaultAvatar = '../Image/Avatar_null.png';
 const anh = '../Image/Forum/icon-anh-video.png';
@@ -31,6 +31,9 @@ export default function CreatePost() {
     const { user } = useContext(UserContext);
     const { accountId } = user;
     const imageUrlRef = useRef('');
+    const style = { 
+        // backgroundColor: '#2A2D34',
+    };
 
     let imageUrlUpload = '';
     const normFile = (e) => {
@@ -41,19 +44,19 @@ export default function CreatePost() {
     };
 
     const showModal = () => {
-        if (!user) {
-            setOpenLogin(true);
-        } else {
-            setOpen(true);
-        }
-    };
+        // if (!user) {
+            // setOpenLogin(true);
+        // } else {
+            // }
+                setOpen(true);
+        };
 
     const cancelModal = () => {
-        if (!user) {
-            setOpenLogin(false);
-        } else {
+        // if (!user) {
+        //     setOpenLogin(false);
+        // } else {
             setOpen(false);
-        }
+        //}
         form.resetFields();
     };
     const uploadImage = async () => {
@@ -104,10 +107,11 @@ export default function CreatePost() {
                         onClick={showModal}
                         size='large'
                         placeholder='Bạn đang nghĩ gì thế?'
+                        style={style}
                         prefix={user && <Avatar src={user.avatar ? user.avatar : defaultAvatar} />}
                     />
                     <hr></hr>
-                    <div className='bottom-form'>
+                    {/* <div className='bottom-form'>
                         <div className='item-bottom-form'>
                             <img src={anh}></img>
                             <label>Ảnh/Video</label>
@@ -120,7 +124,7 @@ export default function CreatePost() {
                             <img src={monhoc}></img>
                             <label>Môn học</label>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
                 <Modal
@@ -138,13 +142,13 @@ export default function CreatePost() {
                         initialValues={formValue}
                         onFinish={handleSubmitAddPostForm}
                     >
-                        <Form.Item
+                        {/* <Form.Item
                             label='Môn học'
                             className='input-form'
                             name='subject'
                             rules={[
                                 {
-                                    required: true,
+                                    required: false,
                                     message: 'Vui lòng chọn môn học!',
                                 },
                             ]}
@@ -164,7 +168,7 @@ export default function CreatePost() {
                                     </Select.Option>
                                 ))}
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item
                             name='content'
                             rules={[

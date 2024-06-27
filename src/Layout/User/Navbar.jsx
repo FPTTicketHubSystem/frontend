@@ -108,7 +108,7 @@ export default function Navbar() {
         <>
             <div className='sc-iBaPrD gdARiY d-sm-block d-none'>
                 <ul className='sc-eggNIi JiLrb list-inline'>
-                    <a
+                    {/* <a
                         className={checkTrangChu ? 'isActive' : ''}
                         onClick={() => {
                             navigate('/');
@@ -136,8 +136,8 @@ export default function Navbar() {
                             </svg>
                             Trang chủ
                         </li>
-                    </a>
-                    <div className='sc-jNMdTA ewqGCM dropdown'>
+                    </a> */}
+                    {/* <div className='sc-jNMdTA ewqGCM dropdown'>
                         <Dropdown
                             menu={{
                                 items: itemsOfTuHoc,
@@ -334,7 +334,7 @@ export default function Navbar() {
                                     Lịch sử ôn luyện
                                 </li>
                             </a>
-                        </button>
+                        </button> */}
 
                         {/* <div tabIndex="-1" role="menu" aria-hidden="true" className="sc-bBrOnJ bhhAF dropdown-menu">
                             <a href="/tu-hoc/luyen-tap">
@@ -347,7 +347,7 @@ export default function Navbar() {
                                 </button>
                             </a>
                         </div> */}
-                    </div>
+                    {/* </div> */}
                 </ul>
             </div>
         </>

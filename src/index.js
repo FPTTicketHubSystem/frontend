@@ -7,6 +7,7 @@ import UserContextProvider from './context/UserContext';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { ToastProvider } from './context/ToastContext';
+import { BrowserRouter } from 'react-router-dom';
 //import { ToastContainer } from 'react-toastify';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

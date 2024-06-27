@@ -1,10 +1,10 @@
 import { useContext, useRef, useState } from 'react';
-import '../../../assets/Forum.css';
+import '../../assets/Forum.css';
 import { Button, Form, Select } from 'antd';
-import { SubjectContext } from '../../../contexts/SubjectContext';
-import { PostContext } from '../../../contexts/PostContext';
+import { SubjectContext } from '../../context/SubjectContext';
+import { PostContext } from '../../context/PostContext';
 import { useSearchParams } from 'react-router-dom';
-import { UserContext } from '../../../contexts/UserContext';
+import { UserContext } from '../../context/UserContext';
 
 const FilterPost = () => {
     const [form] = Form.useForm();
@@ -70,7 +70,7 @@ const FilterPost = () => {
             id='filter-post-form'
         >
             <Form.Item className='select-box form-item'>
-                <Select
+                {/* <Select
                     label='Môn học'
                     defaultValue={0}
                     onChange={(subjectValue) => handleSelectionChange(subjectValue)}
@@ -85,7 +85,7 @@ const FilterPost = () => {
                             {subject.subjectName}
                         </Select.Option>
                     ))}
-                </Select>
+                </Select> */}
             </Form.Item>
             <Form.Item className='form-item'>
                 <Button

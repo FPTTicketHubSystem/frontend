@@ -14,18 +14,22 @@ import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
 import Eventapproval from './pages/Admin/Eventapproval';
 import Forum from './component/Forum';
+import Header from './component/Header';
+import PostProvider from './context/PostContext';
+import SubjectProvider from './context/SubjectContext';
+import CommentProvider from './context/CommentContext';
 
 function App() {
   const { token, user } = useContext(UserContext);
   return (
-    <>
+    <div className="App">
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/forum" element={<Forum />} />
-          <Route path="/confirmaccount/:email" element={<ConfirmAccount/>} />
+          <Route path="/forum" element={<PostProvider><SubjectProvider><CommentProvider><Forum /></CommentProvider></SubjectProvider></PostProvider>} />
+          <Route path="/confirmaccount/:email" element={<ConfirmAccount />} />
           <Route path="/event-detail" element={<EventDetail />} />
           <Route path="/organizer/create-event" element={<CreateEvent />} />
           <Route path="/user" element={<User />} />
@@ -36,8 +40,7 @@ function App() {
           <Route path="/organizer/events" element={<Events />} />
         </Routes>
       </Router>
-    </>
-  );
+    </div>);
 }
 
 export default App;
