@@ -1,16 +1,3 @@
-/* Reset default styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Saira Semi Condensed', sans-serif;
-  background-color: #222;
-  color: #fff;
-}
-
 /* Modal backdrop styling */
 .modal-backdrop {
   position: fixed;
@@ -23,16 +10,19 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  overflow: auto; /* Allow scrolling */
 }
 
 /* Modal content styling */
 .modal-content {
   background-color: #1f1f1f; /* Darker shade of black */
   color: #fff;
-  width: 80%;
-  max-width: 800px;
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh; /* Allow it to be almost full height */
   padding: 30px;
   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.3);
+  overflow-y: auto; /* Add vertical scroll if content is too long */
 }
 
 .main {
@@ -108,6 +98,7 @@ body {
 @media only screen and (max-width: 425px) {
   .modal-content {
     width: 90%;
+    padding: 20px;
   }
 
   .picture img {
@@ -117,5 +108,38 @@ body {
 
   .details p {
     margin-top: 5vw;
+  }
+
+  .name {
+    font-size: 6vw;
+  }
+
+  .buttons-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .back-btn, .change-role-btn {
+    width: 80%;
+    margin-bottom: 10px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .modal-content {
+    width: 90%;
+  }
+
+  .picture img {
+    height: 30vw;
+    width: 30vw;
+  }
+
+  .name {
+    font-size: 24px;
+  }
+
+  .back-btn, .change-role-btn {
+    padding: 10px 15px;
   }
 }
