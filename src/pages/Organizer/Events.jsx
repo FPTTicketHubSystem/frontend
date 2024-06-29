@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import Navbar from "../../component/Organizer/Navbar";
 import { UserContext } from '../../context/UserContext';
 import { Input, Segmented, Table, Button } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { GetEventsService } from '../../services/EventService';
+//import { SearchOutlined } from '@ant-design/icons';
+import { GetEventsByAccountService } from '../../services/EventService';
 import Footer from '../../component/Footer';
+import { encodeId } from '../../utils/utils';
 
-const { Search } = Input;
 
 const CustomSearch = styled(Input)`
   .ant-btn-primary {
@@ -56,14 +56,27 @@ const Events = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!user.accountId) {
+                console.error('accountid', user.accountId);
+                setLoading(false);
+                return;
+            }
+
             setLoading(true);
             try {
-                const response = await GetEventsService();
-                const filteredEvents = response.filter(event => event.accountId === user.accountId);
-                setEvents(response);
-                setFilteredEvents(filterEvents);
+                const response = await GetEventsByAccountService(user.accountId);
+                console.log('response', response);
+
+                if (!Array.isArray(response)) {
+                    console.error('respone is not an array', response);
+                    setEvents([]);
+                    setFilteredEvents([]);
+                } else {
+                    setEvents(response);
+                    setFilteredEvents(response);
+                }
             } catch (error) {
-                console.error("Failed to fetch events:", error);
+                console.error("fetching data error", error);
             } finally {
                 setLoading(false);
             }
@@ -154,11 +167,14 @@ const Events = () => {
         {
             title: 'Thao tác',
             key: 'action',
-            render: (_, record) => (
-                <CustomButton type="primary">
-                    <i className="bi bi-pen"></i>
-                </CustomButton>
-            ),
+            render: (_, record) => {
+                const encodedId = encodeId(record.eventId);
+                return (
+                    <CustomButton type="primary" href={`/organizer/edit-event/${encodedId}`}>
+                        <i className="bi bi-pen"></i>
+                    </CustomButton>
+                );
+            },
         },
     ];
 
