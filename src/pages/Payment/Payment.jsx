@@ -4,8 +4,7 @@ import "../../assets/css/Payment.css";
 import { UserContext } from "../../context/UserContext";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
-import momoLogo from "../../assets/images/payment/momo.png";
-import vnpayLogo from "../../assets/images/payment/vnpay.png";
+import vnpayLogo from "../../assets/images/logo/paymentLogo2.png";
 
 const Payment = () => {
   const location = useLocation();

@@ -15,7 +15,6 @@ import { toast } from "react-toastify";
 import "../assets/css/bootstrap-icons.css";
 import News from "./Home/News";
 import "../assets/css/ticket.css";
-import "../assets/css/search.css";
 
 function HomePage() {
   const navigate = useNavigate();
