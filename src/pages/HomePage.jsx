@@ -23,18 +23,18 @@ function HomePage() {
 
   const { user, token, onSetUser, onSetRender } = useContext(UserContext);
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
-    localStorage.clear();
-    onSetUser({
-      data: "",
-      token: "",
-    });
-    onSetRender();
-    navigate("/login");
-    toast.success("Đã đăng xuất!");
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem("authToken");
+  //   localStorage.removeItem("user");
+  //   localStorage.clear();
+  //   onSetUser({
+  //     data: "",
+  //     token: "",
+  //   });
+  //   onSetRender();
+  //   navigate("/login");
+  //   toast.success("Đã đăng xuất!");
+  // };
 
   return (
     <div>
@@ -49,9 +49,7 @@ function HomePage() {
             <br />
             <h1 className="text-white mb-5 display-1 fw-bold">FPT TICKETHUB</h1>
             <small>Trở thành ban tổ chức</small> <br />
-            <a class="btn custom-btn smoothscroll" href="#section_2">
-              TẠO SỰ KIỆN
-            </a>
+            <Link to = "/organizer/create-event" class="btn custom-btn smoothscroll">TẠO SỰ KIỆN</Link>
           </div>
         </div>
         <video

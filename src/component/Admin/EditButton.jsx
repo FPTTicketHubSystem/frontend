@@ -1,15 +1,17 @@
-import React from 'react'
+import React from 'react';
+import '../../assets/css/button.css';
 
-const EditButton = ({onEdit}) => {
+const EditButton = ({ onEdit }) => {
   return (
-        <a  href="/user/edituser">
-            <button onClick={onEdit} class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip"
-                data-bs-placement="top" data-bs-custom-class="custom-tooltip-primary"
-                data-bs-title="Edit">
-                <i class="icon-edit" ></i>
-            </button>
-         </a>
-  )
+    <a className="btn-tooltip" title="Edit">
+      <button 
+        onClick={onEdit} 
+        className="btn btn-outline-primary btn-sm" 
+      >
+        <i className="icon-edit"></i>
+      </button>
+    </a>
+  );
 }
 
-export default EditButton
+export default EditButton;

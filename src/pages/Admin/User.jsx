@@ -1,44 +1,59 @@
-import React, { useState } from 'react';
-import '../../assets/fonts/icomoon/style.css';
-import '../../assets/css/main.css';
-import '../../assets/vendor/overlay-scroll/OverlayScrollbars.min.css';
-import '../../assets/images/favicon.svg';
-import Duc from '../../assets/images/user/Duc.jpg';
+import React, { useState, useEffect } from 'react';
 import Header from '../../component/Admin/Header';
 import Navbar from '../../component/Admin/Navbar';
 import LockButton from '../../component/Admin/LockButton';
 import EditButton from '../../component/Admin/EditButton';
 import ConfirmButton from '../../component/Admin/ConfirmButton';
 import CancelButton from '../../component/Admin/CancelButton';
+import '../../assets/css/editprofile.css';
+import { GetAllUserAccountsService } from '../../services/UserService';
+import { format } from 'date-fns';
+import { Select } from 'antd';
 
 const User = () => {
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: 'Pham Phu Duc',
-      email: 'duc@fpt.edu.vn',
-      password: '••••••',
-      status: 'Online',
-      phone: '0900009900',
-      gender: 'Nam',
-      gold: 0,
-      avatar: Duc,
-      isLocked: false,
-    },
-  ]);
-
+  const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(5);
   const [filterStatus, setFilterStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await GetAllUserAccountsService();
+        setUsers(data.userList);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (showModal) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+  }, [showModal]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
   const handleLockChange = (id, newLockStatus) => {
-    const updatedUsers = users.map(user =>
-      user.id === id ? { ...user, isLocked: newLockStatus } : user
+    const updatedUsers = users.map((user) =>
+      user.accountId === id
+        ? {
+            ...user,
+            isLocked: newLockStatus,
+            status: newLockStatus ? 'Đang khóa' : 'Đang hoạt động',
+          }
+        : user
     );
     setUsers(updatedUsers);
   };
@@ -53,19 +68,92 @@ const User = () => {
     setCurrentPage(1);
   };
 
-  const filteredUsers = users.filter(user => {
+  const handleEditButtonClick = (user) => {
+    setCurrentUser(user);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+
+    const formattedDate = format(new Date(dateString), 'dd/MM/yyyy');
+    return formattedDate;
+  };
+  
+
+  const filteredUsers = users.filter((user) => {
     if (filterStatus !== 'All' && user.status !== filterStatus) {
       return false;
     }
-    if (searchTerm && !user.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+    if (searchTerm && !user.fullName.toLowerCase().includes(searchTerm.toLowerCase())) {
       return false;
     }
     return true;
   });
+  
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser).map((user, index) => ({
+    ...user,
+    index: indexOfFirstUser + index + 1,
+  }));
+
+  const columns = [
+    { title: 'STT', dataIndex: 'index', key: 'index' },
+    { title: 'Role', dataIndex: 'roleId', key: 'roleId' 
+              
+    },
+    {
+      title: 'Họ và tên', dataIndex: 'fullName', key: 'fullName',
+      render: (user) => (
+        <>
+          <img src={user.avatar} className="me-2 img-3x rounded-3" alt="avt" />
+          {user.fullName}
+        </>
+      ),
+    },
+    { title: 'Email', dataIndex: 'email', key: 'email' },
+    { title: 'Ngày sinh', dataIndex: 'birthDay', key: 'birthDay', render: (user) => formatDate(user.birthDay) },
+    {
+      title: 'Trạng thái', dataIndex: 'status', key: 'status',
+      render: (user) => (
+        <div className="d-flex align-items-center">
+          <i
+            className={`icon-circle1 me-2 fs-5 ${user.status === 'Chờ xác thực' ? 'text-danger' : user.isLocked ? 'text-light' : 'text-success'}`}
+          ></i>
+          {user.isLocked ? 'Đang khóa' : user.status}
+        </div>
+      ),
+    },
+    { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
+    { title: 'Giới tính', dataIndex: 'gender', key: 'gender' },
+    {
+      title: 'Hành động', key: 'actions',
+      render: (user) => (
+        <>
+          {user.status === 'Đang hoạt động' || user.status === 'Đang khóa' ? (
+            <>
+              <EditButton onEdit={() => handleEditButtonClick(user)} />
+              <LockButton
+                isLocked={user.isLocked}
+                onLockChange={(newLockStatus) => handleLockChange(user.accountId, newLockStatus)}
+              />
+            </>
+          ) : user.status === 'Chờ xác thực' ? (
+            <>
+              <ConfirmButton />
+              <CancelButton />
+            </>
+          ) : null}
+        </>
+      ),
+    },
+  ];
 
   return (
     <div className="page-wrapper">
@@ -79,13 +167,15 @@ const User = () => {
         <div className="app-body">
           <div className="container">
             <div className="row">
-              <div className="col-12 col-xl-6">
+              <div className="col-12 col-xl-12">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <div>
                     <ol className="breadcrumb mb-0">
                       <li className="breadcrumb-item">
                         <i className="icon-home lh-1"></i>
-                        <a href="/" className="text-decoration-none">Home</a>
+                        <a href="/" className="text-decoration-none">
+                          Home
+                        </a>
                       </li>
                       <li className="breadcrumb-item text-light">User</li>
                     </ol>
@@ -99,22 +189,22 @@ const User = () => {
                         All
                       </button>
                       <button
-                        className={`btn ${filterStatus === 'Online' ? 'btn-primary' : 'btn-outline-primary'}`}
-                        onClick={() => handleFilterChange('Online')}
+                        className={`btn ${filterStatus === 'Đang hoạt động' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        onClick={() => handleFilterChange('Đang hoạt động')}
                       >
-                        Online
+                        Đang hoạt động
                       </button>
                       <button
-                        className={`btn ${filterStatus === 'Offline' ? 'btn-primary' : 'btn-outline-primary'}`}
-                        onClick={() => handleFilterChange('Offline')}
+                        className={`btn ${filterStatus === 'Đang khóa' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        onClick={() => handleFilterChange('Đang khóa')}
                       >
-                        Offline
+                        Đang khóa
                       </button>
                       <button
-                        className={`btn ${filterStatus === 'Pending' ? 'btn-primary' : 'btn-outline-primary'}`}
-                        onClick={() => handleFilterChange('Pending')}
+                        className={`btn ${filterStatus === 'Chờ xác thực' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        onClick={() => handleFilterChange('Chờ xác thực')}
                       >
-                        Pending
+                        Chờ xác thực
                       </button>
                     </div>
                     <div className="search-bar">
@@ -133,59 +223,25 @@ const User = () => {
 
             <div className="row">
               <div className="col-12">
-                <div className="card2 mb-2">
+                <div className="card mb-2">
                   <div className="card-body">
                     <div className="table-responsive">
                       <table className="table table-bordered table-striped align-middle m-0">
                         <thead>
                           <tr>
-                            <th>id</th>
-                            <th></th>
-                            <th>Họ và tên</th>
-                            <th>Email</th>
-                            <th>Mật khẩu</th>
-                            <th>Trạng thái</th>
-                            <th>Số điện thoại</th>
-                            <th>Giới tính</th>
-                            <th>Gold</th>
-                            <th>Hành động</th>
+                            {columns.map((column) => (
+                              <th key={column.key}>{column.title}</th>
+                            ))}
                           </tr>
                         </thead>
                         <tbody>
-                          {currentUsers.map(user => (
-                            <tr key={user.id}>
-                              <td>{user.id}</td>
-                              <th>
-                                <input className="form-check-input" type="checkbox" value="option1" />
-                              </th>
-                              <td>
-                                <img src={user.avatar || Duc} className="me-2 img-3x rounded-3" alt="avt" />
-                                {user.name}
-                              </td>
-                              <td className="email">{user.email}</td>
-                              <td className="password">{user.password}</td>
-                              <td>
-                                <div className="d-flex align-items-center">
-                                  <i className={`icon-circle1 me-2 fs-5 ${user.isLocked ? "text-light" : "text-success"}`}></i>
-                                  {user.isLocked ? "Offline" : "Online"}
-                                </div>
-                              </td>
-                              <td>{user.phone}</td>
-                              <td>{user.gender}</td>
-                              <td>{user.gold}</td>
-                              <td>
-                                {filterStatus !== 'Pending' && (
-                                  <>
-                                    <EditButton />
-                                    <ConfirmButton />
-                                    <CancelButton />
-                                    <LockButton
-                                      isLocked={user.isLocked}
-                                      onLockChange={(newLockStatus) => handleLockChange(user.id, newLockStatus)}
-                                    />
-                                  </>
-                                )}
-                              </td>
+                          {currentUsers.map((user) => (
+                            <tr key={user.accountId}>
+                              {columns.map((column) => (
+                                <td key={column.key}>
+                                  {column.render ? column.render(user) : user[column.dataIndex]}
+                                </td>
+                              ))}
                             </tr>
                           ))}
                         </tbody>
@@ -199,13 +255,17 @@ const User = () => {
             <div className="row">
               <div className="col-12 d-flex justify-content-center">
                 <nav>
-                  <ul className="pagination">
+                  <ul className="pagination" role="navigation" aria-label="Pagination">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                      <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>Previous</button>
+                      <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>
+                        Previous
+                      </button>
                     </li>
-                    {[...Array(Math.ceil(filteredUsers.length / usersPerPage)).keys()].map(number => (
+                    {[...Array(Math.ceil(filteredUsers.length / usersPerPage)).keys()].map((number) => (
                       <li key={number} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageChange(number + 1)}>{number + 1}</button>
+                        <button className="page-link" onClick={() => handlePageChange(number + 1)}>
+                          {number + 1}
+                        </button>
                       </li>
                     ))}
                     <li className={`page-item ${currentPage === Math.ceil(filteredUsers.length / usersPerPage) ? 'disabled' : ''}`}>
@@ -218,6 +278,76 @@ const User = () => {
           </div>
         </div>
       </div>
+
+      {showModal && currentUser && (
+  <div className="modal-backdrop">
+    <div className="modal-content">
+      <div className="main">
+        <div className="row">
+          <div className="col-sm-6 picture">
+            <center>
+              <img className="circle responsive-img" src={currentUser.avatar} alt={`Profile picture of ${currentUser.fullName}`} />
+              <span className="btn-tooltip" title="Add Friend"></span>
+            </center>
+          </div>
+          <div className="col-sm-6 details">
+            <center>
+              <p className="name">
+                <b>{currentUser.fullName}</b>
+              </p>
+            </center>
+            <center>
+              <p className="email">{currentUser.email}</p>
+            </center>
+            <center>
+              <p className="phone">{currentUser.phone}</p>
+            </center>
+          </div>
+        </div>
+
+        <form>
+          <div className="row">
+            <div className="col-sm-6">
+              <label htmlFor="gender">Gender:</label>
+              <p id="gender" className="form-control-static">{currentUser.gender}</p>
+            </div>
+            <div className="col-sm-6">
+              <label htmlFor="status">Status:</label>
+              <p id="status" className="form-control-static">{currentUser.status}</p>
+            </div>
+          </div>
+          <div className="row mt-3">
+            <div className="col-sm-6">
+              <label htmlFor="birthday">Birthday:</label>
+              <p id="birthday" className="form-control-static">{formatDate(currentUser.birthDay)}</p>
+            </div>
+            <div className="col-sm-6">
+              <label htmlFor="role">Role:</label>
+              <Select
+                defaultValue={currentUser.roleId.toString()}
+                style={{ width: '100%' }}
+              >
+                <Select.Option value="1">Admin</Select.Option>
+                <Select.Option value="2">User</Select.Option>
+                <Select.Option value="3">Organizer</Select.Option>
+                <Select.Option value="4">Staff</Select.Option>
+              </Select>
+            </div>
+          </div>
+          <div className="buttons-container mt-4">
+            <button type="button" className="waves-effect waves-light btn edit back-btn" onClick={handleCloseModal}>
+              Trở lại
+            </button>
+            <button type="button" className="waves-effect waves-light btn edit change-role-btn" title="Change Role">
+              Xác nhận
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

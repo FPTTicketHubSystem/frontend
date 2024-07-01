@@ -164,7 +164,7 @@ function Profile() {
         <>
             <div className="bg bg-dark">
                 <Header />
-                <Form onSubmit={handleSubmit} className="p-3 border rounded shadow-sm col-lg-4" style={{ maxWidth: '400px', margin: '0 auto', backgroundColor: '#f8f9fa' }}>
+                <Form onSubmit={handleSubmit} className="p-3 border rounded shadow-sm col-lg-4" style={{ maxWidth: '400px', margin: '10px auto', backgroundColor: '#101316' }}>
                     <div className="text-center mb-3">
                         <img
                             src={userInfo.avatar || 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'}

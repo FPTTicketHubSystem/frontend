@@ -11,13 +11,14 @@ import { UserContext } from './context/UserContext';
 import EventDetail from './pages/EventDetail';
 import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
-import EditUser from './pages/Admin/EditUser';
 import Eventapproval from './pages/Admin/Eventapproval';
 import MyTicket from './pages/User/MyTicket';
 import ChooseTicket from './pages/Payment/ChooseTicket';
 import TicketDetail from './pages/User/TicketDetail';
 import Payment from './pages/Payment/Payment';
 
+
+import EditEvent from './pages/Organizer/EditEvent';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -33,15 +34,14 @@ function App() {
           <Route path="/organizer/create-event" element={<CreateEvent />} />
           <Route path="/user" element={<User />} />
           <Route path="/eventapproval" element={<Eventapproval />} />
-          <Route path="/user/edituser" element={<EditUser />} />
-          <Route path="/confirmaccount/:email" element={<ConfirmAccount/>} />
+          <Route path="/confirmaccount/:email" element={<ConfirmAccount />} />
           <Route path="/event-detail/:encodedId" element={<EventDetail />} />
-          <Route path="/organizer/create-event" element={<CreateEvent/>}/>
           <Route path="/organizer/events" element={<Events/>}/>
           <Route path="/seclectTicket" element={<ChooseTicket/>}/>
           <Route path="/payment" element={<Payment/>}/>
           <Route path="/myticket" element={<MyTicket/>}/>
           <Route path="/myticket/detail" element={<TicketDetail/>}/>
+          <Route path="/organizer/edit-event/:encodedId" element={<EditEvent />} />
         </Routes>
       </Router>
     </>

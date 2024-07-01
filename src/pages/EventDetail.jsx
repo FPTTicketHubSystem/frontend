@@ -258,7 +258,6 @@ function EventDetail() {
               </div>
             </div>
           </div>
-
           <div className="card" style={{ color: "black" }}>
             <div className="card-header">Trở thành giám sát viên</div>
             <div className="staff-content mt-2 mb-2">

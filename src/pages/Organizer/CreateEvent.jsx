@@ -154,6 +154,14 @@ const CreateEvent = () => {
     const { name, value } = e.target;
     setFormData(prevState => {
       const updatedTicketTypes = [...prevState.ticketTypes];
+      if (name === 'price' && value < 0 ) {
+        message.error('Giá tiền không hợp lệ!');
+        return prevState;
+      }
+      if (name === 'quantity' && value <= 0 ) {
+        message.error('Số lượng không hợp lệ!');
+        return prevState;
+      }
       updatedTicketTypes[index][name] = value;
       const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
       return {
@@ -166,9 +174,18 @@ const CreateEvent = () => {
 
   const handleDiscountCodeChange = (index, e) => {
     const { name, value } = e.target;
-    const updatedDiscountCodes = [...formData.discountCodes];
-    updatedDiscountCodes[index][name] = value;
-    setFormData(prevState => ({ ...prevState, discountCodes: updatedDiscountCodes }));
+    setFormData(prevState => {
+      const updatedDiscountCodes = [...prevState.discountCodes];
+      if ((name === 'discountAmount' || name === 'quantity') && value < 0) {
+        message.error(`${name === 'discountAmount' ? 'Giá trị giảm giá' : 'Số lượng'} không hợp lệ!`);
+        return prevState;
+      }
+      updatedDiscountCodes[index][name] = value;
+      return {
+        ...prevState,
+        discountCodes: updatedDiscountCodes,
+      };
+    });
   };
 
   const handleRemoveTicketType = (index) => {
@@ -269,7 +286,7 @@ const CreateEvent = () => {
               <h2>Thông tin sự kiện <i class="bi bi-calendar-event"></i></h2>
               <div className="row mb-3">
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="themeImage" label="Thêm ảnh nền sự kiện">
+                  <Form.Item name="themeImage" label="Thêm ảnh nền sự kiện" rules={[{ required: true, message: 'Vui lòng thêm ảnh nền sự kiện!' }]}>
                     <Dragger {...uploadProps}>
                       {formData.themeImage ? (
                         <img
@@ -282,7 +299,7 @@ const CreateEvent = () => {
                           <p className="ant-upload-drag-icon">
                             <InboxOutlined style={{ color: '#EC6C21' }} />
                           </p>
-                          <p className="ant-upload-text">Thêm ảnh nền sự kiện</p>
+                          <p className="ant-upload-text">Ảnh nền sự kiện</p>
                           <p className="ant-upload-hint">Kích thước 1280x720</p>
                         </>
                       )}
@@ -290,30 +307,32 @@ const CreateEvent = () => {
                   </Form.Item>
                 </div>
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="eventName" label="Tên sự kiện">
+                  <Form.Item name="eventName" label="Tên sự kiện" rules={[{ required: true, message: 'Vui lòng nhập tên sự kiện!' }]}>
                     <Input
+                      showCount
                       placeholder="Tên sự kiện"
                       maxLength={80}
                       onChange={handleChange}
                       id="eventName"
                     />
                   </Form.Item>
-                  <Form.Item name="location" label="Tên địa điểm">
+                  <Form.Item name="location" label="Tên địa điểm" rules={[{ required: true, message: 'Vui lòng nhập tên địa điểm!' }]}>
                     <Input
+                      showCount
                       placeholder="Tên địa điểm"
                       maxLength={80}
                       onChange={handleChange}
                       id="location"
                     />
                   </Form.Item>
-                  <Form.Item name="address" label="Địa chỉ">
+                  <Form.Item name="address" label="Địa chỉ" rules={[{ required: true, message: 'Vui lòng chọn địa chỉ!' }]}>
                     <LocationPicker onLocationChange={handleAddressChange} />
                   </Form.Item>
                 </div>
               </div>
               <div className="row mb-3">
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="startTime" label="Thời gian bắt đầu">
+                  <Form.Item name="startTime" label="Thời gian bắt đầu" rules={[{ required: true, message: 'Vui lòng chọn thời gian bắt đầu!' }]}>
                     <DatePicker
                       showTime
                       onChange={(value) =>
@@ -323,7 +342,7 @@ const CreateEvent = () => {
                   </Form.Item>
                 </div>
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="endTime" label="Thời gian kết thúc">
+                  <Form.Item name="endTime" label="Thời gian kết thúc" rules={[{ required: true, message: 'Vui lòng chọn thời gian kết thúc!' }]}>
                     <DatePicker
                       showTime
                       onChange={(value) =>
@@ -333,7 +352,7 @@ const CreateEvent = () => {
                   </Form.Item>
                 </div>
               </div>
-              <Form.Item name="categoryId" label="Thể loại sự kiện">
+              <Form.Item name="categoryId" label="Thể loại sự kiện" rules={[{ required: true, message: 'Vui lòng chọn loại sự kiện!' }]}>
                 <Select
                   placeholder="Chọn loại sự kiện"
                   onChange={(value) => setFormData({ ...formData, categoryId: value })}
@@ -344,7 +363,7 @@ const CreateEvent = () => {
                   <Option value="4">Sự kiện khác</Option>
                 </Select>
               </Form.Item>
-              <Form.Item name="eventDescription" label="Mô tả sự kiện">
+              <Form.Item name="eventDescription" label="Mô tả sự kiện" rules={[{ required: true, message: 'Vui lòng nhập mô tả!' }]}>
                 <CKEditor
                   editor={ClassicEditor}
                   data={formData.eventDescription}
@@ -354,6 +373,7 @@ const CreateEvent = () => {
                     toolbar: [
                       'heading', '|',
                       'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                      'alignment:left', 'alignment:right', 'alignment:center', 'alignment:justify', '|',
                       'insertTable', 'tableColumn', 'tableRow', 'mergeTableCells', '|',
                       'undo', 'redo', '|',
                       'imageUpload', 'mediaEmbed'
@@ -373,6 +393,8 @@ const CreateEvent = () => {
                   key="typeName"
                   render={(text, record, index) => (
                     <Input
+                      showCount
+                      maxLength={20}
                       placeholder="Tên loại vé"
                       value={text}
                       name="typeName"
@@ -444,6 +466,8 @@ const CreateEvent = () => {
                   key="code"
                   render={(text, record, index) => (
                     <Input
+                      showCount
+                      maxLength={20}
                       placeholder="Mã giảm giá"
                       value={text}
                       name="code"
@@ -496,7 +520,7 @@ const CreateEvent = () => {
               {/* <CustomButton type="primary" onClick={handleAddDiscountCode}>
           Thêm mã giảm giá
         </CustomButton> */}
-              <Form.Item name="status" label="Trạng thái" className='mt-3'>
+              <Form.Item name="status" label="Trạng thái" className='mt-3' rules={[{ required: true, message: 'Vui lòng chọn!' }]}>
                 <Select
                   placeholder="Vui lòng chọn"
                   onChange={(value) => setFormData({ ...formData, status: value })}
