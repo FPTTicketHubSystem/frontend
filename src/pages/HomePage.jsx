@@ -6,7 +6,7 @@ import EventByCategory from "./Home/EventByCategory";
 import "bootstrap/dist/css/bootstrap.css";
 import { useContext, useEffect, useState } from "react";
 import videoBg from "../assets/css/Thumel.mp4";
-import forumSrc from "../assets/images/forum/forum.jpg"
+import forumSrc from "../assets/images/forum/forum.jpg";
 import "../assets/css/header.css";
 import { Link } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
@@ -15,9 +15,11 @@ import { toast } from "react-toastify";
 import "../assets/css/bootstrap-icons.css";
 import News from "./Home/News";
 import "../assets/css/ticket.css";
+import "../assets/css/search.css";
 
 function HomePage() {
   const navigate = useNavigate();
+
 
   const { user, token, onSetUser, onSetRender } = useContext(UserContext);
 
@@ -35,15 +37,13 @@ function HomePage() {
   // };
 
   return (
-    <>
+    <div>
       <Header isNotAtTopEnabled={true} />
+
       <section class="hero-section" id="section_1">
         <div class="section-overlay"></div>
 
-        <div
-          class="container d-flex flex-column justify-content-center align-items-center"
-          style={{ paddingTop: "128px" }}
-        >
+        <div class="container d-flex flex-column justify-content-center align-items-center">
           <div class="col-12 mt-15 mb-15 text-center">
             <small>NỀN TẢNG CUNG CẤP VÉ SỰ KIỆN ĐẠI HỌC FPT ĐÀ NẴNG</small>{" "}
             <br />
@@ -65,16 +65,29 @@ function HomePage() {
       </section>
 
       <Upcoming />
-      <div className="forum mb-5" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}  >
-        <img className="forum-img rounded" style={{width:"85%", height:"180px", borderRadius:"12px"}} src={forumSrc} alt=""/>
+      <div
+        className="forum mb-5"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img
+          className="forum-img rounded"
+          style={{ width: "85%", height: "180px", borderRadius: "12px" }}
+          src={forumSrc}
+          alt=""
+        />
       </div>
       <EventByCategory categoryId={1} categoryName={"Cate1"} />
       <EventByCategory categoryId={2} categoryName={"Cate2"} />
       <EventByCategory categoryId={3} categoryName={"Cate3"} />
 
       <News />
+
       <Footer />
-    </>
+    </div>
   );
 }
 

@@ -230,6 +230,7 @@ body {
 /*---------------------------------------
   EventCard In Each Category          
 -----------------------------------------*/
+
 .events-list {
   display: flex;
   flex-wrap: wrap;
@@ -546,7 +547,7 @@ strong {
   CUSTOM BUTTON               
 -----------------------------------------*/
 .btn-custom {
-  background-color: #F2721E;
+  background-color: #EC6C21;
 }
 
 .custom-btn {

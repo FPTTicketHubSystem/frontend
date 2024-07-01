@@ -5,12 +5,14 @@ import Footer from "../component/Footer";
 import { useParams } from "react-router-dom";
 import { decodeId } from "../utils/utils";
 import { GetEventByIdService } from "../services/EventService";
+import { useNavigate } from "react-router-dom";
 
 function EventDetail() {
   const [isAboutCollapsed, setIsAboutCollapsed] = useState(true);
   const [isTicketCollapsed, setIsTicketCollapsed] = useState(false);
   const [event, setEvent] = useState([]);
   const { encodedId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -28,28 +30,37 @@ function EventDetail() {
     };
 
     fetchEvent();
-  }, [encodedId]); 
+  }, [encodedId]);
 
-  // const ticketList = [
-  //   { type: "GA 1", price: "50.000 đ" },
-  //   { type: "GA 2", price: "100.000 đ" },
-  //   { type: "VIP", price: "200.000 đ" },
-  //   { type: "V.VIP", price: "300.000 đ" },
-  // ];
+  const ticketList =
+    event?.tickettypes?.map((ticket) => ({
+      type: ticket.typeName,
+      price: ticket.price,
+      quantity: ticket.quantity,
+    })) || [];
 
-  const ticketList = event?.tickettypes?.map((ticket) => ({
-    type: ticket.typeName,
-    price: ticket.price,
-    quantity: ticket.quantity
-  })) || [];
+  // Function to check if all tickets are sold out
+  const areAllTicketsSoldOut = ticketList.every(
+    (ticket) => ticket.quantity === 0
+  );
+
+  // Function to check if the event has ended
+  const isEventEnded = new Date(event.endTime) < new Date();
 
   // xử lý so sánh ngày
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return new Date(date).toLocaleDateString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
   };
 
   const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    return new Date(date).toLocaleTimeString("vi-VN", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   const getDateTimeDisplay = (startTime, endTime) => {
@@ -57,23 +68,38 @@ function EventDetail() {
     const endDate = new Date(endTime);
 
     if (startDate.toDateString() === endDate.toDateString()) {
-      return `${formatTime(startTime)} - ${formatTime(endTime)}, ${formatDate(startTime)}`;
+      return `${formatTime(startTime)} - ${formatTime(endTime)}, ${formatDate(
+        startTime
+      )}`;
     } else {
-      return `${formatTime(startTime)}, ${formatDate(startTime)} - ${formatTime(endTime)}, ${formatDate(endTime)}`;
+      return `${formatTime(startTime)}, ${formatDate(startTime)} - ${formatTime(
+        endTime
+      )}, ${formatDate(endTime)}`;
     }
   };
 
-  //xử lý giá tiền
+  // xử lý giá tiền
   const getLowestTicketPrice = (tickettypes) => {
     if (!tickettypes || tickettypes.length === 0) return "Miễn phí";
-    const prices = tickettypes.map(ticket => ticket.price);
+    const prices = tickettypes.map((ticket) => ticket.price);
     const lowestPrice = Math.min(...prices);
-    return lowestPrice === 0 ? "Miễn phí" : lowestPrice.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    return lowestPrice === 0
+      ? "Miễn phí"
+      : lowestPrice.toLocaleString("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        });
   };
 
-  //xử lý chuyển trạng thái và text cho nút đặt vé
+  // xử lý chuyển trạng thái và text cho nút đặt vé
 
-
+  //#region Handle Buy Ticket
+  const handleClickChooseTicket = () => {
+    if (!areAllTicketsSoldOut && !isEventEnded) {
+      navigate("/seclectTicket", { state: { event } });
+    }
+  };
+  //#endregion
 
   return (
     <>
@@ -83,43 +109,45 @@ function EventDetail() {
           <div className="ticket-content">
             <div className="text">
               <div className="info mb-5">
-                <p className="title h5 text-white mt-4 mb-5">
+                <p className="title h3 text-white mt-4 mb-5">
                   {event.eventName}
                 </p>
                 <p className="date">
-                  <i className="bi bi-calendar3 me-2"></i>{getDateTimeDisplay(event.startTime, event.endTime)}
+                  <i className="bi bi-calendar3 me-2"></i>
+                  {getDateTimeDisplay(event.startTime, event.endTime)}
                 </p>
                 <p className="location">
                   <i className="bi bi-geo-alt me-2"></i> {event.location}
                 </p>
-                <p className="address text-white">
-                  {event.address}
-                </p>
+                <p className="address text-white">{event.address}</p>
               </div>
               <div className="price mt-5">
                 <div id="ticket-price" className="d-flex align-items-center">
                   <span className="me-2 h5 text-white">Giá từ</span>
                   <span href="#ticket-info" className="price-value">
-                  {getLowestTicketPrice(event.tickettypes)}
+                    {getLowestTicketPrice(event.tickettypes)}
                   </span>
                 </div>
-                <div className="btn mt-2" id="buy-btn">
-                  <a
-                    href="#buy"
-                    className="text-white"
-                    style={{ textDecoration: "none" }}
-                  >
-                    Đặt vé ngay{" "}
+                <div
+                  className="btn mt-2"
+                  id="buy-btn"
+                  onClick={handleClickChooseTicket}
+                >
+                  <a className="text-white" style={{ textDecoration: "none" }}>
+                    {isEventEnded ? (
+                      <span className="event-ended">Sự kiện đã kết thúc</span>
+                    ) : areAllTicketsSoldOut ? (
+                      <span className="tickets-sold-out">Hết vé</span>
+                    ) : (
+                      "Đặt vé ngay"
+                    )}
                   </a>
                 </div>
               </div>
             </div>
           </div>
           <div className="ticket-image">
-            <img
-              src={event.themeImage}
-              alt="Banner cover"
-            />
+            <img src={event.themeImage} alt="Banner cover" />
           </div>
         </div>
       </div>
@@ -127,9 +155,11 @@ function EventDetail() {
       <div className="ticket-event-page">
         <div className="left-part">
           <div className={"card" + (isAboutCollapsed ? " collapsed" : "")}>
-            <div className="card-header">Giới thiệu</div>
+            <div className="card-header">Giới thiệu </div>
             <div className="about-content">
-              <div dangerouslySetInnerHTML={{__html: event.eventDescription}} />
+              <div
+                dangerouslySetInnerHTML={{ __html: event.eventDescription }}
+              />
             </div>
             {isAboutCollapsed ? (
               <>
@@ -164,10 +194,21 @@ function EventDetail() {
                   <button>
                     <i class="bi bi-chevron-right"></i>
                   </button>
-                  <span>{getDateTimeDisplay(event.startTime, event.endTime)}</span>
+                  <span>
+                    {getDateTimeDisplay(event.startTime, event.endTime)}
+                  </span>
                 </div>
 
-                <button className="book-button">Đặt vé ngay</button>
+                <button
+                  className="book-button"
+                  onClick={handleClickChooseTicket}
+                >
+                  {isEventEnded
+                    ? "Sự kiện đã kết thúc"
+                    : areAllTicketsSoldOut
+                    ? "Hết vé"
+                    : "Đặt vé ngay"}
+                </button>
               </div>
             </div>
             <div
@@ -180,18 +221,22 @@ function EventDetail() {
                 <div className="ticket-level" key={ticket.type}>
                   <span className="name">{ticket.type}</span>
                   <div>
-                  {ticket.price === 0 ? (
-                    <span className="price text-center">Miễn phí</span>
-                  ) : (
-                    <span className="price text-center">{ticket.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
-                  )}
-                  {ticket.quantity === 0 ? (
-              <button className="sold-out-button">Hết vé</button>
-            ) : (
-              <></>
-            )}
+                    {ticket.price === 0 ? (
+                      <span className="price text-center">Miễn phí</span>
+                    ) : (
+                      <span className="price text-center">
+                        {ticket.price.toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })}
+                      </span>
+                    )}
+                    {ticket.quantity === 0 ? (
+                      <button className="sold-out-button">Hết vé</button>
+                    ) : (
+                      <></>
+                    )}
                   </div>
-
                 </div>
               ))}
             </div>
@@ -199,20 +244,21 @@ function EventDetail() {
           <div className="card ">
             <div className="card-header">Ban tổ chức</div>
             <div className="organizer-content mb-4">
-              <img
-                src={event.avatar}
-                alt=""
-              />
-              <div style={{color:"black"}}>
+              <img src={event.avatar} alt="" />
+              <div style={{ color: "black" }}>
                 <div className="name">{event.fullName}</div>
                 <div className="founding">
-                  Ngày thành lập: {new Date(event.birthDay).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                  Ngày thành lập:{" "}
+                  {new Date(event.birthDay).toLocaleDateString("vi-VN", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="card" style={{color:"black"}}>
+          <div className="card" style={{ color: "black" }}>
             <div className="card-header">Trở thành giám sát viên</div>
             <div className="staff-content mt-2 mb-2">
               <div>Bạn muốn trở thành giám sát viên cho sự kiện này?</div>
@@ -230,24 +276,24 @@ function EventDetail() {
             </div>
           </div>
         </div>
+
         <div className="right-part">
-          <img className="forum mb-3"
+          <img
+            className="forum mb-3"
             src="https://daihoc.fpt.edu.vn/wp-content/uploads/2021/04/Poster-FTS2021-Toan-quoc-V1.1.jpg"
             alt=""
           />
-                                  <div class="social-share">
-                            <ul class="social-icon d-flex align-items-center justify-content-center">
-                                <span class="text-black me-3">Chia sẻ:</span>
+          <div class="social-share">
+            <ul class="social-icon d-flex align-items-center justify-content-center">
+              <span class="text-black me-3">Chia sẻ:</span>
 
-                                <li class="social-icon-item">
-                                    <a href="#" class="social-icon-link">
-                                        <span class="bi-facebook"></span>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </div>
-          
+              <li class="social-icon-item">
+                <a href="#" class="social-icon-link">
+                  <span class="bi-facebook"></span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <Footer />
