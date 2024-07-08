@@ -4,8 +4,8 @@ import '../assets/Style.css';
 import Header from '../Layout/User/Header';
 import Footer from './Footer';
 import CreatePost from './ForumComponent/CreatePost';
-// import PostList from './PostList';
-import { useContext, useEffect } from 'react';
+import PostDetails from './ForumComponent/PostDetails';
+import { useContext, useEffect, useState } from 'react';
 import { PostContext } from '../context/PostContext';
 import FilterPost from './ForumComponent/FilterPost';
 import { useSearchParams } from 'react-router-dom';
@@ -13,46 +13,28 @@ import { UserContext } from '../context/UserContext';
 import PostStatusTab from './ForumComponent/PostStatusTab';
 import Spinner from '../common/Spinner/Spinner';
 import PostList from './PostList';
-// import { Footer } from 'antd/es/layout/layout';
+import { getCommentsByPostService } from '../services/commentService';
 
 export default function Forum() {
     const { loading, posts, getAllPost, getPostByStatus, getSavedPost } = useContext(PostContext);
     const { user } = useContext(UserContext);
     const [searchParams] = useSearchParams();
     const statusQueryParam = searchParams.get('status');
+    const [comments, setComments] = useState([]);
+
     const statusList = [
-        {
-            id: 1,
-            title: 'Tất cả bài viết',
-        },
-        {
-            id: 2,
-            name: 'Approved',
-            title: 'Bài viết của tôi',
-        },
-        {
-            id: 3,
-            name: 'Pending',
-            title: 'Chờ phê duyệt',
-        },
-        {
-            id: 4,
-            name: 'Rejected',
-            title: 'Bị từ chối',
-        },
-        {
-            id: 5,
-            name: 'Saved',
-            title: 'Đã lưu',
-        },
+        { id: 1, title: 'Tất cả bài viết' },
+        { id: 5, name: 'Saved', title: 'Đã lưu' },
     ];
 
-    //get post list
     useEffect(() => {
         if (statusQueryParam) {
-            if (statusQueryParam === 'Saved') getSavedPost(user.accountId);
-            else getPostByStatus(statusQueryParam, user.accountId);
-        } else getAllPost();
+            if (statusQueryParam === 'Saved') {
+                getSavedPost(user.accountId);
+            } 
+        } else {
+            getAllPost();
+        }
     }, [statusQueryParam, user.accountId]);
 
     return (
@@ -65,10 +47,12 @@ export default function Forum() {
                         <FilterPost />
                         {user && <PostStatusTab statusList={statusList} />}
                     </div>
-                    <div className='post-container'>{loading ? <Spinner /> : <PostList posts={posts} />}</div>
+                    <div className='post-container'>
+                        {loading ? <Spinner /> : <PostList posts={posts} />}
+                    </div>
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </>
     );
 }

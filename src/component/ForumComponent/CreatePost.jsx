@@ -23,7 +23,7 @@ export default function CreatePost() {
     const [openLogin, setOpenLogin] = useState(false);
     const navigate = useNavigate();
     const [form] = Form.useForm();
-    const [formValue, setFormValue] = useState({ subjectId: null, postText: '', postFile: '' });
+    const [formValue, setFormValue] = useState({ Status: "", postText: '', postFile: '' });
     const [imageUpload, setImageUpload] = useState(null);
     const [uploadingImage, setUploadingImage] = useState(false);
     const { subjects } = useContext(SubjectContext);
@@ -90,10 +90,13 @@ export default function CreatePost() {
         const postFile = await uploadImage();
         await addPost({ ...formValue, accountId, postFile });
         openNotificationAddPostSuccess('topRight');
-        await getPostByStatus('Pending', accountId);
+        // await getPostByStatus('Pending', accountId);
         cancelModal();
-        navigate('/forum?status=Pending');
+        // navigate('/forum?status=Pending');
     };
+    const handleStatusChange = (status) => {
+        setFormValue({ ...formValue, Status: status });
+      };
 
     return (
         <>
@@ -111,20 +114,6 @@ export default function CreatePost() {
                         prefix={user && <Avatar src={user.avatar ? user.avatar : defaultAvatar} />}
                     />
                     <hr></hr>
-                    {/* <div className='bottom-form'>
-                        <div className='item-bottom-form'>
-                            <img src={anh}></img>
-                            <label>Ảnh/Video</label>
-                        </div>
-                        <div className='item-bottom-form'>
-                            <img src={tag}></img>
-                            <label>Tag</label>
-                        </div>
-                        <div className='item-bottom-form'>
-                            <img src={monhoc}></img>
-                            <label>Môn học</label>
-                        </div>
-                    </div> */}
                 </div>
 
                 <Modal
@@ -142,33 +131,20 @@ export default function CreatePost() {
                         initialValues={formValue}
                         onFinish={handleSubmitAddPostForm}
                     >
-                        {/* <Form.Item
-                            label='Môn học'
-                            className='input-form'
-                            name='subject'
-                            rules={[
-                                {
-                                    required: false,
-                                    message: 'Vui lòng chọn môn học!',
-                                },
-                            ]}
+                    <Form.Item
+                        label='Status'
+                        name='Status'
+                        rules={[{ required: true, message: 'Vui lòng chọn status!' }]}
                         >
-                            <Select
-                                label='Môn học'
-                                onChange={(subjectValue) => setFormValue({ ...formValue, subjectId: subjectValue })}
-                                defaultValue={0}
-                            >
-                                <Select.Option value={0}>-- Vui lòng chọn môn học --</Select.Option>
-                                {subjects?.map((subject) => (
-                                    <Select.Option
-                                        key={subject.subjectId}
-                                        value={subject.subjectId}
-                                    >
-                                        {subject.subjectName}
-                                    </Select.Option>
-                                ))}
-                            </Select>
-                        </Form.Item> */}
+                        <Select
+                            onChange={handleStatusChange}
+                            placeholder='-- Vui lòng chọn status --'
+                        >
+                            <Select.Option value='Chưa diễn ra'>Chưa diễn ra</Select.Option>
+                            <Select.Option value='Sắp diễn ra'>Sắp diễn ra</Select.Option>
+                            <Select.Option value='Đang diễn ra'>Đang diễn ra</Select.Option>
+                        </Select>
+                        </Form.Item>
                         <Form.Item
                             name='content'
                             rules={[

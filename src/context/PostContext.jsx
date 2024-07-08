@@ -59,6 +59,16 @@ const PostProvider = ({ children }) => {
 
     const addPost = async (data) => {
         try {
+            data.comment = [
+                {
+                    postCommentId: 0,
+                    accountId: 0,
+                    postId: 0,
+                    content: "string",
+                    commentDate: new Date().toISOString(), 
+                    status: "string"
+                }
+            ];
             await addPostService(data);
             const newPosts = await getAllPostService();
             dispatch({

@@ -1,6 +1,5 @@
 const PostDetails = ({ data }) => {
     const { postText, postFile } = data;
-
     return (
         <div className="form-mid-content">
             <div>

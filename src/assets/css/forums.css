@@ -1,0 +1,22 @@
+.container-edit-comment {
+    width: 93%;
+    overflow: hidden;
+    border: 1px solid black;
+    border-radius: 10px; 
+    background-color:#6b6b6d ;
+    margin: 2%;
+}
+
+.right-side .left-side {
+    width: 50%;
+    box-sizing: border-box;
+}
+.left-side {
+    float: left;
+    margin-left: 2%;
+    margin-top: 1.4%;
+}
+.right-side {
+    float: right;
+    margin-right: 2%;
+}

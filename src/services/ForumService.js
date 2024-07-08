@@ -43,9 +43,9 @@ export const EditPost = async (idPost, editpost) => {
       data: JSON.stringify(editpost),
     });
 
-    return response.data; // Assuming your response contains data field
+    return response.data; 
   } catch (error) {
-    throw error; // Handle or rethrow the error as needed
+    throw error;
   }
 };
 

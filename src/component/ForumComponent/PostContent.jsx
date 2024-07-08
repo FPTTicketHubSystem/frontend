@@ -12,7 +12,7 @@ import { CommentContext } from '../../context/CommentContext';
 const defaultAvatar = '../Image/Avatar_null.png';
 const like = '../Image/Forum/like.png';
 const liked = '../Image/Forum/liked.png';
-const save = '../Image/Forum/luu.png';
+const save = 'https://cdn.iconscout.com/icon/free/png-256/free-save-3251597-2724646.png';
 const saved = '../Image/Forum/daluu.png';
 const comment = '../Image/Forum/comment.png';
 
@@ -91,12 +91,12 @@ export default function PostContent({ post }) {
         });
     };
     const handleLikedClick = async () => {
-        if (user) {
-            if (!userLiked) {
-                await likePost(postId, user.accountId);
-            } else {
-                await unlikePost(postId, user.accountId);
-            }
+        // if (user) {
+            // if (!userLiked) {
+            await likePost(postId, user.accountId);
+            // } else {
+            //     await unlikePost(postId, user.accountId);
+            // }
 
             if (statusQueryParams) {
                 if (statusQueryParams === 'Saved') {
@@ -107,37 +107,39 @@ export default function PostContent({ post }) {
             } else {
                 await getAllPost();
             }
-        } else {
-            showLoginModal();
-            setMessageModal('like');
-        }
+        // } else {
+        //     showLoginModal();
+        //     setMessageModal('like');
+        // }
     };
 
     const handleSaveClick = async () => {
-        if (user) {
-            if (!userSaved) {
-                await savePost(postId, user.accountId);
-                openNotificationSavePostSuccess('topRight');
-            } else {
-                await unSavePost(postId, user.accountId);
-                openNotificationUnSavePostSuccess('topRight');
-            }
+        //set user id
+        await likePost(postId, user.accountId);
+        openNotificationSavePostSuccess('topRight');
+        // if (user) {
+        //     if (!userSaved) {
+        //         await savePost(postId, user.accountId);
+        //         openNotificationSavePostSuccess('topRight');
+        //     } else {
+        //         await unSavePost(postId, user.accountId);
+        //         openNotificationUnSavePostSuccess('topRight');
+        //     }
 
-            if (statusQueryParams) {
-                if (statusQueryParams === 'Saved') {
-                    await getSavedPost(user.accountId);
-                } else {
-                    await getPostByStatus(statusQueryParams, user.accountId);
-                }
-            } else {
-                await getAllPost();
-            }
-        } else {
-            showLoginModal();
-            setMessageModal('lưu');
-        }
+        //     if (statusQueryParams) {
+        //         if (statusQueryParams === 'Saved') {
+        //             await getSavedPost(user.accountId);
+        //         } else {
+        //             await getPostByStatus(statusQueryParams, user.accountId);
+        //         }
+        //     } else {
+        //         await getAllPost();
+        //     }
+        // } else {
+        //     showLoginModal();
+        //     setMessageModal('lưu');
+        // }
     };
-
     return (
         <>
             {contextHolder}
@@ -162,10 +164,10 @@ export default function PostContent({ post }) {
                             <p>{subjectName}</p>
                         </div>
                     </div>
-                    <div className='form-mid-content'>
-                        <div>
+                    <div>
                             <p>{postText}</p>
                         </div>
+                    <div className='form-mid-content'>
                         {postFile && (
                             <img
                                 src={postFile}
@@ -186,7 +188,7 @@ export default function PostContent({ post }) {
                 <div className='form-like'>
                     <img
                         onClick={handleLikedClick}
-                        src={userLiked ? liked : like}
+                        // src={userLiked ? liked : like}
                         alt='heart'
                     />
                     <p>{countLike}</p>
@@ -207,6 +209,7 @@ export default function PostContent({ post }) {
                 onCancel={cancelModal}
                 className='comment-modal'
             >
+                {/* {console.log(currentPost,"sss")} */}
                 <PostDetails data={currentPost} />
                 {comments.length > 0 ? (
                     <>

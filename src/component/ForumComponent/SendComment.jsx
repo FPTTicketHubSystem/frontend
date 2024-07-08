@@ -1,5 +1,6 @@
-import { Input, Avatar, Modal, notification } from 'antd';
+import { Input, Avatar, Modal, notification, Radio } from 'antd';
 import 'bootstrap/dist/css/bootstrap.css';
+import '../../assets/css/forums.css';
 
 import { useContext, useState } from 'react';
 import { CommentContext } from '../../context/CommentContext';
@@ -62,11 +63,11 @@ export default function SendComment({ post }) {
         setIsOpenLoginModal(false);
     };
 
-    const handleCommentClick = () => {
-        if (!user) {
-            setIsOpenLoginModal(true);
-        }
-    };
+     const handleCommentClick = () => {
+    //     if (!user) {
+    //         setIsOpenLoginModal(true);
+    //     }
+     };
 
     return (
         <>
@@ -86,7 +87,7 @@ export default function SendComment({ post }) {
                     </div>
                     <div className='form-comment-midle'>
                         <TextArea
-                            onClick={handleCommentClick}
+                            // onClick={handleCommentClick}
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             placeholder='Viết bình luận...'
@@ -99,12 +100,12 @@ export default function SendComment({ post }) {
                             src={send}
                             alt='send'
                             onClick={handleSendComment}
-                            style={content ? { cursor: 'pointer' } : { cursor: 'not-allowed' }}
+                            style={content ? { cursor: 'pointer' } : { cursor: 'not-allowed' }} 
                         ></img>
                     </div>
                 </div>
             </div>
-
+        <div className='container-comment'>
             <Modal
                 title='Bình luận'
                 cancelText='Đóng'
@@ -125,6 +126,7 @@ export default function SendComment({ post }) {
             >
                 <h5>Vui lòng đăng nhập để bình luận về bài viết !</h5>
             </Modal>
+        </div>
         </>
     );
 }

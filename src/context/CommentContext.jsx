@@ -21,7 +21,7 @@ const CommentProvider = ({ children }) => {
     const addComment = async (data) => {
         try {
             await addCommentService(data);
-            await getCommentsByPost(data.postId);
+            window.location.reload()
         } catch (error) {
             console.log(error);
         }
