@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext';
-import logo from '../../assets/images/logo/3.png';
-import logo2 from '../../assets/images/logo/logo2.png';
-import { toast } from 'react-toastify';
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
+import logo from "../../assets/images/logo/3.png";
+import logo2 from "../../assets/images/logo/logo2.png";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -38,21 +38,39 @@ const Header = () => {
         <div class="col-md-9 col-10">
           <div class="header-actions d-flex align-items-center justify-content-end">
             <div class="dropdown ms-2">
-              <a class="dropdown-toggle d-flex align-items-center user-settings" role="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <img src={user.avatar} class="img-3x m-2 me-0 rounded-5" alt="Avatar" />
+              <a
+                class="dropdown-toggle d-flex align-items-center user-settings"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <img
+                  src={user.avatar}
+                  class="img-3x m-2 me-0 rounded-5"
+                  alt="Avatar"
+                />
               </a>
               <div class="dropdown-menu dropdown-menu-end dropdown-menu-sm shadow-sm gap-3">
-                <Link to="/profile" class="dropdown-item d-flex align-items-center py-2">
+                <Link
+                  to="/profile"
+                  class="dropdown-item d-flex align-items-center py-2"
+                >
                   <i class="icon-smile fs-4 me-3"></i>Hồ sơ
                 </Link>
-                <a onClick={handleLogout} class="dropdown-item d-flex align-items-center py-2">
+                <a
+                  onClick={handleLogout}
+                  class="dropdown-item d-flex align-items-center py-2"
+                >
                   <i class="icon-log-out fs-4 me-3"></i>Đăng xuất
                 </a>
               </div>
             </div>
-            <button class="btn btn-success btn-sm ms-3 d-lg-none d-md-block" type="button"
-              data-bs-toggle="offcanvas" data-bs-target="#MobileMenu">
+            <button
+              class="btn btn-success btn-sm ms-3 d-lg-none d-md-block"
+              type="button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#MobileMenu"
+            >
               <i class="icon-menu"></i>
             </button>
           </div>
@@ -60,6 +78,6 @@ const Header = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Header;

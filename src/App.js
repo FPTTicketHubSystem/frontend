@@ -19,6 +19,8 @@ import Payment from './pages/Payment/Payment';
 
 
 import EditEvent from './pages/Organizer/EditEvent';
+import ManageNews from './pages/Admin/ManageNews';
+import NewsDetail from './pages/Admin/NewsDetail';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -42,6 +44,8 @@ function App() {
           <Route path="/myticket" element={<MyTicket/>}/>
           <Route path="/myticket/detail" element={<TicketDetail/>}/>
           <Route path="/organizer/edit-event/:encodedId" element={<EditEvent />} />
+          <Route path="/manage-news" element={<ManageNews />} />
+          <Route path="/news-detail/:newsId" element={<NewsDetail />} />
         </Routes>
       </Router>
     </>
