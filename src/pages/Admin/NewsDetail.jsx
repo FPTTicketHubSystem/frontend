@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Button, Card, Col, Row, Spin, notification, Table } from "antd";
-import { useParams, useNavigate } from "react-router-dom";
+import { Button, Card, Col, notification, Row, Spin, Table } from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import styled from "styled-components";
 import Header from "../../component/Admin/Header";
 import Navbar from "../../component/Admin/Navbar";
 import { UserContext } from "../../context/UserContext";
 import {
-  GetNewsDetailService,
   ChangeStatusNewsService,
+  GetNewsDetailService,
 } from "../../services/NewsService";
-import styled from "styled-components";
 
 const CustomButton = styled(Button)`
   background-color: #ec6c21;
@@ -20,6 +20,50 @@ const CustomButton = styled(Button)`
   }
 `;
 
+// const ContentFigure = styled.figure`
+//   margin: 20px 0;
+//   text-align: center;
+
+//   img {
+//     max-width: 100%;
+//     height: auto;
+//     border-radius: 8px;
+//     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+//   }
+// `;
+
+// const ContentParagraph = styled.p`
+//   font-size: 16px;
+//   line-height: 1.6;
+//   color: #333;
+//   margin-bottom: 15px;
+// `;
+
+const ContentWrapper = styled.div`
+  font-family: "Roboto", sans-serif;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  img {
+    max-width: 560px;
+    height: 315px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+// Function to replace <oembed> with <iframe>
+const transformContent = (content) => {
+  return content.replace(
+    /<oembed url="https:\/\/www\.youtube\.com\/watch\?v=([^"]+)"><\/oembed>/g,
+    (match, videoId) => {
+      return `<iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+    }
+  );
+};
+
 export default function NewsDetail() {
   const { user, render, onSetRender } = useContext(UserContext);
   const [newsDetail, setNewsDetail] = useState(null);
@@ -30,6 +74,7 @@ export default function NewsDetail() {
     const fetchNewsDetail = async () => {
       const result = await GetNewsDetailService(newsId);
       if (result) {
+        result.content = transformContent(result.content); // Transform content before setting it
         setNewsDetail(result);
       }
     };
@@ -96,8 +141,7 @@ export default function NewsDetail() {
       key: "5",
       attribute: "Nội dung",
       detail: (
-        <div
-          className="fs-5"
+        <ContentWrapper
           dangerouslySetInnerHTML={{ __html: newsDetail.content }}
         />
       ),
