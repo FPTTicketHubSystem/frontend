@@ -30,20 +30,20 @@ export const GetAllNewsAdminService = async (status = "") => {
     }
 };
 
-export const GetNewsByAccount = async () => {
-    try {
-        const response = await request({
-            method: 'get',
-            url: `news/getAllNews`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        return response;
-    } catch (e) {
-        return e;
-    }
-};
+// export const GetNewsByAccount = async () => {
+//     try {
+//         const response = await request({
+//             method: 'get',
+//             url: `news/getAllNews`,
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         });
+//         return response;
+//     } catch (e) {
+//         return e;
+//     }
+// };
 
 export const GetNewsByIdService = async (newsId) => {
     try {
@@ -132,6 +132,21 @@ export const GetNewsInPageService = async (currentPage, pageSize) => {
             },
         });
         console.log("123 " + response);
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const GetNewsByAccountService = async (accountId) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `news/getNewsByAccount?accountId=${accountId}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
         return response;
     } catch (e) {
         return e;
