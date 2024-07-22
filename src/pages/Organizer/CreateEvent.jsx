@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { Form, Input, Button, DatePicker, Select, Table, Upload, message, Modal } from 'antd';
+import { Form, Input, Button, DatePicker, Select, Table, Upload, message, Modal, Switch } from 'antd';
 import { UserContext } from '../../context/UserContext';
 import { AddEventService } from '../../services/EventService';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -12,7 +12,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import LocationPicker from '../../component/LocationPicker';
 import styled from "styled-components";
 import Navbar from '../../component/Organizer/Navbar';
-import Footer from '../../component/Footer'
+import { useNavigate } from 'react-router-dom';
 
 
 const { Dragger } = Upload;
@@ -52,14 +52,33 @@ const CustomButton = styled(Button)`
   }
 `;
 
+const CustomSwitch = styled(Switch)`
+  &.ant-switch-checked {
+    background-color: #EC6C21;
+  }
+  &:hover.ant-switch-checked:not(.ant-switch-disabled) {
+    background-color: #b74f18;
+  }
+  &:hover:not(.ant-switch-disabled) {
+    background-color: #d85a1a;
+  }
+  .ant-switch-inner {
+    font-size: 16px;
+  }
+  &.ant-switch {
+    width: 90px;
+    height: 22px;
+  }
+`;
+
 const CreateEvent = () => {
   const { user } = useContext(UserContext);
   const [showNoteModal, setShowNoteModal] = useState(true);
+  const navigate = useNavigate();
 
   const handleClickAgree = () => {
     setShowNoteModal(false);
   };
-
 
   const [formData, setFormData] = useState({
     accountId: user?.accountId || '',
@@ -71,9 +90,9 @@ const CreateEvent = () => {
     location: '',
     startTime: '',
     endTime: '',
-    ticketQuantity: 0,
+    //ticketQuantity: 0,
     status: '',
-    eventImages: [],
+    // eventImages: [],
     ticketTypes: [],
     discountCodes: []
   });
@@ -127,18 +146,18 @@ const CreateEvent = () => {
     }
   };
 
-  const calculateTotalTicketQuantity = (ticketTypes) => {
-    return ticketTypes.reduce((total, ticket) => total + Number(ticket.quantity), 0);
-  };
+  // const calculateTotalTicketQuantity = (ticketTypes) => {
+  //   return ticketTypes.reduce((total, ticket) => total + Number(ticket.quantity), 0);
+  // };
 
   const handleAddTicketType = () => {
     setFormData(prevState => {
       const newTicketTypes = [...prevState.ticketTypes, { typeName: '', price: 0, quantity: 0, status: '' }];
-      const newTicketQuantity = calculateTotalTicketQuantity(newTicketTypes);
+      //const newTicketQuantity = calculateTotalTicketQuantity(newTicketTypes);
       return {
         ...prevState,
         ticketTypes: newTicketTypes,
-        ticketQuantity: newTicketQuantity
+        //ticketQuantity: newTicketQuantity
       };
     });
   };
@@ -154,20 +173,20 @@ const CreateEvent = () => {
     const { name, value } = e.target;
     setFormData(prevState => {
       const updatedTicketTypes = [...prevState.ticketTypes];
-      if (name === 'price' && value < 0 ) {
+      if (name === 'price' && value < 0) {
         message.error('Giá tiền không hợp lệ!');
         return prevState;
       }
-      if (name === 'quantity' && value <= 0 ) {
+      if (name === 'quantity' && value < 0) {
         message.error('Số lượng không hợp lệ!');
         return prevState;
       }
       updatedTicketTypes[index][name] = value;
-      const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
+      //const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
       return {
         ...prevState,
         ticketTypes: updatedTicketTypes,
-        ticketQuantity: newTicketQuantity
+        //ticketQuantity: newTicketQuantity
       };
     });
   };
@@ -191,11 +210,11 @@ const CreateEvent = () => {
   const handleRemoveTicketType = (index) => {
     setFormData(prevState => {
       const updatedTicketTypes = prevState.ticketTypes.filter((_, i) => i !== index);
-      const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
+      //const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
       return {
         ...prevState,
         ticketTypes: updatedTicketTypes,
-        ticketQuantity: newTicketQuantity
+        //ticketQuantity: newTicketQuantity
       };
     });
   };
@@ -210,8 +229,9 @@ const CreateEvent = () => {
       const response = await AddEventService(formData);
       if (response.status === 200) {
         toast.success('Sự kiện đã được tạo thành công!');
+        navigate('/organizer/events');
       } else if (response.status === 400) {
-        toast.error('Thất bại');
+        toast.error('Có lỗi xảy ra!');
       }
     } catch (error) {
       console.error(error);
@@ -325,7 +345,7 @@ const CreateEvent = () => {
                       id="location"
                     />
                   </Form.Item>
-                  <Form.Item name="address" label="Địa chỉ" rules={[{ required: true, message: 'Vui lòng chọn địa chỉ!' }]}>
+                  <Form.Item name="address" label="Địa chỉ">
                     <LocationPicker onLocationChange={handleAddressChange} />
                   </Form.Item>
                 </div>
@@ -342,7 +362,28 @@ const CreateEvent = () => {
                   </Form.Item>
                 </div>
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="endTime" label="Thời gian kết thúc" rules={[{ required: true, message: 'Vui lòng chọn thời gian kết thúc!' }]}>
+                  {/* <Form.Item name="endTime" label="Thời gian kết thúc" rules={[{ required: true, message: 'Vui lòng chọn thời gian kết thúc!' }]}>
+                    <DatePicker
+                      showTime
+                      onChange={(value) =>
+                        setFormData({ ...formData, endTime: value })
+                      }
+                    />
+                  </Form.Item> */}
+                  <Form.Item
+                    name="endTime"
+                    label="Thời gian kết thúc"
+                    rules={[
+                      { required: true, message: 'Vui lòng chọn thời gian kết thúc!' },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('startTime') && value.isAfter(getFieldValue('startTime'))) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('Thời gian kết thúc không sớm hơn thời gian bắt đầu'));
+                        },
+                      }),
+                    ]}>
                     <DatePicker
                       showTime
                       onChange={(value) =>
@@ -357,9 +398,9 @@ const CreateEvent = () => {
                   placeholder="Chọn loại sự kiện"
                   onChange={(value) => setFormData({ ...formData, categoryId: value })}
                 >
-                  <Option value="1">Category 1</Option>
-                  <Option value="2">Category 2</Option>
-                  <Option value="3">Category 3</Option>
+                  <Option value="1">Nghệ thuật</Option>
+                  <Option value="2">Giáo dục</Option>
+                  <Option value="3">Thể thao</Option>
                   <Option value="4">Sự kiện khác</Option>
                 </Select>
               </Form.Item>
@@ -520,7 +561,7 @@ const CreateEvent = () => {
               {/* <CustomButton type="primary" onClick={handleAddDiscountCode}>
           Thêm mã giảm giá
         </CustomButton> */}
-              <Form.Item name="status" label="Trạng thái" className='mt-3' rules={[{ required: true, message: 'Vui lòng chọn!' }]}>
+              {/* <Form.Item name="status" label="Trạng thái" className='mt-3' rules={[{ required: true, message: 'Vui lòng chọn!' }]}>
                 <Select
                   placeholder="Vui lòng chọn"
                   onChange={(value) => setFormData({ ...formData, status: value })}
@@ -528,7 +569,15 @@ const CreateEvent = () => {
                   <Option value="Nháp">Lưu nháp</Option>
                   <Option value="Chờ duyệt">Gửi xét duyệt</Option>
                 </Select>
+              </Form.Item> */}
+              <Form.Item name="status" label="Trạng thái" className='mt-3'>
+                <CustomSwitch
+                  checkedChildren="Chờ duyệt"
+                  unCheckedChildren="Nháp"
+                  onChange={(checked) => setFormData({ ...formData, status: checked ? "Chờ duyệt" : "Nháp" })}
+                />
               </Form.Item>
+
               <Form.Item className="mt-4 pb-4">
                 <CustomButton type="primary" htmlType="submit">
                   Tạo sự kiện

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import logoSrc from "../../assets/images/logo/3.png";
 
-export default function Navbar() {
+export default function NavbarStaff() {
   const [isNotAtTop, setIsNotAtTop] = useState(window.scrollY !== 0);
   const eventListener = useRef(null);
   const [activeLink, setActiveLink] = useState("");
@@ -53,7 +53,7 @@ export default function Navbar() {
             <div className="d-flex align-items-center">
               {
                 user.roleId === 3 ? (
-                  <Link to="/organizer/events" className="navbar-brand text-white">
+                  <Link to="/staff" className="navbar-brand text-white">
                     <img src={logoSrc} height={80} alt="logo" />
                   </Link>
                 ) : (
@@ -155,13 +155,13 @@ export default function Navbar() {
                     Tạo sự kiện
                   </a> */}
                   <Link
-                    to="/organizer/create-event"
+                    to="/staff/checkin"
                     className={`nav-link click-scroll ${
-                      activeLink === "/organizer/create-event" ? "active" : ""
+                      activeLink === "/staff/checkin" ? "active" : ""
                     }`}
-                    onClick={() => setActiveLink("/organizer/create-event")}
+                    onClick={() => setActiveLink("/staff/checkin")}
                   >
-                    Tạo sự kiện
+                    Checkin vé
                   </Link>
                 </li>
 
@@ -170,42 +170,15 @@ export default function Navbar() {
                     Sự kiện đã tạo
                   </a> */}
                   <Link
-                    to="/organizer/events"
+                    to="/staff/checkin-history"
                     className={`nav-link click-scroll ${
-                      activeLink === "/organizer/events" ? "active" : ""
+                      activeLink === "/staff/checkin-history" ? "active" : ""
                     }`}
-                    onClick={() => setActiveLink("/organizer/events")}
+                    onClick={() => setActiveLink("/staff/checkin-history")}
                   >
-                    Sự kiện đã tạo
+                    Lịch sử checkin
                   </Link>
                 </li>
-                {user.roleId === 3 ? (
-                  <li className="nav-item">
-                    {/* <a className="nav-link click-scroll" href="#section_3">
-                    Sự kiện đã tạo
-                  </a> */}
-                    <Link
-                      to="/organizer/manage-staff"
-                      className={`nav-link click-scroll ${
-                        activeLink === "/organizer/manage-staff" ? "active" : ""
-                      }`}
-                      onClick={() => setActiveLink("/organizer/manage-staff")}
-                    >
-                      Giám sát viên
-                    </Link>
-                    <Link
-                      to="/organizer/manage-news"
-                      className={`nav-link click-scroll ${
-                        activeLink === "/organizer/manage-news" ? "active" : ""
-                      }`}
-                      onClick={() => setActiveLink("/organizer/manage-news")}
-                    >
-                      Bài viết
-                    </Link>
-                  </li>
-                ) : (
-                  <></>
-                )}
                 {/* <li className="nav-item">
                   <a className="nav-link click-scroll" href="#section_5">
                     Thể thao
