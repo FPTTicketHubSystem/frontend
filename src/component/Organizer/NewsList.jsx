@@ -4,10 +4,9 @@ import Navbar from "../../component/Organizer/Navbar";
 import { UserContext } from '../../context/UserContext';
 import { Input, Segmented, Table, Button } from 'antd';
 //import { SearchOutlined } from '@ant-design/icons';
-import { GetEventsByAccountService } from '../../services/EventService';
+import { GetNewsByAccountService } from '../../services/NewsService';
 import Footer from '../../component/Footer';
 import { encodeId } from '../../utils/utils';
-
 
 const CustomSearch = styled(Input)`
   .ant-btn-primary {
@@ -46,10 +45,10 @@ const CustomSegmented = styled(Segmented)`
   }
 `;
 
-const Events = () => {
+const NewsList = () => {
     const { user } = useContext(UserContext);
-    const [events, setEvents] = useState([]);
-    const [filteredEvents, setFilteredEvents] = useState([]);
+    const [news, setNews] = useState([]);
+    const [filteredNews, setFilteredNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('TẤT CẢ');
     const [search, setSearch] = useState('');
@@ -57,24 +56,23 @@ const Events = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (!user.accountId) {
-                console.error('accountid by context', user.accountId);
+                console.error('accountId', user.accountId);
                 setLoading(false);
                 return;
             }
 
             setLoading(true);
             try {
-                const response = await GetEventsByAccountService(user.accountId);
-                console.error('accountid by context loading false', user.accountId);
+                const response = await GetNewsByAccountService(user.accountId);
                 console.log('response', response);
 
                 if (!Array.isArray(response)) {
-                    console.error('respone is not an array', response);
-                    setEvents([]);
-                    setFilteredEvents([]);
+                    console.error('response is not an array', response);
+                    setNews([]);
+                    setFilteredNews([]);
                 } else {
-                    setEvents(response);
-                    setFilteredEvents(response);
+                    setNews(response);
+                    setFilteredNews(response);
                 }
             } catch (error) {
                 console.error("fetching data error", error);
@@ -86,92 +84,72 @@ const Events = () => {
     }, [user.accountId]);
 
     useEffect(() => {
-        filterEvents(filter, search);
-    }, [events, filter, search]);
+        filterNews(filter, search);
+    }, [news, filter, search]);
 
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearch(value);
-        filterEvents(filter, value);
+        filterNews(filter, value);
     };
 
     const handleSegmentedChange = (value) => {
         setFilter(value);
-        filterEvents(value, search);
+        filterNews(value, search);
     };
 
-    const filterEvents = (filter, search) => {
-        const now = new Date();
-        let filtered = events;
-
-        if (filter === 'SẮP DIỄN RA') {
-            filtered = filtered.filter(event => new Date(event.startTime) > now);
-        } else if (filter === 'ĐÃ QUA') {
-            filtered = filtered.filter(event => new Date(event.endTime) < now);
-        } else if (filter === 'CHỜ DUYỆT') {
-            filtered = filtered.filter(event => event.status === 'Chờ duyệt');
-        } else if (filter === 'NHÁP') {
-            filtered = filtered.filter(event => event.status === 'Nháp');
+    const filterNews = (filter, search) => {
+        let filtered = news;
+        if (filter === 'CHỜ DUYỆT') {
+            filtered = filtered.filter(newsItem => newsItem.status === 'Chờ duyệt');
+        } else if (filter === 'ĐÃ DUYỆT') {
+            filtered = filtered.filter(newsItem => newsItem.status === 'Đã duyệt');
         }
 
         if (search) {
-            filtered = filtered.filter(event => event.eventName.toLowerCase().includes(search.toLowerCase()));
+            filtered = filtered.filter(newsItem => newsItem.title.toLowerCase().includes(search.toLowerCase()));
         }
 
-        setFilteredEvents(filtered);
+        setFilteredNews(filtered);
     };
 
     const columns = [
         {
-            title: 'Tên sự kiện',
-            dataIndex: 'eventName',
-            key: 'eventName',
-        },
-        {
-            title: 'Ảnh nền sự kiện',
-            dataIndex: 'themeImage',
-            key: 'themeImage',
-            render: (text) => <img src={text} alt="ThemeImage" style={{ width: '120px', height: 'auto', borderRadius: '10px' }} />,
+            title: 'Ảnh bìa',
+            dataIndex: 'coverImage',
+            key: 'coverImage',
+            render: (text) => <img src={text} alt="CoverImage" style={{ width: '120px', height: 'auto', borderRadius: '10px' }} />,
             responsive: ['md'],
         },
         {
-            title: 'Loại sự kiện',
-            dataIndex: 'categoryName',
-            key: 'categoryName',
+            title: 'Tiêu đề',
+            dataIndex: 'title',
+            key: 'title',
+        },
+        {
+            title: 'Phụ đề',
+            dataIndex: 'subtitle',
+            key: 'subtitle',
             responsive: ['md'],
         },
         {
-            title: 'Tên địa điểm',
-            dataIndex: 'location',
-            key: 'location',
-            responsive: ['md'],
-        },
-        {
-            title: 'Thời gian bắt đầu',
-            dataIndex: 'startTime',
-            key: 'startTime',
+            title: 'Thời gian tạo',
+            dataIndex: 'createDate',
+            key: 'createDate',
             render: (text) => new Date(text).toLocaleString("vi"),
-        },
-        {
-            title: 'Thời gian kết thúc',
-            dataIndex: 'endTime',
-            key: 'endTime',
-            render: (text) => new Date(text).toLocaleString("vi"),
-            responsive: ['md'],
         },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            
         },
         {
             title: 'Thao tác',
             key: 'action',
             render: (_, record) => {
-                const encodedId = encodeId(record.eventId);
+                const encodedId = encodeId(record.newsId);
                 return (
-                    <CustomButton type="primary" href={`/organizer/edit-event/${encodedId}`}>
+                    <CustomButton type="primary" href={`/organizer/edit-news/${encodedId}`}>
                         <i className="bi bi-pen"></i>
                     </CustomButton>
                 );
@@ -179,14 +157,33 @@ const Events = () => {
         },
     ];
 
+    const expandedRowRender = (record) => {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <img
+                    src={record.coverImage}
+                    alt="Cover Image"
+                    style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+                />
+                <p><strong>Tiêu đề:</strong> {record.title}</p>
+                <p><strong>Tiêu đề phụ:</strong> {record.subtitle}</p>
+                <div>
+                    <p><strong>Nội dung:</strong></p>
+                    <div dangerouslySetInnerHTML={{ __html: record.content }} />
+                </div>
+                <p><strong>Ngày tạo:</strong> {new Date(record.createDate).toLocaleString("vi")}</p>
+            </div>
+        );
+    };
+
+
     return (
         <>
-            <Navbar />
-            <div className="p-4 bg-light">
+            <div>
                 <div className="row align-items-center mb-4">
                     <div className="col-md-8 mb-3 mb-md-0">
                         <CustomSearch
-                            placeholder="Tìm kiếm sự kiện"
+                            placeholder="Tìm kiếm tin tức"
                             allowClear
                             size="large"
                             style={{ width: '100%' }}
@@ -196,7 +193,7 @@ const Events = () => {
                     </div>
                     <div className="col-md-4">
                         <CustomSegmented
-                            options={['TẤT CẢ', 'SẮP DIỄN RA', 'ĐÃ QUA', 'CHỜ DUYỆT', 'NHÁP']}
+                            options={['TẤT CẢ', 'ĐÃ DUYỆT', 'CHỜ DUYỆT']}
                             style={{ width: '100%' }}
                             onChange={handleSegmentedChange}
                             value={filter}
@@ -205,14 +202,14 @@ const Events = () => {
                 </div>
                 <Table
                     columns={columns}
-                    dataSource={filteredEvents}
-                    rowKey="eventId"
+                    dataSource={filteredNews}
+                    rowKey="newsId"
                     loading={loading}
+                    expandable={{ expandedRowRender }}
                 />
             </div>
-            <Footer/>
         </>
     );
 };
 
-export default Events;
+export default NewsList;

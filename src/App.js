@@ -13,6 +13,9 @@ import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
 import Eventapproval from './pages/Admin/Eventapproval';
 import EditEvent from './pages/Organizer/EditEvent';
+import NewsManage from './pages/Organizer/NewsManage';
+import CheckinTicket from './pages/Staff/CheckinTicket';
+import ManageStaff from './pages/Organizer/ManageStaff';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -33,6 +36,10 @@ function App() {
           <Route path="/organizer/create-event" element={<CreateEvent />} />
           <Route path="/organizer/events" element={<Events />} />
           <Route path="/organizer/edit-event/:encodedId" element={<EditEvent />} />
+          <Route path="/organizer/manage-news" element={<NewsManage />} />
+          <Route path="/organizer/manage-staff" element={<ManageStaff />} />
+          <Route path="/staff/checkin" element={<CheckinTicket />} />
+
         </Routes>
       </Router>
     </>
