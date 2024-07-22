@@ -16,9 +16,10 @@ import MyTicket from './pages/User/MyTicket';
 import ChooseTicket from './pages/Payment/ChooseTicket';
 import TicketDetail from './pages/User/TicketDetail';
 import Payment from './pages/Payment/Payment';
-
 import EditEvent from './pages/Organizer/EditEvent';
 import Search from './pages/Home/Search';
+import ManageNews from './pages/Admin/ManageNews';
+import NewsDetail from './pages/Admin/NewsDetail';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -43,6 +44,8 @@ function App() {
           <Route path="/myticket/detail/:id" element={<TicketDetail/>}/>
           <Route path="/organizer/edit-event/:encodedId" element={<EditEvent />} />
           <Route path="/search" element={<Search/>}/>
+          <Route path="/manage-news" element={<ManageNews />} />
+          <Route path="/news-detail/:newsId" element={<NewsDetail />} />
         </Routes>
       </Router>
     </>
