@@ -6,7 +6,7 @@ import EditButton from '../../component/Admin/EditButton';
 import ConfirmButton from '../../component/Admin/ConfirmButton';
 import CancelButton from '../../component/Admin/CancelButton';
 import '../../assets/css/editprofile.css';
-import { GetAllUserAccountsService } from '../../services/UserService';
+import { GetAllUserAccountsService, ChangeStatusUserService } from '../../services/UserService';
 import { format } from 'date-fns';
 import { Select } from 'antd';
 
@@ -18,7 +18,6 @@ const User = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,18 +44,37 @@ const User = () => {
     setCurrentPage(pageNumber);
   };
 
-  const handleLockChange = (id, newLockStatus) => {
-    const updatedUsers = users.map((user) =>
-      user.accountId === id
-        ? {
-            ...user,
-            isLocked: newLockStatus,
-            status: newLockStatus ? 'Đang khóa' : 'Đang hoạt động',
-          }
-        : user
-    );
-    setUsers(updatedUsers);
+  const handleLockChange = async (id, newStatus) => {
+    try {
+      const status = newStatus ? 'Đang khóa' : 'Đang hoạt động';
+      await ChangeStatusUserService(id, status);
+      const updatedUsers = users.map((user) =>
+        user.accountId === id
+          ? {
+              ...user,
+              status: status,
+            }
+          : user
+      );
+      setUsers(updatedUsers);
+    } catch (error) {
+      console.error('Error changing user status:', error);
+    }
   };
+
+  
+  const handleConfirmChange = async (accountId) => {
+    try {
+      await ChangeStatusUserService(accountId, 'Đang hoạt động');
+      const updatedUsers = users.map((user) =>
+        user.accountId === accountId ? { ...user, status: 'Đang hoạt động' } : user
+      );
+      setUsers(updatedUsers);
+    } catch (error) {
+      console.error('Error approving user:', error);
+    }
+  };
+
 
   const handleFilterChange = (status) => {
     setFilterStatus(status);
@@ -83,7 +101,6 @@ const User = () => {
     const formattedDate = format(new Date(dateString), 'dd/MM/yyyy');
     return formattedDate;
   };
-  
 
   const filteredUsers = users.filter((user) => {
     if (filterStatus !== 'All' && user.status !== filterStatus) {
@@ -94,7 +111,6 @@ const User = () => {
     }
     return true;
   });
-  
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -105,8 +121,8 @@ const User = () => {
 
   const columns = [
     { title: 'STT', dataIndex: 'index', key: 'index' },
-    { title: 'Role', dataIndex: 'roleId', key: 'roleId' 
-              
+    {
+      title: 'Role', dataIndex: 'roleId', key: 'roleId',
     },
     {
       title: 'Họ và tên', dataIndex: 'fullName', key: 'fullName',
@@ -124,9 +140,9 @@ const User = () => {
       render: (user) => (
         <div className="d-flex align-items-center">
           <i
-            className={`icon-circle1 me-2 fs-5 ${user.status === 'Chờ xác thực' ? 'text-danger' : user.isLocked ? 'text-light' : 'text-success'}`}
+            className={`icon-circle1 me-2 fs-5 ${user.status === 'Chờ xác thực' ? 'text-danger' : user.status === 'Đang khóa' ? 'text-light' : 'text-success'}`}
           ></i>
-          {user.isLocked ? 'Đang khóa' : user.status}
+          {user.status}
         </div>
       ),
     },
@@ -140,14 +156,13 @@ const User = () => {
             <>
               <EditButton onEdit={() => handleEditButtonClick(user)} />
               <LockButton
-                isLocked={user.isLocked}
-                onLockChange={(newLockStatus) => handleLockChange(user.accountId, newLockStatus)}
+                isLocked={user.status === 'Đang khóa'}
+                onLockChange={(newStatus) => handleLockChange(user.accountId, newStatus)}
               />
             </>
           ) : user.status === 'Chờ xác thực' ? (
             <>
-              <ConfirmButton />
-              <CancelButton />
+              <ConfirmButton accountId={user.accountId} onConfirm={() => handleConfirmChange(user.accountId)} />
             </>
           ) : null}
         </>
