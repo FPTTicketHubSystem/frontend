@@ -15,6 +15,21 @@ export const GetEventsService = async () => {
     }
 }
 
+export const GetEventsForAdminService = async () => {
+    try {
+      const response = await request({
+        method: 'get',
+        url: 'event/getAllEventAdmin',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response;
+    } catch (e) {
+      return e;
+    }
+}
+
 export const GetEventsByAccountService = async (accountId) => {
     try {
         const response = await request({
@@ -91,11 +106,11 @@ export const GetEventForEdit = async (id) => {
     }
 }
 
-export const UpdateEventService = async (id, data) => {
+export const UpdateEventService = async (data) => {
     try {
         const response = await request({
             method: "post",
-            url: `event/editEvent?eventId=${id}`,
+            url: "event/editEvent",
             headers: {
                 "Content-Type": "application/json",
             },
