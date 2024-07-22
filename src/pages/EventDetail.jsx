@@ -39,12 +39,12 @@ function EventDetail() {
       quantity: ticket.quantity,
     })) || [];
 
-  // Function to check if all tickets are sold out
+  // check if all tickets are sold out
   const areAllTicketsSoldOut = ticketList.every(
     (ticket) => ticket.quantity === 0
   );
 
-  // Function to check if the event has ended
+  // check if the event has ended
   const isEventEnded = new Date(event.endTime) < new Date();
 
   // xử lý so sánh ngày
@@ -219,7 +219,7 @@ function EventDetail() {
             >
               {ticketList.map((ticket) => (
                 <div className="ticket-level" key={ticket.type}>
-                  <span className="name">{ticket.type}</span>
+                  <span className="type-ticket">{ticket.type}</span>
                   <div>
                     {ticket.price === 0 ? (
                       <span className="price text-center">Miễn phí</span>

@@ -3,11 +3,14 @@ import SideBar from "./component/SideBar";
 import { Container } from "react-bootstrap";
 import { RightOutlined } from "@ant-design/icons";
 import { Button, Flex } from "antd";
-import { useState } from "react";
-
+import { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import { Link } from "react-router-dom";
+
+import {GetTicketByAccountService} from "../../services/TicketService";
+
 
 const buttonStyle = {
     height: "1.8rem",
@@ -45,25 +48,36 @@ const activeTabStyle = {
     ...tabStyle,
     opacity: 1,
     fontWeight: "bold",
-    borderBottom: "2px solid #00c853"
-};
-
-const ticketParam = {
-    orderCode: "237612828",
-    eventName: "Khoá tu Mùa Hè TÌM VỀ CHÍNH MÌNH",
-    status: "Thành công",
-    ticketType: "Vé điện tử",
-    date: "11 tháng 07, 2024",
-    time: "14:00",
-    endDate: "14 tháng 07, 2024",
-    endTime: "10:00",
-    location: "Tịnh Viện Pháp Thường, Nhơn Trạch Đồng Nai",
-    fullLocation: "Tinh Vien Phap Thuong, Huyen Nhon Trach, Dong Nai, Xã Phú Đông, Huyện Nhơn Trạch, Tỉnh Đồng Nai"
+    borderBottom: "2px solid #EC6C21"
 };
 
 const MyTicket = () => {
+    const {user} = useContext(UserContext);
     const [activeTab, setActiveTab] = useState("upcoming");
     const [activeButton, setActiveButton] = useState("all");
+    const [tickets, setTickets] = useState([]);
+
+    const fetchTickets = async () => {
+        try {
+            const response = await GetTicketByAccountService(user.accountId);
+            setTickets(response);
+        } catch (error) {
+            console.error("Error fetching tickets:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (!user.accountId) {
+            return;
+        }
+        try {
+            fetchTickets();
+        }
+        catch (e) {
+            console.error(e);
+        }
+
+    }, [user.accountId]);
 
     return (
         <div className="bg bg-dark">
@@ -76,7 +90,7 @@ const MyTicket = () => {
                 <SideBar />
                 <div style={{ marginLeft: "150px" }}>
                     <h2>Vé đã mua</h2>
-                    <Flex className="py-4 my-3" style={{ borderTop: "2px solid #EC6C21", justifyContent: "space-around" }}>
+                    <Flex className="py-4 my-3" style={{ borderTop: "1px solid #EC6C21", justifyContent: "space-around" }}>
                         <Button
                             style={activeButton === "all" ? activeButtonStyle : buttonStyle}
                             onClick={() => setActiveButton("all")}
@@ -116,15 +130,22 @@ const MyTicket = () => {
                             Đã kết thúc
                         </Button>
                     </Flex>
-                    <Link  to="/myticket/detail" style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <Ticket {...ticketParam} />
-                        
-                    </Link>
-                    
-                    <a href="/myticket/detail">
-                    <Ticket {...ticketParam} />
-                    
-                    </a>
+                    {tickets.map(ticket => (
+                        <Link key={ticket.ticketId} to={`/myticket/detail/${ticket.ticketId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <Ticket 
+                                orderCode={ticket.ticketId.toString()}
+                                eventName={ticket.eventName}
+                                status={ticket.isCheckedIn ? "Đã sử dụng" : "Chưa sử dụng"}
+                                ticketType={ticket.typeName}
+                                date={new Date(ticket.startTime).toLocaleDateString('vi-VN')}
+                                time={new Date(ticket.startTime).toLocaleTimeString('vi-VN')}
+                                endDate={new Date(ticket.endTime).toLocaleDateString('vi-VN')}
+                                endTime={new Date(ticket.endTime).toLocaleTimeString('vi-VN')}
+                                location={ticket.location}
+                                fullLocation={ticket.address}
+                            />
+                        </Link>
+                    ))}
                 </div>
             </Container>
             <Footer />

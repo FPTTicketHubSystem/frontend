@@ -1,48 +1,58 @@
-import React, { useState } from 'react';
+import React from 'react';
+import '../../assets/css/search.css';
+import Header from "../../component/Header";
+import Footer from "../../component/Footer";
 
-function App() {
-  const [showFilters, setShowFilters] = useState(false);
 
-  const toggleFilters = () => {
-    setShowFilters(!showFilters);
-  };
-
+const Search = () => {
   return (
-    <div className="app">
-      <div className="background">
-        <div className="search-container">
-          <input type="text" placeholder="Search..." className="search-input" />
-          <input type="text" placeholder="Toàn Quốc" className="location-input" />
-          <button className="search-button">Tìm kiếm</button>
+    <>
+    {/* <Header/> */}
+    <div className="custom-search-container">
+    <div className="custom-overlay">
+      <div className="custom-search-box">
+        <div className="input-group">
+          <span className="input-group-text" id="basic-addon1">
+            <i className="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Sự kiện bạn muốn tìm kiếm?"
+            aria-label="Search"
+            aria-describedby="basic-addon1"
+          />
         </div>
-        <div className="filters">
-          <span className="filter-label">Kết quả tìm kiếm:</span>
-          <button className="filter-button active">Tất cả</button>
-          <button className="filter-button">Nhạc sống</button>
-          <button className="filter-reset">Thiết lập lại</button>
+        <div className="input-group mt-3">
+          <span className="input-group-text" id="basic-addon2">
+            <i className="bi bi-geo-alt"></i>
+          </span>
+          <select className="form-select" aria-label="Location">
+            <option value="toanquoc">Toàn Quốc</option>
+            <option value="toanquoc">Hà Nội</option>
+            <option value="toanquoc">Đà Nẵng</option>
+            <option value="toanquoc">Quy Nhơn</option>
+            <option value="toanquoc">TP. Hồ Chí Minh</option>
+          </select>
         </div>
-        <div className="filter-dropdown">
-          <button className="filter-toggle" onClick={toggleFilters}>
-            Bộ lọc
-            <span className={showFilters ? "arrow up" : "arrow down"}></span>
-          </button>
-          {showFilters && (
-            <div className="filter-options">
-              <label>
-                <input type="checkbox" name="option1" /> Option 1
-              </label>
-              <label>
-                <input type="checkbox" name="option2" /> Option 2
-              </label>
-              <label>
-                <input type="checkbox" name="option3" /> Option 3
-              </label>
-            </div>
-          )}
-        </div>
+        <button className="btn btn-primary mt-3">Tìm kiếm</button>
       </div>
     </div>
+  </div>
+  <div className="custom-search-results mt-4">
+            <div className="d-flex flex-wrap align-items-center">
+              <span className="text-success me-2">Kết quả tìm kiếm:</span>
+              <button className="btn btn-outline-secondary btn-sm me-2">Tất cả</button>
+              <button className="btn btn-outline-secondary btn-sm me-2">Nhạc sống</button>
+              <button className="btn btn-outline-secondary btn-sm me-2">Sân khấu & Nghệ thuật</button>
+              <button className="btn btn-outline-secondary btn-sm me-2">Thể thao</button>
+              <span className="text-success ms-auto">Thiết lập lại</span>
+            </div>
+          </div>
+  
+    </>
+    
   );
-}
+};
 
-export default App;
+export default Search;

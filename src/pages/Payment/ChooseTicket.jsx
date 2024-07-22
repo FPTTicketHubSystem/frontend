@@ -5,6 +5,8 @@ import "../../assets/css/chooseticket.css";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import { UserContext } from "../../context/UserContext";
+import { PaymentForUser } from "../../services/PaymentService";
+import { toast } from "react-toastify";
 
 function ChooseTicket() {
   const location = useLocation();
@@ -17,6 +19,7 @@ function ChooseTicket() {
 
   const ticketList =
     event?.tickettypes?.map((ticket) => ({
+      id: ticket.ticketTypeId,
       type: ticket.typeName,
       price: ticket.price,
       quantity: ticket.quantity,
@@ -54,20 +57,42 @@ function ChooseTicket() {
     );
   };
 
-  const handleContinue = () => {
-    navigate("/payment", {
-      state: {
-        event,
-        totalPrice,
-        quantities,
-        ticketList,
-      },
-    });
-  };
-
-  if (!event) {
-    return <div>Loading...</div>;
+  const handleContinue = async () => {
+    const selectedTickets = ticketList.map((ticket, index) => ({
+      ticketTypeId: ticket.id,
+      priceTicket: ticket.price,
+      quantity: quantities[index],
+    })).filter(ticket => ticket.quantity > 0);
+    const paymentDTO = {
+      accountId: user.accountId,
+      eventId: event.eventId,
+      totalPayment: totalPrice,
+      ticketBuyeds: selectedTickets,
+    };
+    const result = await PaymentForUser(paymentDTO);
+    if(result.status == 200)
+    {
+      var orderId = result.orderId;
+      navigate("/payment", {
+        state: {
+          event,
+          totalPrice,
+          quantities,
+          ticketList,
+          paymentDTO,
+          orderId
+        },
+      });
+    } 
+    else
+    {
+      toast.error('Order thất bại');
+    }
   }
+
+  // if (!event) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <>
@@ -84,7 +109,7 @@ function ChooseTicket() {
               <span className="ticket-quantity">Số lượng</span>
             </div>
             {ticketList.map((ticket, index) => (
-              <div key={ticket.type} className="ticket-row">
+              <div key={ticket.id} className="ticket-row">
                 <span className="ticket-type">{ticket.type}</span>
                 <span
                     className={ticket.quantity === 0 ? "sold-out" : "available"}

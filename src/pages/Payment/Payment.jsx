@@ -5,16 +5,21 @@ import { UserContext } from "../../context/UserContext";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import vnpayLogo from "../../assets/images/logo/paymentLogo2.png";
+import { Button, Modal } from "antd";
+import qrCodeImage from "../../assets/images/qrcode.png";
+import { DeleteTimeOutOrder } from "../../services/PaymentService";
+import { ReturnPaymentUrl } from "../../services/PaymentService";
 
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { event, totalPrice, quantities, ticketList } = location.state || {};
+  const { event, totalPrice, quantities, ticketList, paymentDTO, orderId} = location.state || {};
 
   const [discountCode, setDiscountCode] = useState("");
   const [discountError, setDiscountError] = useState(""); // State for discount error message
   const [discountAmount, setDiscountAmount] = useState(0); // State for discount amount
   const [finalTotalPrice, setFinalTotalPrice] = useState(totalPrice);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleApplyDiscount = () => {
     // Replace with actual discount code validation logic
@@ -32,6 +37,7 @@ const Payment = () => {
   };
 
   const [timeLeft, setTimeLeft] = useState({ minutes: 9, seconds: 59 });
+  const [timeLeft2, setTimeLeft2] = useState({ minutes: 9, seconds: 59  });
   const [timeUp, setTimeUp] = useState(false); // State to control the popup
   const { user } = useContext(UserContext);
 
@@ -45,8 +51,13 @@ const Payment = () => {
       if (remainingTime <= 0) {
         setTimeUp(true);
         setTimeLeft({ minutes: 0, seconds: 0 });
+        setTimeLeft2({ minutes: 0, seconds: 0 });
       } else {
         setTimeLeft({
+          minutes: Math.floor(remainingTime / 60),
+          seconds: remainingTime % 60,
+        });
+        setTimeLeft2({
           minutes: Math.floor(remainingTime / 60),
           seconds: remainingTime % 60,
         });
@@ -55,7 +66,7 @@ const Payment = () => {
       sessionStorage.setItem("startTime", currentTime);
     }
 
-    const countdown = setInterval(() => {
+    const countdown = setInterval(async () => {
       setTimeLeft((prevTime) => {
         const newSeconds = prevTime.seconds - 1;
         if (newSeconds < 0) {
@@ -69,6 +80,20 @@ const Payment = () => {
         }
         return { ...prevTime, seconds: newSeconds };
       });
+      setTimeLeft2((prevTime) => {
+        const newSeconds = prevTime.seconds - 1;
+        if (newSeconds < 0) {
+          const newMinutes = prevTime.minutes - 1;
+          if (newMinutes < 0) {
+            clearInterval(countdown);
+            setTimeUp(true); // Show popup when time is up
+            return { minutes: 0, seconds: 0 };
+          }
+          return { minutes: newMinutes, seconds: 59 };
+        }
+        return { ...prevTime, seconds: newSeconds };
+      });
+      const result = await CallDeleteTimeOutOrder(paymentDTO);
     }, 1000);
 
     return () => {
@@ -77,12 +102,14 @@ const Payment = () => {
     };
   }, []);
 
-  const handleContinue = () => {
-    // Handle the continue action, e.g., form validation and submission
-    //console.log("Phone Number:", phoneNumber);
-    //console.log("Email:", email);
-    // navigate to the next step if needed
-  };
+  async function CallDeleteTimeOutOrder(paymentDTO) {
+    try {
+      const response = await DeleteTimeOutOrder(paymentDTO);
+    } catch (error) {
+      console.error('There was a problem with the fetch operation:', error);
+      return null;
+    }
+  }
 
   if (!event) {
     return <div>Loading...</div>; // Handle the case where event is not available
@@ -92,6 +119,31 @@ const Payment = () => {
     navigate(-1); // Navigate back to the previous page
   };
 
+  //#region Handle Modal
+  const handleContinue = async () => {
+    debugger;
+    var data = {
+      orderId: orderId,
+      discountCode: discountCode
+    };
+    console.log(data);
+    const response = await ReturnPaymentUrl(data);
+    if(response.status == 200)
+    {
+      
+      window.open(response.paymentUrl);
+    }
+    // setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  //#endregion
   return (
     <div>
       <Header />
@@ -126,7 +178,7 @@ const Payment = () => {
           </div>
         </div>
 
-        <div className="row"> 
+        <div className="row">
           <div className="question-table col-lg-8 col-md-10 col-sm-10">
             <h3>Thông tin nhận vé</h3>
             <div className="form-group">
@@ -233,9 +285,12 @@ const Payment = () => {
             </h5>
             <p>
               {" "}
-              <i className="bi bi-bell" style={{ fontSize: "40px" }}></i>{" "}
+              <i
+                className="bi bi-bell"
+                style={{ fontSize: "40px", color: "black" }}
+              ></i>{" "}
             </p>
-            <p style={{ fontSize: "16px" }}>
+            <p style={{ fontSize: "16px", color: "black" }}>
               Đã hết thời gian giữ vé. Vui lòng chọn lại vé.
             </p>
             <button onClick={handleBack} className="back-button">
@@ -244,6 +299,32 @@ const Payment = () => {
           </div>
         </div>
       )}
+
+      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <h2 className="text-center">Thanh toán bằng VNPAY</h2>
+        <div className="row mt-3">
+          <div className="col-lg-6">
+            {" "}
+            <img src={qrCodeImage} alt="QR Code" className="qr-code"/>
+          </div>
+          <div className="instructions col-lg-6" style={{fontSize:"5px"}}>
+              <p style={{fontSize:"16px"}}>
+                <strong>Quét mã QR để thanh toán</strong>
+              </p>
+              <p style={{fontSize:"14px"}}>1. Mở ứng dụng VNPAY hoặc ngân hàng trên điện thoại</p>
+              <p style={{fontSize:"14px"}}>2. Chọn biểu tượng Quét mã QR</p>
+              <p style={{fontSize:"14px"}}>3. Quét mã QR ở trang này và thanh toán</p>
+          </div>
+        </div>
+
+        <div className="timer">
+          <p className="text-center">Giao dịch sẽ kết thúc sau</p>
+          <div className="time">
+            <span>{String(timeLeft2.minutes).padStart(2, "0")}</span>:
+            <span>{String(timeLeft2.seconds).padStart(2, "0")}</span>
+          </div>
+        </div>
+      </Modal>
       <Footer />
     </div>
   );
