@@ -220,9 +220,12 @@ Giới thiệu */
   display: flex;
   justify-content: space-between;
 }
-.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level .name {
+.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level .type-ticket {
   text-transform: uppercase;
   font-weight: 600;
+  font-size: 20px;
+  color: #EC6C21;
+
 }
 .ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level .price {
   color: #EC6C21;

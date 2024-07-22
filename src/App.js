@@ -17,8 +17,8 @@ import ChooseTicket from './pages/Payment/ChooseTicket';
 import TicketDetail from './pages/User/TicketDetail';
 import Payment from './pages/Payment/Payment';
 
-
 import EditEvent from './pages/Organizer/EditEvent';
+import Search from './pages/Home/Search';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -40,8 +40,9 @@ function App() {
           <Route path="/seclectTicket" element={<ChooseTicket/>}/>
           <Route path="/payment" element={<Payment/>}/>
           <Route path="/myticket" element={<MyTicket/>}/>
-          <Route path="/myticket/detail" element={<TicketDetail/>}/>
+          <Route path="/myticket/detail/:id" element={<TicketDetail/>}/>
           <Route path="/organizer/edit-event/:encodedId" element={<EditEvent />} />
+          <Route path="/search" element={<Search/>}/>
         </Routes>
       </Router>
     </>
