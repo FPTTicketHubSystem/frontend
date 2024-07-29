@@ -49,3 +49,19 @@ export const ReturnPaymentUrl = async (data) => {
         return e;
     }
 };
+
+export const CheckInputCoupon = async (id , discount) => {
+  try {
+      debugger;
+      const response = await request({
+          method: 'post',
+          url: `payment/checkInputCoupon?ticketId=${id}&coupon=${discount}`,
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+      return response;
+  } catch (e) {
+      return e;
+  }
+};
