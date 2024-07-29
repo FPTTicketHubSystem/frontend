@@ -9,6 +9,7 @@ import { Button, Modal } from "antd";
 import qrCodeImage from "../../assets/images/qrcode.png";
 import { DeleteTimeOutOrder } from "../../services/PaymentService";
 import { ReturnPaymentUrl } from "../../services/PaymentService";
+import { CheckInputCoupon } from "../../services/PaymentService";
 
 const Payment = () => {
   const location = useLocation();
@@ -21,18 +22,20 @@ const Payment = () => {
   const [finalTotalPrice, setFinalTotalPrice] = useState(totalPrice);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleApplyDiscount = () => {
+  const handleApplyDiscount = async () => {
+    const result = await CheckInputCoupon(paymentDTO.eventId, discountCode);
     // Replace with actual discount code validation logic
-    if (discountCode !== "FPT50") {
+    if (result.status === 400) {
+      setDiscountCode("");
       setDiscountError("Mã giảm giá không hợp lệ hoặc đã hết hạn.");
       setDiscountAmount(0); // Reset discount amount if invalid
       setFinalTotalPrice(totalPrice); // Reset to original price if invalid
     } else {
       setDiscountError("");
       // Apply the discount if valid
-      const discount = 50000; // Example discount amount
+      const discount = (result.discountAmount/100); // Example discount amount
       setDiscountAmount(discount);
-      setFinalTotalPrice(totalPrice - discount);
+      setFinalTotalPrice(totalPrice * discount);
     }
   };
 
