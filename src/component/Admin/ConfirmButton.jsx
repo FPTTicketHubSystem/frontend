@@ -1,30 +1,23 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-const ConfirmButon = ({ onRemove }) => {
+const ConfirmButton = ({ accountId, onConfirm }) => {
   const [showModal, setShowModal] = useState(false);
-  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const handleConfirm = () => {
-    // Handle confirmation logic, e.g., call onRemove()
-    setIsConfirmed(true); // Set isConfirmed to true when confirmed
-    setShowModal(false); // Close the modal after confirmation
+    onConfirm(accountId); // Gọi hàm onConfirm và truyền accountId
+    setShowModal(false); // Đóng modal sau khi xác nhận
   };
 
   return (
     <>
-      {!isConfirmed && ( // Render the button only if not confirmed
-        <button
-          onClick={() => setShowModal(true)}
-          className="btn btn-outline-success btn-sm"
-          data-bs-toggle="tooltip"
-          data-bs-placement="top"
-          data-bs-custom-class="custom-tooltip-danger"
-          data-bs-title="Duyet"
-        >
-          <i className="icon-check1"></i>
-        </button>
-      )}
+      <button
+        onClick={() => setShowModal(true)}
+        className="btn-tooltip btn btn-outline-success btn-sm"
+        title="Duyệt"
+      >
+        <i className="icon-check1"></i>
+      </button>
 
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
@@ -42,7 +35,6 @@ const ConfirmButon = ({ onRemove }) => {
       </Modal>
     </>
   );
-}
+};
 
-export default ConfirmButon;
-
+export default ConfirmButton;

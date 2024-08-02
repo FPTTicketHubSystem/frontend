@@ -14,9 +14,8 @@ function EventByCategory({ categoryId, categoryName }) {
         const response = await GetEventByCategoryService(categoryId);
         if (Array.isArray(response)) {
           setEvents(response);
-        }
-        else {
-          console.error ("response is not an array", response)
+        } else {
+          console.error("response is not an array", response);
         }
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -28,15 +27,19 @@ function EventByCategory({ categoryId, categoryName }) {
 
   return (
     <div className="app">
-      <div>
-      <h1 style={{ color: "white", marginLeft: "128px", fontSize: "2rem" }}>
-        {categoryName}
-      </h1>
-      <Link to={`/events/${categoryId}`} className="see-more-button">
-        Xem thêm <i class="bi bi-chevron-right"></i>
-      </Link>
+      <div className="titleCategory" style={{display: "flex", margin: "auto", justifyContent: "space-between"}}>
+        <div>
+          <h1 style={{ color: "white", marginLeft: "128px", fontSize: "2rem" }}>
+            {categoryName}
+          </h1>
+        </div>
+        <div style={{marginRight: "9%"}}>
+          <Link to={`/events/${categoryId}`} className="see-more-button" >
+            Xem thêm <i class="bi bi-chevron-right"></i>
+          </Link>
+        </div>
       </div>
-      
+
       <div className="events-list">
         {events.slice(0, 4).map((event) => {
           const lowestPrice = event.tickettypes.reduce(
