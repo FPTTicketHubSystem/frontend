@@ -230,6 +230,7 @@ body {
 /*---------------------------------------
   EventCard In Each Category          
 -----------------------------------------*/
+
 .events-list {
   display: flex;
   flex-wrap: wrap;
@@ -348,7 +349,7 @@ h6 {
 }
 
 p {
-  color: var(--p-color);
+
   font-size: var(--p-font-size);
   font-weight: var(--font-weight-light);
 }
@@ -546,7 +547,7 @@ strong {
   CUSTOM BUTTON               
 -----------------------------------------*/
 .btn-custom {
-  background-color: #F2721E;
+  background-color: #EC6C21;
 }
 
 .custom-btn {

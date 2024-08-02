@@ -1,34 +1,37 @@
-import React from 'react'
-import { Modal, Button } from 'react-bootstrap'
-
+import React, { useState } from 'react';
+import { Modal, Button } from 'react-bootstrap';
+import '../../assets/css/button.css';
 
 const LockButton = ({ isLocked, onLockChange }) => {
-  const [showModal, setShowModal] = React.useState(false)
+  const [showModal, setShowModal] = useState(false);
 
   const handleLockClick = () => {
-    setShowModal(true)
-  }
+    setShowModal(true);
+  };
 
   const handleCloseModal = () => {
-    setShowModal(false)
-  }
+    setShowModal(false);
+  };
 
   const handleConfirmLock = () => {
-    onLockChange(!isLocked)
-    setShowModal(false)
-  }
+    onLockChange(!isLocked);
+    setShowModal(false);
+  };
 
   return (
     <>
-      <button className="btn btn-outline-warning btn-sm" data-bs-toggle="tooltip"
-        data-bs-placement="top" data-bs-custom-class="custom-tooltip-danger"
-        data-bs-title="Lock" onClick={handleLockClick}>
+      <button
+        className="btn-tooltip btn btn-outline-warning btn-sm"
+        title={isLocked ? "Mở khóa" : "Khóa"}
+        onClick={handleLockClick}
+        style={{ marginLeft: '10px' }}
+      >
         <i className={isLocked ? "icon-unlock" : "icon-lock"}></i>
       </button>
 
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Xác nhận khóa tài khoản</Modal.Title>
+          <Modal.Title>Xác nhận {isLocked ? "mở khóa" : "khóa"} tài khoản</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Bạn có muốn {isLocked ? "mở khóa" : "khóa"} tài khoản này không?
@@ -43,7 +46,7 @@ const LockButton = ({ isLocked, onLockChange }) => {
         </Modal.Footer>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default LockButton
+export default LockButton;

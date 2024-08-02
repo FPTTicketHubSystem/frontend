@@ -1,15 +1,12 @@
 import React from 'react';
+import '../../assets/css/button.css';
 
 const EditButton = ({ onEdit }) => {
   return (
-    <a>
+    <a className="btn-tooltip" title="Edit">
       <button 
         onClick={onEdit} 
         className="btn btn-outline-primary btn-sm" 
-        data-bs-toggle="tooltip"
-        data-bs-placement="top" 
-        data-bs-custom-class="custom-tooltip-primary"
-        data-bs-title="Edit"
       >
         <i className="icon-edit"></i>
       </button>

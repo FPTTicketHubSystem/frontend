@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import "../../assets/css/header.css"
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -9,6 +9,8 @@ import logoSrc from "../../assets/images/logo/3.png";
 export default function Navbar() {
   const [isNotAtTop, setIsNotAtTop] = useState(window.scrollY !== 0);
   const eventListener = useRef(null);
+  const [activeLink, setActiveLink] = useState("");
+  const location = useLocation();
 
   useEffect(() => {
     eventListener.current = window.addEventListener("scroll", () => {
@@ -22,7 +24,8 @@ export default function Navbar() {
     };
   }, []);
   useEffect(() => {
-    window.scrollTo(0, 0); 
+    window.scrollTo(0, 0);
+    setActiveLink(location.pathname);
   }, []);
 
   const navigate = useNavigate();
@@ -48,9 +51,17 @@ export default function Navbar() {
         <nav className="navbar navbar-expand-lg pt-0 pb-0">
           <div className="container">
             <div className="d-flex align-items-center">
-              <Link to="/" className="navbar-brand text-white">
-                <img src={logoSrc} height={80} alt="logo" />
-              </Link>
+              {
+                user.roleId === 3 ? (
+                  <Link to="/organizer/events" className="navbar-brand text-white">
+                    <img src={logoSrc} height={80} alt="logo" />
+                  </Link>
+                ) : (
+                  <Link to="/" className="navbar-brand text-white">
+                    <img src={logoSrc} height={80} alt="logo" />
+                  </Link>
+                )
+              }
             </div>
 
             <div className="d-flex align-items-center order-lg-2 order-1">
@@ -81,7 +92,7 @@ export default function Navbar() {
                           className="rounded-circle"
                           width="50"
                           height="50"
-                          style={{border: 'solid #ffffff'}}
+                          style={{ border: 'solid #ffffff' }}
                         />
                       )}
                     </a>
@@ -106,7 +117,7 @@ export default function Navbar() {
                           </Link>
                         )}
                       </li>
-                      
+
                       <li>
                         <hr className="dropdown-divider" />
                       </li>
@@ -143,22 +154,55 @@ export default function Navbar() {
                   {/* <a className="nav-link click-scroll" href="#section_2">
                     Tạo sự kiện
                   </a> */}
-                  <Link to = "/organizer/create-event" className="nav-link click-scroll">Tạo sự kiện</Link>
+                  <Link
+                    to="/organizer/create-event"
+                    className={`nav-link click-scroll ${
+                      activeLink === "/organizer/create-event" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveLink("/organizer/create-event")}
+                  >
+                    Tạo sự kiện
+                  </Link>
                 </li>
 
                 <li className="nav-item">
                   {/* <a className="nav-link click-scroll" href="#section_3">
                     Sự kiện đã tạo
                   </a> */}
-                  <Link to = "/organizer/events" className="nav-link click-scroll">Sự kiện đã tạo</Link>
+                  <Link
+                    to="/organizer/events"
+                    className={`nav-link click-scroll ${
+                      activeLink === "/organizer/events" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveLink("/organizer/events")}
+                  >
+                    Sự kiện đã tạo
+                  </Link>
                 </li>
-                { user.roleId ===3 ? (
+                {user.roleId === 3 ? (
                   <li className="nav-item">
-                  {/* <a className="nav-link click-scroll" href="#section_3">
+                    {/* <a className="nav-link click-scroll" href="#section_3">
                     Sự kiện đã tạo
                   </a> */}
-                  <Link to = "/organizer/approve-staff" className="nav-link click-scroll">Duyệt giám sát viên</Link>
-                </li>
+                    <Link
+                      to="/organizer/manage-staff"
+                      className={`nav-link click-scroll ${
+                        activeLink === "/organizer/manage-staff" ? "active" : ""
+                      }`}
+                      onClick={() => setActiveLink("/organizer/manage-staff")}
+                    >
+                      Giám sát viên
+                    </Link>
+                    <Link
+                      to="/organizer/manage-news"
+                      className={`nav-link click-scroll ${
+                        activeLink === "/organizer/manage-news" ? "active" : ""
+                      }`}
+                      onClick={() => setActiveLink("/organizer/manage-news")}
+                    >
+                      Bài viết
+                    </Link>
+                  </li>
                 ) : (
                   <></>
                 )}

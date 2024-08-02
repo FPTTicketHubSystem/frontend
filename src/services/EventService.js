@@ -15,6 +15,36 @@ export const GetEventsService = async () => {
     }
 }
 
+export const GetEventsForAdminService = async () => {
+    try {
+      const response = await request({
+        method: 'get',
+        url: 'event/getAllEventAdmin',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response;
+    } catch (e) {
+      return e;
+    }
+}
+
+export const GetEventsByAccountService = async (accountId) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `event/getEventByAccount?accountId=${accountId}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
 export const GetEventByIdService = async (id) => {
     try {
         const response = await request({
@@ -61,11 +91,26 @@ export const AddEventService = async (data) => {
     }
 }
 
-export const UpdateEventService = async (id, data) => {
+export const GetEventForEdit = async (id) => {
     try {
         const response = await request({
-            method: "put",
-            url: `event/editEvent?eventId=${id}`,
+            method: "get",
+            url: `event/getEventForEdit?eventId=${id}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const UpdateEventService = async (data) => {
+    try {
+        const response = await request({
+            method: "post",
+            url: "event/editEvent",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -106,3 +151,18 @@ export const GetUpcomingEventService = async () => {
 //         return e;
 //     }
 // }
+
+export const ChangeStatusEventService = async (eventId, newStatus) => {
+  try {
+    const response = await request({
+      method: 'post',
+      url: `event/changeEventStatus?eventId=${eventId}&status=${newStatus}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (error) {
+    throw new Error(`Error changing event status: ${error.message}`);
+  }
+};

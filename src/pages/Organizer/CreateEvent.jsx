@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { Form, Input, Button, DatePicker, Select, Table, Upload, message, Modal } from 'antd';
+import { Form, Input, Button, DatePicker, Select, Table, Upload, message, Modal, Switch } from 'antd';
 import { UserContext } from '../../context/UserContext';
 import { AddEventService } from '../../services/EventService';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -12,7 +12,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import LocationPicker from '../../component/LocationPicker';
 import styled from "styled-components";
 import Navbar from '../../component/Organizer/Navbar';
-import Footer from '../../component/Footer'
+import { useNavigate } from 'react-router-dom';
 
 
 const { Dragger } = Upload;
@@ -52,14 +52,33 @@ const CustomButton = styled(Button)`
   }
 `;
 
+const CustomSwitch = styled(Switch)`
+  &.ant-switch-checked {
+    background-color: #EC6C21;
+  }
+  &:hover.ant-switch-checked:not(.ant-switch-disabled) {
+    background-color: #b74f18;
+  }
+  &:hover:not(.ant-switch-disabled) {
+    background-color: #d85a1a;
+  }
+  .ant-switch-inner {
+    font-size: 16px;
+  }
+  &.ant-switch {
+    width: 90px;
+    height: 22px;
+  }
+`;
+
 const CreateEvent = () => {
   const { user } = useContext(UserContext);
   const [showNoteModal, setShowNoteModal] = useState(true);
+  const navigate = useNavigate();
 
   const handleClickAgree = () => {
     setShowNoteModal(false);
   };
-
 
   const [formData, setFormData] = useState({
     accountId: user?.accountId || '',
@@ -71,9 +90,9 @@ const CreateEvent = () => {
     location: '',
     startTime: '',
     endTime: '',
-    ticketQuantity: 0,
+    //ticketQuantity: 0,
     status: '',
-    eventImages: [],
+    // eventImages: [],
     ticketTypes: [],
     discountCodes: []
   });
@@ -127,18 +146,18 @@ const CreateEvent = () => {
     }
   };
 
-  const calculateTotalTicketQuantity = (ticketTypes) => {
-    return ticketTypes.reduce((total, ticket) => total + Number(ticket.quantity), 0);
-  };
+  // const calculateTotalTicketQuantity = (ticketTypes) => {
+  //   return ticketTypes.reduce((total, ticket) => total + Number(ticket.quantity), 0);
+  // };
 
   const handleAddTicketType = () => {
     setFormData(prevState => {
       const newTicketTypes = [...prevState.ticketTypes, { typeName: '', price: 0, quantity: 0, status: '' }];
-      const newTicketQuantity = calculateTotalTicketQuantity(newTicketTypes);
+      //const newTicketQuantity = calculateTotalTicketQuantity(newTicketTypes);
       return {
         ...prevState,
         ticketTypes: newTicketTypes,
-        ticketQuantity: newTicketQuantity
+        //ticketQuantity: newTicketQuantity
       };
     });
   };
@@ -154,31 +173,48 @@ const CreateEvent = () => {
     const { name, value } = e.target;
     setFormData(prevState => {
       const updatedTicketTypes = [...prevState.ticketTypes];
+      if (name === 'price' && value < 0) {
+        message.error('Giá tiền không hợp lệ!');
+        return prevState;
+      }
+      if (name === 'quantity' && value < 0) {
+        message.error('Số lượng không hợp lệ!');
+        return prevState;
+      }
       updatedTicketTypes[index][name] = value;
-      const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
+      //const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
       return {
         ...prevState,
         ticketTypes: updatedTicketTypes,
-        ticketQuantity: newTicketQuantity
+        //ticketQuantity: newTicketQuantity
       };
     });
   };
 
   const handleDiscountCodeChange = (index, e) => {
     const { name, value } = e.target;
-    const updatedDiscountCodes = [...formData.discountCodes];
-    updatedDiscountCodes[index][name] = value;
-    setFormData(prevState => ({ ...prevState, discountCodes: updatedDiscountCodes }));
+    setFormData(prevState => {
+      const updatedDiscountCodes = [...prevState.discountCodes];
+      if ((name === 'discountAmount' || name === 'quantity') && value < 0) {
+        message.error(`${name === 'discountAmount' ? 'Giá trị giảm giá' : 'Số lượng'} không hợp lệ!`);
+        return prevState;
+      }
+      updatedDiscountCodes[index][name] = value;
+      return {
+        ...prevState,
+        discountCodes: updatedDiscountCodes,
+      };
+    });
   };
 
   const handleRemoveTicketType = (index) => {
     setFormData(prevState => {
       const updatedTicketTypes = prevState.ticketTypes.filter((_, i) => i !== index);
-      const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
+      //const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
       return {
         ...prevState,
         ticketTypes: updatedTicketTypes,
-        ticketQuantity: newTicketQuantity
+        //ticketQuantity: newTicketQuantity
       };
     });
   };
@@ -193,8 +229,9 @@ const CreateEvent = () => {
       const response = await AddEventService(formData);
       if (response.status === 200) {
         toast.success('Sự kiện đã được tạo thành công!');
+        navigate('/organizer/events');
       } else if (response.status === 400) {
-        toast.error('Thất bại');
+        toast.error('Có lỗi xảy ra!');
       }
     } catch (error) {
       console.error(error);
@@ -269,7 +306,7 @@ const CreateEvent = () => {
               <h2>Thông tin sự kiện <i class="bi bi-calendar-event"></i></h2>
               <div className="row mb-3">
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="themeImage" label="Thêm ảnh nền sự kiện">
+                  <Form.Item name="themeImage" label="Thêm ảnh nền sự kiện" rules={[{ required: true, message: 'Vui lòng thêm ảnh nền sự kiện!' }]}>
                     <Dragger {...uploadProps}>
                       {formData.themeImage ? (
                         <img
@@ -282,7 +319,7 @@ const CreateEvent = () => {
                           <p className="ant-upload-drag-icon">
                             <InboxOutlined style={{ color: '#EC6C21' }} />
                           </p>
-                          <p className="ant-upload-text">Thêm ảnh nền sự kiện</p>
+                          <p className="ant-upload-text">Ảnh nền sự kiện</p>
                           <p className="ant-upload-hint">Kích thước 1280x720</p>
                         </>
                       )}
@@ -290,16 +327,18 @@ const CreateEvent = () => {
                   </Form.Item>
                 </div>
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="eventName" label="Tên sự kiện">
+                  <Form.Item name="eventName" label="Tên sự kiện" rules={[{ required: true, message: 'Vui lòng nhập tên sự kiện!' }]}>
                     <Input
+                      showCount
                       placeholder="Tên sự kiện"
                       maxLength={80}
                       onChange={handleChange}
                       id="eventName"
                     />
                   </Form.Item>
-                  <Form.Item name="location" label="Tên địa điểm">
+                  <Form.Item name="location" label="Tên địa điểm" rules={[{ required: true, message: 'Vui lòng nhập tên địa điểm!' }]}>
                     <Input
+                      showCount
                       placeholder="Tên địa điểm"
                       maxLength={80}
                       onChange={handleChange}
@@ -313,7 +352,7 @@ const CreateEvent = () => {
               </div>
               <div className="row mb-3">
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="startTime" label="Thời gian bắt đầu">
+                  <Form.Item name="startTime" label="Thời gian bắt đầu" rules={[{ required: true, message: 'Vui lòng chọn thời gian bắt đầu!' }]}>
                     <DatePicker
                       showTime
                       onChange={(value) =>
@@ -323,7 +362,28 @@ const CreateEvent = () => {
                   </Form.Item>
                 </div>
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="endTime" label="Thời gian kết thúc">
+                  {/* <Form.Item name="endTime" label="Thời gian kết thúc" rules={[{ required: true, message: 'Vui lòng chọn thời gian kết thúc!' }]}>
+                    <DatePicker
+                      showTime
+                      onChange={(value) =>
+                        setFormData({ ...formData, endTime: value })
+                      }
+                    />
+                  </Form.Item> */}
+                  <Form.Item
+                    name="endTime"
+                    label="Thời gian kết thúc"
+                    rules={[
+                      { required: true, message: 'Vui lòng chọn thời gian kết thúc!' },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('startTime') && value.isAfter(getFieldValue('startTime'))) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('Thời gian kết thúc không sớm hơn thời gian bắt đầu'));
+                        },
+                      }),
+                    ]}>
                     <DatePicker
                       showTime
                       onChange={(value) =>
@@ -333,18 +393,18 @@ const CreateEvent = () => {
                   </Form.Item>
                 </div>
               </div>
-              <Form.Item name="categoryId" label="Thể loại sự kiện">
+              <Form.Item name="categoryId" label="Thể loại sự kiện" rules={[{ required: true, message: 'Vui lòng chọn loại sự kiện!' }]}>
                 <Select
                   placeholder="Chọn loại sự kiện"
                   onChange={(value) => setFormData({ ...formData, categoryId: value })}
                 >
-                  <Option value="1">Category 1</Option>
-                  <Option value="2">Category 2</Option>
-                  <Option value="3">Category 3</Option>
+                  <Option value="1">Nghệ thuật</Option>
+                  <Option value="2">Giáo dục</Option>
+                  <Option value="3">Thể thao</Option>
                   <Option value="4">Sự kiện khác</Option>
                 </Select>
               </Form.Item>
-              <Form.Item name="eventDescription" label="Mô tả sự kiện">
+              <Form.Item name="eventDescription" label="Mô tả sự kiện" rules={[{ required: true, message: 'Vui lòng nhập mô tả!' }]}>
                 <CKEditor
                   editor={ClassicEditor}
                   data={formData.eventDescription}
@@ -354,6 +414,7 @@ const CreateEvent = () => {
                     toolbar: [
                       'heading', '|',
                       'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', '|',
+                      'alignment:left', 'alignment:right', 'alignment:center', 'alignment:justify', '|',
                       'insertTable', 'tableColumn', 'tableRow', 'mergeTableCells', '|',
                       'undo', 'redo', '|',
                       'imageUpload', 'mediaEmbed'
@@ -373,6 +434,8 @@ const CreateEvent = () => {
                   key="typeName"
                   render={(text, record, index) => (
                     <Input
+                      showCount
+                      maxLength={20}
                       placeholder="Tên loại vé"
                       value={text}
                       name="typeName"
@@ -444,6 +507,8 @@ const CreateEvent = () => {
                   key="code"
                   render={(text, record, index) => (
                     <Input
+                      showCount
+                      maxLength={20}
                       placeholder="Mã giảm giá"
                       value={text}
                       name="code"
@@ -496,7 +561,7 @@ const CreateEvent = () => {
               {/* <CustomButton type="primary" onClick={handleAddDiscountCode}>
           Thêm mã giảm giá
         </CustomButton> */}
-              <Form.Item name="status" label="Trạng thái" className='mt-3'>
+              {/* <Form.Item name="status" label="Trạng thái" className='mt-3' rules={[{ required: true, message: 'Vui lòng chọn!' }]}>
                 <Select
                   placeholder="Vui lòng chọn"
                   onChange={(value) => setFormData({ ...formData, status: value })}
@@ -504,7 +569,15 @@ const CreateEvent = () => {
                   <Option value="Nháp">Lưu nháp</Option>
                   <Option value="Chờ duyệt">Gửi xét duyệt</Option>
                 </Select>
+              </Form.Item> */}
+              <Form.Item name="status" label="Trạng thái" className='mt-3'>
+                <CustomSwitch
+                  checkedChildren="Chờ duyệt"
+                  unCheckedChildren="Nháp"
+                  onChange={(checked) => setFormData({ ...formData, status: checked ? "Chờ duyệt" : "Nháp" })}
+                />
               </Form.Item>
+
               <Form.Item className="mt-4 pb-4">
                 <CustomButton type="primary" htmlType="submit">
                   Tạo sự kiện

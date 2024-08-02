@@ -25,6 +25,11 @@ export default function Header() {
 
   const navigate = useNavigate();
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    navigate('/search');
+  };
+
   const { user, token, onSetUser, onSetRender } = useContext(UserContext);
 
   const handleLogout = () => {
@@ -49,21 +54,27 @@ export default function Header() {
               <Link to="/" className="navbar-brand text-white">
                 <img src={logoSrc} height={80} alt="logo" />
               </Link>
-              <form className="d-flex">
-                <input
-                  className="form-control d-lg-block d-none me-2"
-                  type="search"
-                  placeholder="Tìm kiếm"
-                  aria-label="Search"
-                />
-                <button
-                  className="btn btn-outline-light"
-                  type="submit"
-                  style={{ backgroundColor: "#EC6C21" }}
-                >
-                  <i className="bi bi-search"></i>
-                </button>
-              </form>
+              <div className="app">
+      <div className="background">
+        <div className="search-container">
+          <form className="d-flex" onSubmit={handleSubmit}>
+            <input
+              className="form-control d-lg-block d-none me-2"
+              type="search"
+              placeholder="Tìm kiếm"
+              aria-label="Search"
+            />
+            <button
+              className="btn btn-outline-light"
+              type="submit"
+              style={{ backgroundColor: "#EC6C21", color: "white" }}
+            >
+              <i className="bi bi-search"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
             </div>
 
             <div className="d-flex align-items-center order-lg-2 order-1">
@@ -74,7 +85,7 @@ export default function Header() {
               ) : (
                 <>
                   <Link
-                    to="/tickets"
+                    to="/myticket"
                     className="btn custom-btn d-lg-block d-none me-3"
                   >
                     <i className="bi-ticket-perforated me-2"></i>
@@ -169,24 +180,25 @@ export default function Header() {
             >
               <ul className="navbar-nav align-items-lg-center mx-auto">
                 <li className="nav-item">
-                  <a className="nav-link click-scroll" href="#section_2">
+                  <a className="nav-link
+                  " href="#section_2">
                     Nghệ thuật
                   </a>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link click-scroll" href="#section_3">
+                  <a className="nav-link" href="#section_3">
                     Giáo dục
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link click-scroll" href="#section_5">
+                  <a className="nav-link" href="#section_5">
                     Thể thao
                   </a>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link click-scroll" href="#section_6">
+                  <a className="nav-link" href="#section_6">
                     Khác
                   </a>
                 </li>
