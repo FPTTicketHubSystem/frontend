@@ -1,5 +1,5 @@
 .ticket-background {
-  background-color: black;
+  background-color: rgb(58, 58, 58);
   padding: 24px;
 }
 
@@ -15,7 +15,7 @@
 .ticket-content {
   width: 480px;
   height: full;
-  background-color: gray;
+  background-color:rgb(42, 45, 52);
   position: relative;
 }
 
@@ -23,7 +23,7 @@
 .ticket-content::before {
   display: block;
   content: "";
-  background-color: black;
+  background-color: rgb(58, 58, 58);
   position: absolute;
   width: 60px;
   height: 60px;
@@ -54,13 +54,10 @@
   display: block;
   content: "";
   height: 100%;
-  left: -3px;
-  border-left: 8px black dashed;
+  left: -4px;
+  border-left: 8px rgb(42, 45, 52) dashed;
 }
 
-.ticket-content {
-  background-color:rgb(42, 45, 52);
-}
 
 .text {
   margin-left: 20px; padding-right: 16px; padding-top: 16px; padding-left: 16px; padding-bottom: 16px;
@@ -89,8 +86,8 @@
 #buy-btn {
   background-color: #EC6C21;
   width: 90%;
+  font-size: 16px;
 }
-
 
 
 .ticket-info {
@@ -223,9 +220,12 @@ Giới thiệu */
   display: flex;
   justify-content: space-between;
 }
-.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level .name {
+.ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level .type-ticket {
   text-transform: uppercase;
   font-weight: 600;
+  font-size: 20px;
+  color: #EC6C21;
+
 }
 .ticket-event-page .card.dark .ticket-info-collapse-content .ticket-level .price {
   color: #EC6C21;
@@ -256,11 +256,14 @@ Giới thiệu */
 .ticket-event-page .card .collapsed-button {
   position: absolute;
   bottom: 0;
-  padding: 12px 0;
+  padding: 2px;
   width: 100%;
   z-index: 1;
   color: black;
+  font-weight: bold; /* Độ đậm của chữ */
 }
+
+ 
 .ticket-event-page .card .organizer-content {
   display: flex;
   gap: 8px;

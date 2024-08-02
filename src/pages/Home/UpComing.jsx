@@ -9,26 +9,28 @@ import { encodeId } from "../../utils/utils";
 
 function Upcoming() {
   const [events, setEvents] = useState([]);
+  const [checkUpComing, setCheckUpComing] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
-        try {
-            const allEvents = await GetUpcomingEventService();
-            if (Array.isArray(allEvents)) {
-                setEvents(allEvents);
-            }
-            else {
-                console.error("Is not array", allEvents)
-                setEvents([]);
-            }
+      try {
+        const allEvents = await GetUpcomingEventService();
+        if (Array.isArray(allEvents)) {
+          setEvents(allEvents);
+          if (allEvents.length == 1) {
+            setCheckUpComing(true);
+          }
+        } else {
+          console.error("Is not array", allEvents);
+          setEvents([]);
         }
-        catch (error) {
-            console.error("Fetching error", error);
-            setEvents([]);
-        }
+      } catch (error) {
+        console.error("Fetching error", error);
+        setEvents([]);
+      }
     };
     fetchEvents();
-}, []);
+  }, []);
 
   var settings = {
     dots: true,
@@ -71,7 +73,7 @@ function Upcoming() {
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <div className="section-title mt-5 mb-3">
+              <div className="section-title">
                 <h2 style={{ color: "white", marginLeft: "7px" }}>
                   Sắp diễn ra
                 </h2>
@@ -79,7 +81,47 @@ function Upcoming() {
             </div>
           </div>
           <div className="row">
-            <Slider {...settings}>
+            {checkUpComing ? (
+              <>
+              {events.map((event) => (
+                <div
+                  className="col-lg-4 col-sm-10"
+                  style={{ margin: "0 10px" }}
+                  key={event.eventId}
+                >
+                  <div className="event__item" style={{ background: "white" }}>
+                    <div
+                      className="event__item__pic set-bg"
+                      style={{ backgroundImage: `url(${event.themeImage})` }}
+                    >
+                      <div className="tag-date">
+                        <span>
+                          {new Date(event.startTime).toLocaleDateString(
+                            "vi-VN"
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="event__item__text">
+                      <Link
+                        key={event.eventId}
+                        style={{ textDecoration: "none" }}
+                        to={`/event-detail/${encodeId(event.eventId)}`}
+                      >
+                        <h4>{event.eventName}</h4>
+                      </Link>
+                      <p>
+                        <i className="custom-icon bi-geo-alt me-2"></i>
+                        {event.location}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              </>
+            ) : (
+              <>
+              <Slider {...settings}>
               {events.map((event) => (
                 <div
                   className="col-lg-4 col-sm-10"
@@ -116,6 +158,9 @@ function Upcoming() {
                 </div>
               ))}
             </Slider>
+              </>
+            )}
+            
           </div>
         </div>
       </section>
