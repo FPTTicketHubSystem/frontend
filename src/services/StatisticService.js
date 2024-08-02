@@ -32,11 +32,43 @@ export const getTotalParticipants = async () => {
     }
   };
 
+  export const getMonthlyRevenue = async () => {
+    try {
+        const response = await request({
+            method: 'get',
+            url: 'Statistics/monthly-revenue',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response;
+    } catch (e) {
+        console.error('Error fetching monthly revenue:', e);
+        throw e;
+    }
+};
+
+    export const getMonthlyParticipants = async () => {
+    try {
+        const response = await request({
+            method: 'get',
+            url: 'Statistics/monthly-participants',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response;
+    } catch (e) {
+        console.error('Error fetching monthly participants:', e);
+        throw e;
+    }
+    };
+
   export const getTopRateEvent = async () => {
     try {
         const response = await request({
             method: 'get',
-            url: 'Statistic/top-rated-events',
+            url: 'statistics/top-rated-events',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -52,7 +84,7 @@ export const getTotalParticipants = async () => {
     try {
         const response = await request({
             method: 'get',
-            url: 'Statistic/top-revenue-events',
+            url: 'statistics/top-revenue-events',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -68,7 +100,7 @@ export const getTotalParticipants = async () => {
     try {
         const response = await request({
             method: 'get',
-            url: 'Statistic/top-participants-events',
+            url: 'statistics/top-participants-events',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -79,3 +111,20 @@ export const getTotalParticipants = async () => {
         throw e;
     }
   };
+
+  export const exportEventStatisticsReport = async () => {
+    try {
+        const response = await request({
+            method: 'get',
+            url: 'statistics/export-pdf',
+            headers: {
+                'Accept': 'application/pdf',
+            },
+            responseType: 'blob',
+        });
+        return response;
+    } catch (e) {
+        console.error('Error exporting event statistics report:', e);
+        throw e;
+    }
+};

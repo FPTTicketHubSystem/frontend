@@ -10,17 +10,19 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  PointElement,
   LineElement,
   ArcElement,
-  PointElement,
 } from "chart.js";
 import {
-  getTotalRevenue,
-  getTotalParticipants,
+  getMonthlyRevenue,
+  getMonthlyParticipants,
   getTopRateEvent,
   getTopRevenueEvent,
   getTopParticipantsEvent,
+  exportEventStatisticsReport,
 } from "../../services/StatisticService";
+import "../../assets/css/dashboard.css";
 
 ChartJS.register(
   Title,
@@ -29,15 +31,14 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  PointElement,
   LineElement,
-  ArcElement,
-  PointElement
+  ArcElement
 );
-
 const Dashboard = () => {
-  const [totalRevenue, setTotalRevenue] = useState(null);
-  const [totalParticipants, setTotalParticipants] = useState(null);
-  const [topRatedEvents, setTopRatedEvents] = useState([]);
+  const [monthlyRevenue, setMonthlyRevenue] = useState([]);
+  const [monthlyParticipants, setMonthlyParticipants] = useState([]);
+  const [topRateEvents, setTopRateEvents] = useState([]);
   const [topRevenueEvents, setTopRevenueEvents] = useState([]);
   const [topParticipantsEvents, setTopParticipantsEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,20 +50,20 @@ const Dashboard = () => {
         const [
           revenueResult,
           participantsResult,
-          ratedEventsResult,
+          rateEventsResult,
           revenueEventsResult,
           participantsEventsResult,
         ] = await Promise.all([
-          getTotalRevenue(),
-          getTotalParticipants(),
+          getMonthlyRevenue(),
+          getMonthlyParticipants(),
           getTopRateEvent(),
           getTopRevenueEvent(),
           getTopParticipantsEvent(),
         ]);
 
-        setTotalRevenue(revenueResult);
-        setTotalParticipants(participantsResult);
-        setTopRatedEvents(ratedEventsResult);
+        setMonthlyRevenue(revenueResult);
+        setMonthlyParticipants(participantsResult);
+        setTopRateEvents(rateEventsResult);
         setTopRevenueEvents(revenueEventsResult);
         setTopParticipantsEvents(participantsEventsResult);
       } catch (error) {
@@ -75,163 +76,215 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  // const handleDownloadReport = async () => {
-  //   try {
-  //     const response = await request({
-  //       method: 'get',
-  //       url: 'Statistic/event-report',
-  //       responseType: 'blob',
-  //     });
-  //     const url = window.URL.createObjectURL(new Blob([response.data]));
-  //     const link = document.createElement('a');
-  //     link.href = url;
-  //     link.setAttribute('download', 'EventReport.pdf');
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     link.remove();
-  //   } catch (error) {
-  //     console.error("Failed to download report", error);
-  //   }
-  // };
+  const formatData = (data, key) => {
+    const labels = data.map((item) => `${item.year}-${item.month}`);
+    const values = data.map((item) => item[key]);
 
-  const revenueData = {
-    labels: ["Total Revenue"],
-    datasets: [
-      {
-        label: "Total Revenue",
-        data: [totalRevenue || 0],
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-    ],
+    return {
+      labels,
+      datasets: [
+        {
+          label:
+            key === "totalRevenue" ? "Monthly Revenue" : "Monthly Participants",
+          data: values,
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
+    };
   };
 
-  const participantsData = {
-    labels: ["Total Participants"],
-    datasets: [
-      {
-        label: "Total Participants",
-        data: [totalParticipants || 0],
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-        borderColor: "rgba(153, 102, 255, 1)",
-        borderWidth: 1,
-      },
-    ],
+  const formatTopEventsData = (data, valueKey, labelKey) => {
+    const labels = data.map((item) => item[labelKey]);
+    const values = data.map((item) => item[valueKey]);
+
+    return {
+      labels,
+      datasets: [
+        {
+          label: valueKey,
+          data: values,
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+          ],
+          borderColor: [
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+          ],
+          borderWidth: 1,
+        },
+      ],
+    };
   };
 
-  const ratedEventsData = {
-    labels: topRatedEvents.map((event) => event.eventName),
-    datasets: [
-      {
-        label: "Average Rating",
-        data: topRatedEvents.map((event) => event.averageRating),
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-        borderColor: "rgba(153, 102, 255, 1)",
-        borderWidth: 1,
-      },
-    ],
+  const revenueData = formatData(monthlyRevenue, "totalRevenue");
+  const participantsData = formatData(monthlyParticipants, "totalParticipants");
+  // const topRateEventsData = formatTopEventsData(
+  //   topRateEvents,
+  //   "averageRating",
+  //   "eventName"
+  // );
+  const topRevenueEventsData = formatTopEventsData(
+    topRevenueEvents,
+    "revenue",
+    "eventName"
+  );
+  const topParticipantsEventsData = formatTopEventsData(
+    topParticipantsEvents,
+    "participants",
+    "eventName"
+  );
+
+  const handleDownloadReport = async () => {
+    try {
+      const response = await exportEventStatisticsReport();
+      const url = window.URL.createObjectURL(
+        new Blob([response], { type: "application/pdf" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "StatisticsReport.pdf");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to download report", error);
+    }
   };
 
-  const revenueEventsData = {
-    labels: topRevenueEvents.map((event) => event.eventName),
-    datasets: [
-      {
-        label: "Total Revenue",
-        data: topRevenueEvents.map((event) => event.revenue), // Ensure 'revenue' is a valid field
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-    ],
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+    return (
+      <>
+        {[...Array(fullStars)].map((_, i) => (
+          <i key={`full-${i}`} className="bi bi-star-fill text-warning"></i>
+        ))}
+        {halfStar && <i className="bi bi-star-half text-warning"></i>}
+        {[...Array(emptyStars)].map((_, i) => (
+          <i key={`empty-${i}`} className="bi bi-star text-warning"></i>
+        ))}
+      </>
+    );
   };
 
-  const participantsEventsData = {
-    labels: topParticipantsEvents.map((event) => event.eventName),
-    datasets: [
-      {
-        label: "Total Participants",
-        data: topParticipantsEvents.map((event) => event.participants), // Ensure 'participants' is a valid field
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 1,
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 10,
+        },
       },
-    ],
+    },
   };
 
   return (
-    <div className="container">
+    <div className="dashboard-container">
       <Header />
       <Navbar />
-      <div className="row mb-4">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="card-title">Total Revenue</h5>
-            </div>
-            <div className="card-body">
-              {loading ? <p>Loading...</p> : <Bar data={revenueData} />}
-            </div>
+      {/* <h1 className="dashboard-title">Dashboard</h1> */}
+      <div className="dashboard-grid">
+        <div className="dashboard-card">
+          <div className="card-header revenue-header">
+            <h5 className="card-title">Monthly Revenue</h5>
+          </div>
+          <div className="card-body">
+            {loading ? (
+              <div className="loader-container">
+                <div className="loader"></div>
+              </div>
+            ) : (
+              <Bar data={revenueData} options={chartOptions} />
+            )}
           </div>
         </div>
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="card-title">Total Participants</h5>
-            </div>
-            <div className="card-body">
-              {loading ? <p>Loading...</p> : <Bar data={participantsData} />}
-            </div>
+        <div className="dashboard-card">
+          <div className="card-header participants-header">
+            <h5 className="card-title">Monthly Participants</h5>
+          </div>
+          <div className="card-body">
+            {loading ? (
+              <div className="loader-container">
+                <div className="loader"></div>
+              </div>
+            ) : (
+              <Bar data={participantsData} options={chartOptions} />
+            )}
+          </div>
+        </div>
+        <div className="dashboard-card">
+          <div className="card-header rating-header">
+            <h5 className="card-title">Top Rated Events</h5>
+          </div>
+          <div className="card-body">
+            {loading ? (
+              <div className="loader-container">
+                <div className="loader"></div>
+              </div>
+            ) : (
+              <ul className="event-list">
+                {topRateEvents
+                  .sort((a, b) => b.averageRating - a.averageRating)
+                  .slice(0, 5)
+                  .map((event, index) => (
+                    <li key={index} className="event-item">
+                      <span className="event-name">{event.eventName}</span>
+                      <span className="event-rating">
+                        {renderStars(event.averageRating)}
+                      </span>
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </div>
+        </div>
+        <div className="dashboard-card">
+          <div className="card-header revenue-events-header">
+            <h5 className="card-title">Top Revenue Events</h5>
+          </div>
+          <div className="card-body">
+            {loading ? (
+              <div className="loader-container">
+                <div className="loader"></div>
+              </div>
+            ) : (
+              <Line data={topRevenueEventsData} options={chartOptions} />
+            )}
+          </div>
+        </div>
+        <div className="dashboard-card">
+          <div className="card-header participants-events-header">
+            <h5 className="card-title">Top Participants Events</h5>
+          </div>
+          <div className="card-body">
+            {loading ? (
+              <div className="loader-container">
+                <div className="loader"></div>
+              </div>
+            ) : (
+              <Bar data={topParticipantsEventsData} options={chartOptions} />
+            )}
           </div>
         </div>
       </div>
-      <div className="row mb-4">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="card-title">Top Rated Events</h5>
-            </div>
-            <div className="card-body">
-              {loading ? <p>Loading...</p> : <Bar data={ratedEventsData} />}
-            </div>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="card-title">Top Revenue Events</h5>
-            </div>
-            <div className="card-body">
-              {loading ? <p>Loading...</p> : <Bar data={revenueEventsData} />}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="card-title">Top Participants Events</h5>
-            </div>
-            <div className="card-body">
-              {loading ? (
-                <p>Loading...</p>
-              ) : (
-                <Bar data={participantsEventsData} />
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="row mt-4 pb-4">
-        <div className="col-12 text-center">
-          <button
-            className="btn btn-success"
-            // onClick={handleDownloadReport}
-          >
-            <i className="bi bi-file-earmark-pdf"></i> Download Report
-          </button>
-        </div>
+      <div className="download-section">
+        <button className="download-button" onClick={handleDownloadReport}>
+          <i className="bi bi-file-earmark-pdf"></i> Download Report
+        </button>
       </div>
     </div>
   );
