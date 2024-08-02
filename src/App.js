@@ -11,7 +11,10 @@ import { UserContext } from './context/UserContext';
 import EventDetail from './pages/EventDetail';
 import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
-import Eventapproval from './pages/Admin/Eventapproval';
+import EventAdmin from './pages/Admin/EventAdmin';
+import ForumAdmin from './pages/Admin/ForumAdmin';
+import Forum from './pages/Home/Forum';
+import RateEvent from './pages/Home/RateEvent';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -24,9 +27,12 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/confirmaccount/:email" element={<ConfirmAccount />} />
           <Route path="/event-detail" element={<EventDetail />} />
+          <Route path="/forum" element={<Forum />} />
+          <Route path="/rate/:ratingid" element={<RateEvent />} />
           <Route path="/organizer/create-event" element={<CreateEvent />} />
-          <Route path="/user" element={<User />} />
-          <Route path="/eventapproval" element={<Eventapproval />} />
+          <Route path="/admin/user" element={<User />} />
+          <Route path="/admin/events" element={<EventAdmin />} />
+          <Route path="/admin/forum" element={<ForumAdmin />} />
           <Route path="/confirmaccount/:email" element={<ConfirmAccount />} />
           <Route path="/event-detail/:encodedId" element={<EventDetail />} />
           <Route path="/organizer/create-event" element={<CreateEvent />} />

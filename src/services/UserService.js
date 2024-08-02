@@ -169,3 +169,17 @@ export const ChangeStatusUserService = async (accountId, newStatus) => {
     throw new Error(`Error changing user status: ${error.message}`);
   }
 };
+export const ChangeRoleService = async (accountId, newRoleId) => {
+  try {
+    const response = await request({
+      method: 'post',
+      url: `user/changeRole?accountId=${accountId}&newRoleId=${newRoleId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (e) {
+    return e;
+  }
+};

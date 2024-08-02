@@ -10,23 +10,23 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  overflow: auto; /* Allow scrolling */
+  overflow: auto;
 }
 
 /* Modal content styling */
 .modal-content {
-  background-color: #1f1f1f; /* Darker shade of black */
+  background-color: #1f1f1f;
   color: #fff;
   width: 90%;
-  max-width: 1200px;
-  max-height: 90vh; /* Allow it to be almost full height */
+  max-width: 600px;
+  max-height: 90vh;
   padding: 30px;
   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.3);
-  overflow-y: auto; /* Add vertical scroll if content is too long */
+  overflow-y: auto;
+  border-radius: 8px;
 }
 
 .main {
-  height: auto;
   width: 100%;
   background-color: #1f1f1f;
   padding: 20px;
@@ -39,12 +39,15 @@
   width: 150px;
   border-radius: 50%;
   object-fit: cover;
+  margin-bottom: 20px;
+  border: 3px solid #ffa726;
 }
 
 /* Name styling */
 .name {
   font-size: 30px;
-  color: #ffa726; /* Orange color */
+  color: #ffa726;
+  margin-bottom: 15px;
 }
 
 /* Center align details */
@@ -55,63 +58,100 @@
 /* Details paragraph styling */
 .details p {
   margin-top: 10px;
+  font-size: 16px;
 }
 
 /* Buttons container styling */
 .buttons-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 /* Back button styling */
 .back-btn {
   margin-right: 10px;
-  background-color: #757575; /* Light gray */
+  background-color: #757575;
   color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   cursor: pointer;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 .back-btn:hover {
-  opacity: 0.8;
+  background-color: #616161;
 }
 
 /* Change role button styling */
 .change-role-btn {
-  background-color: #fd7e14; /* Orange */
+  background-color: #fd7e14;
   color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 24px;
   cursor: pointer;
-  transition: background-color 0.3s ease, opacity 0.3s ease;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 .change-role-btn:hover {
-  background-color: #ffa726; /* Lighter orange */
-  opacity: 0.8;
+  background-color: #ffa726;
+}
+
+/* Role select styling */
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 /* Responsive design for smaller screens */
-@media only screen and (max-width: 425px) {
+@media only screen and (max-width: 768px) {
   .modal-content {
-    width: 90%;
+    width: 95%;
     padding: 20px;
   }
 
   .picture img {
-    height: 40vw;
-    width: 40vw;
-  }
-
-  .details p {
-    margin-top: 5vw;
+    height: 120px;
+    width: 120px;
   }
 
   .name {
-    font-size: 6vw;
+    font-size: 24px;
+  }
+
+  .details p {
+    font-size: 14px;
+  }
+
+  .back-btn, .change-role-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .modal-content {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .picture img {
+    height: 100px;
+    width: 100px;
+  }
+
+  .name {
+    font-size: 20px;
   }
 
   .buttons-container {
@@ -120,26 +160,8 @@
   }
 
   .back-btn, .change-role-btn {
-    width: 80%;
+    width: 100%;
     margin-bottom: 10px;
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  .modal-content {
-    width: 90%;
-  }
-
-  .picture img {
-    height: 30vw;
-    width: 30vw;
-  }
-
-  .name {
-    font-size: 24px;
-  }
-
-  .back-btn, .change-role-btn {
-    padding: 10px 15px;
+    margin-right: 0;
   }
 }

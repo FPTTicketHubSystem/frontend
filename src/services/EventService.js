@@ -106,6 +106,20 @@ export const GetUpcomingEventService = async () => {
     return e;
   }
 };
+export const ChangeStatusEventService = async (eventId, newStatus) => {
+  try {
+    const response = await request({
+      method: 'post',
+      url: `event/changeEventStatus?eventId=${eventId}&status=${newStatus}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (error) {
+    throw new Error(`Error changing event status: ${error.message}`);
+  }
+};
 
 // export const DeleteEventService = async (id) => {
 //     try {

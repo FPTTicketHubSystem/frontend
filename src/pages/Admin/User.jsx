@@ -4,11 +4,11 @@ import Navbar from '../../component/Admin/Navbar';
 import LockButton from '../../component/Admin/LockButton';
 import EditButton from '../../component/Admin/EditButton';
 import ConfirmButton from '../../component/Admin/ConfirmButton';
-import CancelButton from '../../component/Admin/CancelButton';
 import '../../assets/css/editprofile.css';
-import { GetAllUserAccountsService, ChangeStatusUserService } from '../../services/UserService';
+import { GetAllUserAccountsService, ChangeStatusUserService, ChangeRoleService } from '../../services/UserService';
 import { format } from 'date-fns';
 import { Select } from 'antd';
+import { useToast } from '../../context/ToastContext';
 
 const User = () => {
   const [users, setUsers] = useState([]);
@@ -18,6 +18,8 @@ const User = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
+  const { showSuccessToast, showErrorToast } = useToast();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,12 +59,13 @@ const User = () => {
           : user
       );
       setUsers(updatedUsers);
+      showSuccessToast(`User ${newStatus ? 'locked' : 'unlocked'} successfully`); // Add this line
     } catch (error) {
       console.error('Error changing user status:', error);
+      showErrorToast('Failed to change user status'); // Add this line
     }
   };
 
-  
   const handleConfirmChange = async (accountId) => {
     try {
       await ChangeStatusUserService(accountId, 'Đang hoạt động');
@@ -70,11 +73,31 @@ const User = () => {
         user.accountId === accountId ? { ...user, status: 'Đang hoạt động' } : user
       );
       setUsers(updatedUsers);
+      showSuccessToast('User confirmed successfully'); // Add this line
     } catch (error) {
       console.error('Error approving user:', error);
+      showErrorToast('Failed to confirm user'); // Add this line
     }
   };
 
+  const handleChangeRole = async () => {
+    try {
+      const newRoleId = selectedRole;
+      if (currentUser) {
+        await ChangeRoleService(currentUser.accountId, newRoleId);
+        const updatedUsers = users.map((user) =>
+          user.accountId === currentUser.accountId ? { ...user, roleId: newRoleId } : user
+        );
+        setUsers(updatedUsers);
+        setShowModal(false);
+        setSelectedRole(null);
+        showSuccessToast('User role changed successfully'); // Add this line
+      }
+    } catch (error) {
+      console.error('Error changing user role:', error);
+      showErrorToast('Failed to change user role'); // Add this line
+    }
+  };
 
   const handleFilterChange = (status) => {
     setFilterStatus(status);
@@ -88,16 +111,17 @@ const User = () => {
 
   const handleEditButtonClick = (user) => {
     setCurrentUser(user);
+    setSelectedRole(user.roleId.toString());
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setSelectedRole(null);
   };
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
-
     const formattedDate = format(new Date(dateString), 'dd/MM/yyyy');
     return formattedDate;
   };
@@ -106,7 +130,9 @@ const User = () => {
     if (filterStatus !== 'All' && user.status !== filterStatus) {
       return false;
     }
-    if (searchTerm && !user.fullName.toLowerCase().includes(searchTerm.toLowerCase())) {
+    if (searchTerm && 
+        !(user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+          user.email.toLowerCase().includes(searchTerm.toLowerCase()))) {
       return false;
     }
     return true;
@@ -121,9 +147,6 @@ const User = () => {
 
   const columns = [
     { title: 'STT', dataIndex: 'index', key: 'index' },
-    {
-      title: 'Role', dataIndex: 'roleId', key: 'roleId',
-    },
     {
       title: 'Họ và tên', dataIndex: 'fullName', key: 'fullName',
       render: (user) => (
@@ -149,7 +172,7 @@ const User = () => {
     { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
     { title: 'Giới tính', dataIndex: 'gender', key: 'gender' },
     {
-      title: 'Hành động', key: 'actions',
+      title: 'Hành động', key: 'actions' ,
       render: (user) => (
         <>
           {user.status === 'Đang hoạt động' || user.status === 'Đang khóa' ? (
@@ -295,74 +318,74 @@ const User = () => {
       </div>
 
       {showModal && currentUser && (
-  <div className="modal-backdrop">
-    <div className="modal-content">
-      <div className="main">
-        <div className="row">
-          <div className="col-sm-6 picture">
-            <center>
-              <img className="circle responsive-img" src={currentUser.avatar} alt={`Profile picture of ${currentUser.fullName}`} />
-              <span className="btn-tooltip" title="Add Friend"></span>
-            </center>
-          </div>
-          <div className="col-sm-6 details">
-            <center>
-              <p className="name">
-                <b>{currentUser.fullName}</b>
-              </p>
-            </center>
-            <center>
-              <p className="email">{currentUser.email}</p>
-            </center>
-            <center>
-              <p className="phone">{currentUser.phone}</p>
-            </center>
+        <div className="modal-backdrop">
+          <div className="modal-content">
+            <div className="main">
+              <div className="row">
+                <div className="col-sm-6 picture">
+                  <center>
+                    <img className="circle responsive-img" src={currentUser.avatar} alt={`Profile picture of ${currentUser.fullName}`} />
+                    <span className="btn-tooltip" title="Add Friend"></span>
+                  </center>
+                </div>
+                <div className="col-sm-6 details">
+                  <center>
+                    <p className="name">
+                      <b>{currentUser.fullName}</b>
+                    </p>
+                  </center>
+                  <center>
+                    <p className="email">{currentUser.email}</p>
+                  </center>
+                  <center>
+                    <p className="phone">{currentUser.phone}</p>
+                  </center>
+                </div>
+              </div>
+
+              <form>
+                <div className="row">
+                  <div className="col-sm-6">
+                    <label htmlFor="gender">Gender:</label>
+                    <p id="gender" className="form-control-static">{currentUser.gender}</p>
+                  </div>
+                  <div className="col-sm-6">
+                    <label htmlFor="status">Status:</label>
+                    <p id="status" className="form-control-static">{currentUser.status}</p>
+                  </div>
+                </div>
+                <div className="row mt-3">
+                  <div className="col-sm-6">
+                    <label htmlFor="birthday">Birthday:</label>
+                    <p id="birthday" className="form-control-static">{formatDate(currentUser.birthDay)}</p>
+                  </div>
+                  <div className="col-sm-6">
+                    <label htmlFor="role">Role:</label>
+                    <Select
+                      value={selectedRole}
+                      onChange={(value) => setSelectedRole(value)}
+                      style={{ width: '100%' }}
+                    >
+                      <Select.Option value="1">Admin</Select.Option>
+                      <Select.Option value="2">User</Select.Option>
+                      <Select.Option value="3">Organizer</Select.Option>
+                      <Select.Option value="4">Staff</Select.Option>
+                    </Select>
+                  </div>
+                </div>
+                <div className="buttons-container mt-4">
+                  <button type="button" className="waves-effect waves-light btn edit back-btn" onClick={handleCloseModal}>
+                    Trở lại
+                  </button>
+                  <button type="button" className="waves-effect waves-light btn edit change-role-btn" onClick={handleChangeRole}>
+                    Xác nhận
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
-
-        <form>
-          <div className="row">
-            <div className="col-sm-6">
-              <label htmlFor="gender">Gender:</label>
-              <p id="gender" className="form-control-static">{currentUser.gender}</p>
-            </div>
-            <div className="col-sm-6">
-              <label htmlFor="status">Status:</label>
-              <p id="status" className="form-control-static">{currentUser.status}</p>
-            </div>
-          </div>
-          <div className="row mt-3">
-            <div className="col-sm-6">
-              <label htmlFor="birthday">Birthday:</label>
-              <p id="birthday" className="form-control-static">{formatDate(currentUser.birthDay)}</p>
-            </div>
-            <div className="col-sm-6">
-              <label htmlFor="role">Role:</label>
-              <Select
-                defaultValue={currentUser.roleId.toString()}
-                style={{ width: '100%' }}
-              >
-                <Select.Option value="1">Admin</Select.Option>
-                <Select.Option value="2">User</Select.Option>
-                <Select.Option value="3">Organizer</Select.Option>
-                <Select.Option value="4">Staff</Select.Option>
-              </Select>
-            </div>
-          </div>
-          <div className="buttons-container mt-4">
-            <button type="button" className="waves-effect waves-light btn edit back-btn" onClick={handleCloseModal}>
-              Trở lại
-            </button>
-            <button type="button" className="waves-effect waves-light btn edit change-role-btn" title="Change Role">
-              Xác nhận
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-)}
-
+      )}
     </div>
   );
 };
