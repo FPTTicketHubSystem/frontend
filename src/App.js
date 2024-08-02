@@ -16,6 +16,8 @@ import ForumAdmin from './pages/Admin/ForumAdmin';
 import Forum from './pages/Home/Forum';
 import RateEvent from './pages/Home/RateEvent';
 import Eventapproval from './pages/Admin/Eventapproval';
+import Dashboard from './pages/Admin/Dashboard';
+import CategoryList from './pages/Admin/ManageCategory';
 import MyTicket from './pages/User/MyTicket';
 import ChooseTicket from './pages/Payment/ChooseTicket';
 import TicketDetail from './pages/User/TicketDetail';
@@ -47,6 +49,10 @@ function App() {
           <Route path="/admin/forum" element={<ForumAdmin />} />
           <Route path="/confirmaccount/:email" element={<ConfirmAccount />} />
           <Route path="/event-detail/:encodedId" element={<EventDetail />} />
+          <Route path="/organizer/create-event" element={<CreateEvent />} />
+          <Route path="/organizer/events" element={<Events />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/manage-category" element={< CategoryList/>} />
           <Route path="/organizer/events" element={<Events/>}/>
           <Route path="/seclectTicket" element={<ChooseTicket/>}/>
           <Route path="/payment" element={<Payment/>}/>
