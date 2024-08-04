@@ -1,7 +1,6 @@
-import logoSrc from "../assets/images/logo/paymentLogo.png";
-import logoSrc2 from "../assets/images/logo/paymentLogo2.png";
+import logoSrc from "../assets/images/logo/payOS.png";
+import logoSrc2 from "../assets/images/logo/vnpay.jpg";
 import logoSrc3 from "../assets/images/logo/bocongthuong.png";
-import logowebSrc from "../assets/images/logo/3.png"
 
 function Footer() {
     return (
