@@ -34,10 +34,11 @@ export const DeleteTimeOutOrder = async (data) => {
 
 export const ReturnPaymentUrl = async (data) => {
     try {
-        debugger;
+
         const response = await request({
             method: 'post',
-            url: 'payment/returnPaymentUrl',
+            // url: 'payment/returnPaymentUrl',
+            url: 'payment/createPaymentWithPayos',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -52,10 +53,9 @@ export const ReturnPaymentUrl = async (data) => {
 
 export const CheckInputCoupon = async (id , discount) => {
   try {
-      debugger;
       const response = await request({
           method: 'post',
-          url: `payment/checkInputCoupon?ticketId=${id}&coupon=${discount}`,
+          url: `payment/checkInputCoupon?eventId=${id}&coupon=${discount}`,
           headers: {
               'Content-Type': 'application/json',
           },
@@ -65,3 +65,20 @@ export const CheckInputCoupon = async (id , discount) => {
       return e;
   }
 };
+
+export const CheckOrderId = async (orderId) => {
+  try {
+      const response = await request({
+          method: 'get',
+          url: `/payment/checkOrderId?orderId=${orderId}`,
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+      return response;
+  } catch (e) {
+      return e;
+  }
+};
+
+

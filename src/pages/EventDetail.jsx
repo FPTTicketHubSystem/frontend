@@ -258,7 +258,7 @@ function EventDetail() {
               </div>
             </div>
           </div>
-          <div className="card" style={{ color: "black" }}>
+          {/* <div className="card" style={{ color: "black" }}>
             <div className="card-header">Trở thành giám sát viên</div>
             <div className="staff-content mt-2 mb-2">
               <div>Bạn muốn trở thành giám sát viên cho sự kiện này?</div>
@@ -274,7 +274,7 @@ function EventDetail() {
                 Đăng ký ngay
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="right-part">

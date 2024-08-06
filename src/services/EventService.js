@@ -259,4 +259,3 @@ export const GetEventStatisticsService = async (eventId) => {
         return e;
     }
 }
-
