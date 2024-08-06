@@ -29,6 +29,7 @@ import ManageStaff from './pages/Organizer/ManageStaff';
 import Search from './pages/Home/Search';
 import ManageNews from './pages/Admin/ManageNews';
 import NewsDetail from './pages/Admin/NewsDetail';
+import EventStatistics from './pages/Organizer/EventStatistics';
 import PaymentSuccess from './pages/Payment/PaymentSuccess';
 
 function App() {
@@ -66,9 +67,9 @@ function App() {
           <Route path="/search" element={<Search/>}/>
           <Route path="/manage-news" element={<ManageNews />} />
           <Route path="/news-detail/:newsId" element={<NewsDetail />} />
+          <Route path="/event-statistics/:encodedId" element={<EventStatistics />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-success/:orderId" element={<PaymentSuccess />} />
-
         </Routes>
       </Router>
     </>

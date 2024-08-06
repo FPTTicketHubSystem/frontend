@@ -191,7 +191,7 @@ export default function Navbar() {
                       }`}
                       onClick={() => setActiveLink("/organizer/manage-staff")}
                     >
-                      Giám sát viên
+                      Soát vé viên
                     </Link>
                     <Link
                       to="/organizer/manage-news"

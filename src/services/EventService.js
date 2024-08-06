@@ -17,16 +17,16 @@ export const GetEventsService = async () => {
 
 export const GetEventsForAdminService = async () => {
     try {
-      const response = await request({
-        method: 'get',
-        url: 'event/getAllEventAdmin',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      return response;
+        const response = await request({
+            method: 'get',
+            url: 'event/getAllEventAdmin',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response;
     } catch (e) {
-      return e;
+        return e;
     }
 }
 
@@ -153,16 +153,109 @@ export const GetUpcomingEventService = async () => {
 // }
 
 export const ChangeStatusEventService = async (eventId, newStatus) => {
-  try {
-    const response = await request({
-      method: 'post',
-      url: `event/changeEventStatus?eventId=${eventId}&status=${newStatus}`,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    return response;
-  } catch (error) {
-    throw new Error(`Error changing event status: ${error.message}`);
-  }
+    try {
+        const response = await request({
+            method: 'post',
+            url: `event/changeEventStatus?eventId=${eventId}&status=${newStatus}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response;
+    } catch (error) {
+        throw new Error(`Error changing event status: ${error.message}`);
+    }
 };
+
+//update for organizer manage
+
+export const GetTicketTypeByEventService = async (id) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `event/getTicketTypeByEvent?eventId=${id}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+};
+
+export const UpdateTicketQuantityService = async (ticketTypeId, addQuantity) => {
+    try {
+        const response = await request({
+            method: "put",
+            url: `event/updateTicketQuantity?ticketTypeId=${ticketTypeId}&addQuantity=${addQuantity}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+};
+
+export const GetDiscountCodeByEventService = async (id) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `event/getDiscountCodeByEvent?eventId=${id}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const AddDiscountCodeService = async (data) => {
+    try {
+        const response = await request({
+            method: "post",
+            url: "event/addDiscountCode",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify(data),
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const UpdateDiscountQuantityService = async (discountId, addQuantity) => {
+    try {
+        const response = await request({
+            method: "put",
+            url: `event/updateDiscountQuantity?discountId=${discountId}&addQuantity=${addQuantity}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const GetEventStatisticsService = async (eventId) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `event/getEventStatistics?eventId=${eventId}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}

@@ -87,10 +87,20 @@ function Profile() {
         setUserInfo({ ...userInfo, [name]: value });
     };
 
+    // const handleDateChange = (date) => {
+    //     const formattedDate = date.toLocaleDateString('en-CA').split('/').reverse().join('-');
+    //     setUserInfo({ ...userInfo, birthDay: formattedDate });
+    // };
+
     const handleDateChange = (date) => {
-        const formattedDate = date.toLocaleDateString('en-CA').split('/').reverse().join('-');
-        setUserInfo({ ...userInfo, birthDay: formattedDate });
+        if (date) {
+            const formattedDate = date.toLocaleDateString('en-CA').split('/').reverse().join('-');
+            setUserInfo({ ...userInfo, birthDay: formattedDate });
+        } else {
+            setUserInfo({ ...userInfo, birthDay: null });
+        }
     };
+    
 
     const [newPassword, setNewPassword] = useState({
         inputNewPassword: '',
@@ -130,10 +140,11 @@ function Profile() {
             accountId: user.accountId,
             fullName: userInfo.fullName,
             phone: userInfo.phone,
-            birthDay: userInfo.birthDay,
+            birthDay: userInfo.birthDay || null,
             gender: userInfo.gender,
             avatar: userInfo.avatar,
         };
+        console.log(data);
         const result = await UpdateUserService(data);
         if (result.status === 200 && result.message === 'Update Successfully') {
             const response = await GetInforByEmailService(user.email);
