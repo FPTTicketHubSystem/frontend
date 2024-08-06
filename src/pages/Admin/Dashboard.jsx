@@ -23,6 +23,7 @@ import {
   exportEventStatisticsReport,
 } from "../../services/StatisticService";
 import "../../assets/css/dashboard.css";
+import Footer from "../../component/Footer";
 
 ChartJS.register(
   Title,
@@ -89,7 +90,7 @@ const Dashboard = () => {
           data: values,
           backgroundColor: "rgba(75, 192, 192, 0.2)",
           borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 1,
+          borderWidth: 2,
         },
       ],
     };
@@ -127,14 +128,9 @@ const Dashboard = () => {
 
   const revenueData = formatData(monthlyRevenue, "totalRevenue");
   const participantsData = formatData(monthlyParticipants, "totalParticipants");
-  // const topRateEventsData = formatTopEventsData(
-  //   topRateEvents,
-  //   "averageRating",
-  //   "eventName"
-  // );
   const topRevenueEventsData = formatTopEventsData(
     topRevenueEvents,
-    "revenue",
+    "Revenue",
     "eventName"
   );
   const topParticipantsEventsData = formatTopEventsData(
@@ -186,106 +182,111 @@ const Dashboard = () => {
       x: {
         ticks: {
           autoSkip: true,
-          maxTicksLimit: 10,
+          maxTicksLimit: 5,
         },
       },
     },
   };
 
   return (
-    <div className="dashboard-container">
-      <Header />
-      <Navbar />
-      {/* <h1 className="dashboard-title">Dashboard</h1> */}
-      <div className="dashboard-grid">
-        <div className="dashboard-card">
-          <div className="card-header revenue-header">
-            <h5 className="card-title">Monthly Revenue</h5>
+    <div>
+      <div className="dashboard-container">
+        <Header />
+        <Navbar />
+        {/* <h1 className="dashboard-title">Dashboard</h1> */}
+        <div className="dashboard-grid">
+          <div className="dashboard-card">
+            <div className="card-header revenue-header">
+              <h5 className="card-title">Monthly Revenue</h5>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <div className="loader-container">
+                  <div className="loader"></div>
+                </div>
+              ) : (
+                <Bar data={revenueData} options={chartOptions} />
+              )}
+            </div>
           </div>
-          <div className="card-body">
-            {loading ? (
-              <div className="loader-container">
-                <div className="loader"></div>
-              </div>
-            ) : (
-              <Bar data={revenueData} options={chartOptions} />
-            )}
+          <div className="dashboard-card">
+            <div className="card-header participants-header">
+              <h5 className="card-title">Monthly Participants</h5>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <div className="loader-container">
+                  <div className="loader"></div>
+                </div>
+              ) : (
+                <Pie data={participantsData} options={chartOptions} />
+              )}
+            </div>
+          </div>
+          <div className="dashboard-card">
+            <div className="card-header rating-header">
+              <h5 className="card-title text-black text-center">
+                Top Rated Events
+              </h5>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <div className="loader-container">
+                  <div className="loader"></div>
+                </div>
+              ) : (
+                <ul className="event-list">
+                  {topRateEvents
+                    .sort((a, b) => b.averageRating - a.averageRating)
+                    .slice(0, 5)
+                    .map((event, index) => (
+                      <li key={index} className="event-item">
+                        <span className="event-name">{event.eventName}</span>
+                        <span className="event-rating">
+                          {renderStars(event.averageRating)}
+                        </span>
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
+          </div>
+          <div className="dashboard-card">
+            <div className="card-header revenue-events-header">
+              <h5 className="card-title">Top Revenue Events</h5>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <div className="loader-container">
+                  <div className="loader"></div>
+                </div>
+              ) : (
+                <Line data={topRevenueEventsData} options={chartOptions} />
+              )}
+            </div>
+          </div>
+          <div className="dashboard-card">
+            <div className="card-header participants-events-header">
+              <h5 className="card-title">Top Participants Events</h5>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <div className="loader-container">
+                  <div className="loader"></div>
+                </div>
+              ) : (
+                <Line data={topParticipantsEventsData} options={chartOptions} />
+              )}
+            </div>
           </div>
         </div>
-        <div className="dashboard-card">
-          <div className="card-header participants-header">
-            <h5 className="card-title">Monthly Participants</h5>
-          </div>
-          <div className="card-body">
-            {loading ? (
-              <div className="loader-container">
-                <div className="loader"></div>
-              </div>
-            ) : (
-              <Bar data={participantsData} options={chartOptions} />
-            )}
-          </div>
-        </div>
-        <div className="dashboard-card">
-          <div className="card-header rating-header">
-            <h5 className="card-title">Top Rated Events</h5>
-          </div>
-          <div className="card-body">
-            {loading ? (
-              <div className="loader-container">
-                <div className="loader"></div>
-              </div>
-            ) : (
-              <ul className="event-list">
-                {topRateEvents
-                  .sort((a, b) => b.averageRating - a.averageRating)
-                  .slice(0, 5)
-                  .map((event, index) => (
-                    <li key={index} className="event-item">
-                      <span className="event-name">{event.eventName}</span>
-                      <span className="event-rating">
-                        {renderStars(event.averageRating)}
-                      </span>
-                    </li>
-                  ))}
-              </ul>
-            )}
-          </div>
-        </div>
-        <div className="dashboard-card">
-          <div className="card-header revenue-events-header">
-            <h5 className="card-title">Top Revenue Events</h5>
-          </div>
-          <div className="card-body">
-            {loading ? (
-              <div className="loader-container">
-                <div className="loader"></div>
-              </div>
-            ) : (
-              <Line data={topRevenueEventsData} options={chartOptions} />
-            )}
-          </div>
-        </div>
-        <div className="dashboard-card">
-          <div className="card-header participants-events-header">
-            <h5 className="card-title">Top Participants Events</h5>
-          </div>
-          <div className="card-body">
-            {loading ? (
-              <div className="loader-container">
-                <div className="loader"></div>
-              </div>
-            ) : (
-              <Bar data={topParticipantsEventsData} options={chartOptions} />
-            )}
-          </div>
+        <div className="download-section">
+          <button className="download-button" onClick={handleDownloadReport}>
+            <i className="bi bi-file-earmark-pdf"></i> Download Report
+          </button>
         </div>
       </div>
-      <div className="download-section">
-        <button className="download-button" onClick={handleDownloadReport}>
-          <i className="bi bi-file-earmark-pdf"></i> Download Report
-        </button>
-      </div>
+      <Footer />
     </div>
   );
 };
