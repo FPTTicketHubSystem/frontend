@@ -15,7 +15,6 @@ import EventAdmin from './pages/Admin/EventAdmin';
 import ForumAdmin from './pages/Admin/ForumAdmin';
 import Forum from './pages/Home/Forum';
 import RateEvent from './pages/Home/RateEvent';
-import Eventapproval from './pages/Admin/Eventapproval';
 import Dashboard from './pages/Admin/Dashboard';
 import CategoryList from './pages/Admin/ManageCategory';
 import MyTicket from './pages/User/MyTicket';
