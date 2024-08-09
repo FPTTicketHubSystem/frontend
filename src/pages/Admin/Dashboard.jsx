@@ -16,11 +16,12 @@ import {
 } from "chart.js";
 import {
   getMonthlyRevenue,
-  getMonthlyParticipants,
-  getTopRateEvent,
-  getTopRevenueEvent,
-  getTopParticipantsEvent,
-  exportEventStatisticsReport,
+  getActiveAccount,
+  getTopRatedEvents,
+  getTopParticipants,
+  getTopRevenueEvents,
+  getTopParticipantsEvents,
+  generateEventStatisticsReport,
 } from "../../services/StatisticService";
 import "../../assets/css/dashboard.css";
 import Footer from "../../component/Footer";
@@ -36,10 +37,12 @@ ChartJS.register(
   LineElement,
   ArcElement
 );
+
 const Dashboard = () => {
   const [monthlyRevenue, setMonthlyRevenue] = useState([]);
-  const [monthlyParticipants, setMonthlyParticipants] = useState([]);
-  const [topRateEvents, setTopRateEvents] = useState([]);
+  const [activeUsers, setActiveUsers] = useState([]);
+  const [topRatedEvents, setTopRatedEvents] = useState([]);
+  const [topParticipants, setTopParticipants] = useState([]);
   const [topRevenueEvents, setTopRevenueEvents] = useState([]);
   const [topParticipantsEvents, setTopParticipantsEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,21 +53,24 @@ const Dashboard = () => {
       try {
         const [
           revenueResult,
-          participantsResult,
-          rateEventsResult,
+          activeUsersResult,
+          ratedEventsResult,
+          topParticipantsResult,
           revenueEventsResult,
           participantsEventsResult,
         ] = await Promise.all([
           getMonthlyRevenue(),
-          getMonthlyParticipants(),
-          getTopRateEvent(),
-          getTopRevenueEvent(),
-          getTopParticipantsEvent(),
+          getActiveAccount(),
+          getTopRatedEvents(),
+          getTopParticipants(),
+          getTopRevenueEvents(),
+          getTopParticipantsEvents(),
         ]);
 
         setMonthlyRevenue(revenueResult);
-        setMonthlyParticipants(participantsResult);
-        setTopRateEvents(rateEventsResult);
+        setActiveUsers(activeUsersResult);
+        setTopRatedEvents(ratedEventsResult);
+        setTopParticipants(topParticipantsResult);
         setTopRevenueEvents(revenueEventsResult);
         setTopParticipantsEvents(participantsEventsResult);
       } catch (error) {
@@ -77,20 +83,62 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  const formatData = (data, key) => {
+  // Định dạng dữ liệu cho biểu đồ doanh thu hàng tháng
+  const formatMonthlyRevenueData = (data) => {
     const labels = data.map((item) => `${item.year}-${item.month}`);
-    const values = data.map((item) => item[key]);
+    const values = data.map((item) => item.totalRevenue);
 
     return {
       labels,
       datasets: [
         {
-          label:
-            key === "totalRevenue" ? "Monthly Revenue" : "Monthly Participants",
+          label: "Monthly Revenue",
           data: values,
           backgroundColor: "rgba(75, 192, 192, 0.2)",
           borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 2,
+        },
+      ],
+    };
+  };
+
+  // Định dạng dữ liệu cho biểu đồ người tham gia
+  const formatTopParticipantsData = (data) => {
+    const labels = data.map((item) => `${item.accountName}`);
+    const values = data.map((item) => item.eventsParticipated);
+
+    return {
+      labels,
+      datasets: [
+        {
+          label: "Events Participated",
+          data: values,
+          backgroundColor: "rgba(255, 99, 132, 0.2)",
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1,
+        },
+      ],
+    };
+  };
+
+  // Định dạng dữ liệu cho biểu đồ người dùng hoạt động
+  const formatActiveUsersData = (data) => {
+    const labels = data
+      .filter((item) => item.year && item.month)
+      .map((item) => `${item.year}-${item.month}`);
+    const values = data
+      .filter((item) => item.year && item.month)
+      .map((item) => item.totalRegisteredUsers);
+
+    return {
+      labels,
+      datasets: [
+        {
+          label: "Active Users",
+          data: values,
+          backgroundColor: "rgba(255, 159, 64, 0.2)",
+          borderColor: "rgba(255, 159, 64, 1)",
+          borderWidth: 1,
         },
       ],
     };
@@ -126,22 +174,23 @@ const Dashboard = () => {
     };
   };
 
-  const revenueData = formatData(monthlyRevenue, "totalRevenue");
-  const participantsData = formatData(monthlyParticipants, "totalParticipants");
+  const topParticipantsData = formatTopParticipantsData(topParticipants);
+  const activeUsersData = formatActiveUsersData(activeUsers);
+  const revenueData = formatMonthlyRevenueData(monthlyRevenue);
   const topRevenueEventsData = formatTopEventsData(
     topRevenueEvents,
-    "Revenue",
+    "totalRevenue",
     "eventName"
   );
   const topParticipantsEventsData = formatTopEventsData(
     topParticipantsEvents,
-    "participants",
+    "participantsCount",
     "eventName"
   );
 
   const handleDownloadReport = async () => {
     try {
-      const response = await exportEventStatisticsReport();
+      const response = await generateEventStatisticsReport();
       const url = window.URL.createObjectURL(
         new Blob([response], { type: "application/pdf" })
       );
@@ -193,7 +242,6 @@ const Dashboard = () => {
       <div className="dashboard-container">
         <Header />
         <Navbar />
-        {/* <h1 className="dashboard-title">Dashboard</h1> */}
         <div className="dashboard-grid">
           <div className="dashboard-card">
             <div className="card-header revenue-header">
@@ -205,13 +253,13 @@ const Dashboard = () => {
                   <div className="loader"></div>
                 </div>
               ) : (
-                <Bar data={revenueData} options={chartOptions} />
+                <Line data={revenueData} options={chartOptions} />
               )}
             </div>
           </div>
           <div className="dashboard-card">
-            <div className="card-header participants-header">
-              <h5 className="card-title">Monthly Participants</h5>
+            <div className="card-header active-users-header">
+              <h5 className="card-title">Active Users</h5>
             </div>
             <div className="card-body">
               {loading ? (
@@ -219,15 +267,27 @@ const Dashboard = () => {
                   <div className="loader"></div>
                 </div>
               ) : (
-                <Pie data={participantsData} options={chartOptions} />
+                <Line data={activeUsersData} options={chartOptions} />
+              )}
+            </div>
+          </div>
+          <div className="dashboard-card">
+            <div className="card-header top-participants-header">
+              <h5 className="card-title">Top Participants</h5>
+            </div>
+            <div className="card-body">
+              {loading ? (
+                <div className="loader-container">
+                  <div className="loader"></div>
+                </div>
+              ) : (
+                <Pie data={topParticipantsData} options={chartOptions} />
               )}
             </div>
           </div>
           <div className="dashboard-card">
             <div className="card-header rating-header">
-              <h5 className="card-title text-black text-center">
-                Top Rated Events
-              </h5>
+              <h5 className="card-title">Top Rated Events</h5>
             </div>
             <div className="card-body">
               {loading ? (
@@ -236,7 +296,7 @@ const Dashboard = () => {
                 </div>
               ) : (
                 <ul className="event-list">
-                  {topRateEvents
+                  {topRatedEvents
                     .sort((a, b) => b.averageRating - a.averageRating)
                     .slice(0, 5)
                     .map((event, index) => (
@@ -261,7 +321,7 @@ const Dashboard = () => {
                   <div className="loader"></div>
                 </div>
               ) : (
-                <Line data={topRevenueEventsData} options={chartOptions} />
+                <Bar data={topRevenueEventsData} options={chartOptions} />
               )}
             </div>
           </div>
@@ -275,7 +335,7 @@ const Dashboard = () => {
                   <div className="loader"></div>
                 </div>
               ) : (
-                <Line data={topParticipantsEventsData} options={chartOptions} />
+                <Bar data={topParticipantsEventsData} options={chartOptions} />
               )}
             </div>
           </div>
