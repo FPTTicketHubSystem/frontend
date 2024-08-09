@@ -79,9 +79,11 @@ function HomePage() {
           alt=""
         />
       </div>
-      <EventByCategory categoryId={1} categoryName={"Cate1"} />
-      <EventByCategory categoryId={2} categoryName={"Cate2"} />
-      <EventByCategory categoryId={3} categoryName={"Cate3"} />
+      <EventByCategory categoryId={1} categoryName={"Nghệ thuật"} />
+      <EventByCategory categoryId={2} categoryName={"Giáo dục"} />
+      <EventByCategory categoryId={3} categoryName={"Workshop"} />
+      <EventByCategory categoryId={4} categoryName={"Khác"} />
+
 
       <News />
 

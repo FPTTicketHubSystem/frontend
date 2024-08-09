@@ -25,18 +25,17 @@ const Payment = () => {
 
   const handleApplyDiscount = async () => {
     const result = await CheckInputCoupon(paymentDTO.eventId, discountCode);
-    // Replace with actual discount code validation logic
     if (result.status === 400) {
       setDiscountCode("");
       setDiscountError("Mã giảm giá không hợp lệ hoặc đã hết hạn.");
-      setDiscountAmount(0); // Reset discount amount if invalid
-      setFinalTotalPrice(totalPrice); // Reset to original price if invalid
+      setDiscountAmount(0);
+      setFinalTotalPrice(totalPrice);
     } else {
       setDiscountError("");
-      // Apply the discount if valid
-      const discount = (result.discountAmount/100); // Example discount amount
+      debugger;
+      const discount = (result.discountAmount/100); 
       setDiscountAmount(discount);
-      setFinalTotalPrice(totalPrice * discount);
+      setFinalTotalPrice(totalPrice - (totalPrice * discount));
     }
   };
 
