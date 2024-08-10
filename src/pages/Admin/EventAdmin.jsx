@@ -433,8 +433,8 @@ const EventAdmin = () => {
               </ul>
               {activeTab === 'details' && (
                 <>
-                  <div className="event-info">
-                    <div className="event-image">
+                  <div className="event-info1">
+                    <div className="event-image1">
                       <img
                         src={currentEvent.themeImage}
                         alt={`Event picture of ${currentEvent.eventName}`}
