@@ -1,5 +1,8 @@
 import request from '../utils/request';
 
+const getAuthToken = () => {
+    return localStorage.getItem('authToken');
+};
 
 export const GetTicketByAccountService = async (accountId) => {
     try {
@@ -8,6 +11,7 @@ export const GetTicketByAccountService = async (accountId) => {
             url: `ticket/getTicketByAccount?accountId=${accountId}`,
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
@@ -23,6 +27,7 @@ export const GetTicketByIdService = async (id) => {
             url: `ticket/getTicketById?ticketId=${id}`,
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
