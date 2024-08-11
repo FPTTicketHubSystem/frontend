@@ -1,5 +1,9 @@
 import request from '../utils/request';
 
+const getAuthToken = () => {
+  return localStorage.getItem('authToken');
+};
+
 export const PaymentForUser = async (data) => {
     try {
       const respone = await request({
@@ -7,6 +11,7 @@ export const PaymentForUser = async (data) => {
         url: 'payment/paymentForUser',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `${getAuthToken()}`,
         },
         data: JSON.stringify(data),
       });
@@ -23,6 +28,7 @@ export const DeleteTimeOutOrder = async (data) => {
         url: 'payment/deleteTimeOutOrder',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `${getAuthToken()}`,
         },
         data: JSON.stringify(data),
       });
@@ -41,6 +47,7 @@ export const ReturnPaymentUrl = async (data) => {
             url: 'payment/createPaymentWithPayos',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `${getAuthToken()}`,
             },
             data: JSON.stringify(data),
         });
@@ -58,6 +65,7 @@ export const CheckInputCoupon = async (id , discount) => {
           url: `payment/checkInputCoupon?eventId=${id}&coupon=${discount}`,
           headers: {
               'Content-Type': 'application/json',
+              'Authorization': `${getAuthToken()}`,
           },
       });
       return response;
@@ -73,6 +81,7 @@ export const CheckOrderId = async (orderId) => {
           url: `/payment/checkOrderId?orderId=${orderId}`,
           headers: {
               'Content-Type': 'application/json',
+              'Authorization': `${getAuthToken()}`,
           },
       });
       return response;
@@ -88,6 +97,7 @@ export const CancelOrderOfUser = async (userId) => {
           url: `/payment/CancelOrderOfUser?userId=${userId}`,
           headers: {
               'Content-Type': 'application/json',
+              'Authorization': `${getAuthToken()}`,
           },
       });
       return response;
@@ -103,6 +113,7 @@ export const CheckOrderdOfUser = async (userId, eventId) => {
           url: `/payment/CheckOrderdOfUser?userId=${userId}&eventId=${eventId}`,
           headers: {
               'Content-Type': 'application/json',
+              'Authorization': `${getAuthToken()}`,
           },
       });
       return response;

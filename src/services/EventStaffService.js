@@ -1,5 +1,9 @@
 import request from '../utils/request';
 
+const getAuthToken = () => {
+  return localStorage.getItem('authToken');
+};
+
 export const RegisterStaffService = async (data) => {
   try {
     const respone = await request({
@@ -7,6 +11,7 @@ export const RegisterStaffService = async (data) => {
       url: 'eventStaff/registerStaff',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `${getAuthToken()}`,
       },
       data: JSON.stringify(data),
     });
@@ -23,6 +28,7 @@ export const AddStaffByEmail = async (email, eventId) => {
       url: `eventStaff/addStaffByEmail?email=${email}&eventId=${eventId}`,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `${getAuthToken()}`,
       },
     });
     return respone;
@@ -38,6 +44,7 @@ export const GetUpcomingEventsByOrganizerService = async(organizerId) => {
       url: `eventStaff/getUpcomingEventByOrganizer?organizerId=${organizerId}`,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `${getAuthToken()}`,
       },
     });
     return respone;
@@ -53,6 +60,7 @@ export const GetStaffByEventService = async(eventId) => {
       url: `eventStaff/getStaffByEvent?eventId=${eventId}`,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `${getAuthToken()}`,
       },
     });
     return respone;
@@ -68,6 +76,7 @@ export const DeleteStaffService = async(staffId , eventId) => {
       url: `eventStaff/deleteStaff?staffId=${staffId}&eventId=${eventId}`,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `${getAuthToken()}`,
       },
     });
     return respone;
