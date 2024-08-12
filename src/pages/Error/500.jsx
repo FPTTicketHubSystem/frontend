@@ -4,6 +4,8 @@ import Header from '../../component/Header';
 import Footer from '../../component/Footer';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { UserContext } from '../../context/UserContext';
 
 
 const CustomButton = styled(Button)`
@@ -17,21 +19,43 @@ const CustomButton = styled(Button)`
 `;
 
 export default function Status500() {
-    const navigate = useNavigate();
-    const handleBackClick = () => {
+  const { token, user } = useContext(UserContext);
+  const navigate = useNavigate();
+  const handleBackClick = () => {
+    if (!user) {
+      navigate('/');
+      return;
+    }
+
+    switch (user.roleId) {
+      case 1:
+        navigate('/admin/user');
+        break;
+      case 2:
         navigate('/');
-      };
-    return (
-        <>
-            <Header />
-            <Result
-                className="bg bg-light"
-                status="500"
-                title="500"
-                subTitle="Có lỗi xảy ra."
-                extra={<CustomButton type="primary" onClick={handleBackClick}>Quay lại</CustomButton>}
-            />
-            <Footer />
-        </>
-    );
+        break;
+      case 3:
+        navigate('/organizer/events');
+        break;
+      case 4:
+        navigate('/staff/checkin');
+        break;
+      default:
+        navigate('/');
+        break;
+    }
+  };
+  return (
+    <>
+      <Header />
+      <Result
+        className="bg bg-light"
+        status="500"
+        title="500"
+        subTitle="Có lỗi xảy ra."
+        extra={<CustomButton type="primary" onClick={handleBackClick}>Quay lại</CustomButton>}
+      />
+      <Footer />
+    </>
+  );
 }

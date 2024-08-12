@@ -1,9 +1,5 @@
 import request from '../utils/request';
 
-const getAuthToken = () => {
-  return localStorage.getItem('authToken');
-};
-
 export const LoginService = async (data) => {
   try {
     const respone = await request({
@@ -105,7 +101,6 @@ export const UpdateUserService = async (data) => {
       url: 'user/updateUser',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${getAuthToken()}`,
       },
       data: JSON.stringify(data),
     });
@@ -137,7 +132,6 @@ export const ChangePassowrdService = async (accountId, newPassword) => {
       url: `user/changePassword?accountId=${accountId}&newPassword=${newPassword}`,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${getAuthToken()}`,
       },
     });
     return response;
@@ -153,7 +147,6 @@ export const GetAllUserAccountsService = async () => {
       url: 'user/getAllAccountUser',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${getAuthToken()}`,
       },
     });
     return response;
@@ -169,7 +162,6 @@ export const ChangeStatusUserService = async (accountId, newStatus) => {
       url: `user/ChangeStatusUser?accountId=${accountId}&newStatus=${newStatus}`,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${getAuthToken()}`,
       },
     });
     return response;
@@ -184,7 +176,6 @@ export const ChangeRoleService = async (accountId, newRoleId) => {
       url: `user/changeRole?accountId=${accountId}&newRoleId=${newRoleId}`,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `${getAuthToken()}`,
       },
     });
     return response;

@@ -65,8 +65,8 @@ function App() {
         <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
         <Route path="/payment-success/:orderId" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
         <Route path="/403" element={<Status403/>}/>
-        <Route path="/404" element={<Status404/>}/>
         <Route path="/500" element={<Status500/>}/>
+        <Route path="*" element={<Status404/>}/>
       </Routes>
     </Router>
   );

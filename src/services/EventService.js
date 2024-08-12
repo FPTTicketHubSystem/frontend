@@ -1,9 +1,5 @@
 import request from '../utils/request';
 
-const getAuthToken = () => {
-    return localStorage.getItem('authToken');
-};
-
 export const GetEventsService = async () => {
     try {
         const response = await request({
@@ -11,7 +7,6 @@ export const GetEventsService = async () => {
             url: "event/getAllEvent",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
@@ -27,7 +22,6 @@ export const GetEventsForAdminService = async () => {
             url: 'event/getAllEventAdmin',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${getAuthToken()}`,
             },
         });
         return response;
@@ -43,7 +37,6 @@ export const GetEventsByAccountService = async (accountId) => {
             url: `event/getEventByAccount?accountId=${accountId}`,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
@@ -59,7 +52,6 @@ export const GetEventByIdService = async (id) => {
             url: `event/getEventById?eventId=${id}`,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
@@ -75,7 +67,6 @@ export const GetEventByCategoryService = async (id) => {
             url: `event/getEventByCategory?categoryId=${id}`,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
@@ -91,7 +82,6 @@ export const AddEventService = async (data) => {
             url: "event/addEvent",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
             data: JSON.stringify(data),
         });
@@ -108,7 +98,6 @@ export const GetEventForEdit = async (id) => {
             url: `event/getEventForEdit?eventId=${id}`,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
@@ -124,7 +113,6 @@ export const UpdateEventService = async (data) => {
             url: "event/editEvent",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
             data: JSON.stringify(data),
         });
@@ -141,7 +129,6 @@ export const GetUpcomingEventService = async () => {
             url: "event/getUpcomingEvent",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
@@ -172,7 +159,6 @@ export const ChangeStatusEventService = async (eventId, newStatus) => {
             url: `event/changeEventStatus?eventId=${eventId}&status=${newStatus}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `${getAuthToken()}`,
             },
         });
         return response;
@@ -190,7 +176,6 @@ export const GetTicketTypeByEventService = async (id) => {
             url: `event/getTicketTypeByEvent?eventId=${id}`,
             headers: {
                 "Content-Type": "application/json",
-                'Authorization': `${getAuthToken()}`,
             },
         });
         return response;
@@ -206,7 +191,6 @@ export const UpdateTicketQuantityService = async (ticketTypeId, addQuantity) => 
             url: `event/updateTicketQuantity?ticketTypeId=${ticketTypeId}&addQuantity=${addQuantity}`,
             headers: {
                 "Content-Type": "application/json",
-                'Authorization': `${getAuthToken()}`,
             },
         });
         return response;
@@ -222,7 +206,6 @@ export const GetDiscountCodeByEventService = async (id) => {
             url: `event/getDiscountCodeByEvent?eventId=${id}`,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
@@ -238,7 +221,6 @@ export const AddDiscountCodeService = async (data) => {
             url: "event/addDiscountCode",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
             data: JSON.stringify(data),
         });
@@ -255,7 +237,6 @@ export const UpdateDiscountQuantityService = async (discountId, addQuantity) => 
             url: `event/updateDiscountQuantity?discountId=${discountId}&addQuantity=${addQuantity}`,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
@@ -271,7 +252,6 @@ export const GetEventStatisticsService = async (eventId) => {
             url: `event/getEventStatistics?eventId=${eventId}`,
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `${getAuthToken()}`,
             },
         });
         return response;
