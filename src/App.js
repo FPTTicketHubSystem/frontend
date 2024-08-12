@@ -38,8 +38,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<ProtectedRoute element={<Profile />} allowedRoles={[2, 3, 4]} />} />
-        <Route path="/confirmaccount/:email" element={<ProtectedRoute element={<ConfirmAccount />} allowedRoles={[0]} />} />
+        <Route path="/profile" element={<ProtectedRoute element={<Profile />} allowedRoles={[1, 2, 3, 4]} />} />
+        <Route path="/confirmaccount/:email" element={<ConfirmAccount />}/>
         <Route path="/event-detail/:encodedId" element={<EventDetail />} />
         <Route path="/forum" element={<ProtectedRoute element={<Forum />} allowedRoles={[2]} />} />
         <Route path="/rate/:ratingid" element={<ProtectedRoute element={<RateEvent />} allowedRoles={[2]} />} />
