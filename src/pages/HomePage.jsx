@@ -79,11 +79,11 @@ function HomePage() {
           alt=""
         />
       </div>
-      <EventByCategory categoryId={1} categoryName={"Nghệ thuật"} />
-      <EventByCategory categoryId={2} categoryName={"Giáo dục"} />
-      <EventByCategory categoryId={3} categoryName={"Workshop"} />
-      <EventByCategory categoryId={4} categoryName={"Khác"} />
 
+      <EventByCategory categoryId={1} categoryName={"Nghệ thuật"} filter={"entertaiment"} /> 
+      <EventByCategory categoryId={2} categoryName={"Giáo dục"} filter={"education"} />
+      <EventByCategory categoryId={3} categoryName={"Workshop"} filter={"workshop"} />
+      <EventByCategory categoryId={4} categoryName={"Khác"} filter={"other"} />
 
       <News />
 

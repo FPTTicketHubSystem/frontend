@@ -22,12 +22,16 @@ export default function Header() {
     };
   }, []);
 
-
   const navigate = useNavigate();
+
+  // Function to handle category click
+  const handleCategoryClick = (category) => {
+    navigate("/search", { state: { category } });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    navigate('/search');
+    navigate("/search");
   };
 
   const { user, token, onSetUser, onSetRender } = useContext(UserContext);
@@ -55,26 +59,26 @@ export default function Header() {
                 <img src={logoSrc} height={80} alt="logo" />
               </Link>
               <div className="app">
-      <div className="background">
-        <div className="search-container">
-          <form className="d-flex" onSubmit={handleSubmit}>
-            <input
-              className="form-control d-lg-block d-none me-2"
-              type="search"
-              placeholder="Tìm kiếm"
-              aria-label="Search"
-            />
-            <button
-              className="btn btn-outline-light"
-              type="submit"
-              style={{ backgroundColor: "#EC6C21", color: "white" }}
-            >
-              <i className="bi bi-search"></i>
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+                <div className="background">
+                  <div className="search-container">
+                    <form className="d-flex" onSubmit={handleSubmit}>
+                      <input
+                        className="form-control d-lg-block d-none me-2"
+                        type="search"
+                        placeholder="Tìm kiếm"
+                        aria-label="Search"
+                      />
+                      <button
+                        className="btn btn-outline-light"
+                        type="submit"
+                        style={{ backgroundColor: "#EC6C21", color: "white" }}
+                      >
+                        <i className="bi bi-search"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="d-flex align-items-center order-lg-2 order-1">
@@ -114,7 +118,7 @@ export default function Header() {
                           className="rounded-circle"
                           width="50"
                           height="50"
-                          style={{border: 'solid #ffffff'}}
+                          style={{ border: "solid #ffffff" }}
                         />
                       )}
                     </a>
@@ -180,27 +184,43 @@ export default function Header() {
             >
               <ul className="navbar-nav align-items-lg-center mx-auto">
                 <li className="nav-item">
-                  <a className="nav-link
-                  " href="#section_2">
+                  <Link
+                    to="/search"
+                    state={{ category: "entertaiment" }}
+                    className="nav-link"
+                  >
                     Nghệ thuật
-                  </a>
+                  </Link>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link" href="#section_3">
+                <Link
+                    to="/search"
+                    state={{ category: "education" }}
+                    className="nav-link"
+                  >
                     Giáo dục
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#section_5">
-                    Workshop
-                  </a>
+                  </Link>
                 </li>
 
                 <li className="nav-item">
-                  <a className="nav-link" href="#section_6">
+                  <Link
+                    to="/search"
+                    state={{ category: "workshop" }}
+                    className="nav-link"
+                  >
+                    Workshop
+                  </Link>
+                </li>
+
+                <li className="nav-item">
+                <Link
+                    to="/search"
+                    state={{ category: "other" }}
+                    className="nav-link"
+                  >
                     Khác
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

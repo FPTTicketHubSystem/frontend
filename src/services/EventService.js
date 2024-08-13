@@ -151,3 +151,49 @@ export const GetUpcomingEventService = async () => {
 //         return e;
 //     }
 // }
+
+export const SearchEventByContainTiTile = async (searchString) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `event/searchEventByContainTiTile?searchString=${searchString}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+
+export const SearchEventByFilter = async (searchString) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `event/searchEventByFilter?filter=${searchString}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const GetEventsUserService = async () => {
+    try {
+        const response = await request({
+            method: "get",
+            url: "event/getAllEventUser",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
