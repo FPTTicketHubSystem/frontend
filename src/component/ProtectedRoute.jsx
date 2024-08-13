@@ -7,10 +7,6 @@ const ProtectedRoute = ({ element, allowedRoles }) => {
   const { token, user } = useContext(UserContext);
   const location = useLocation();
 
-  if (token !== null && location.pathname === '/login') {
-    return <Navigate to="/" replace />;
-  }
-
   if (!token) {
     return <Navigate to="/login" replace />;
   }

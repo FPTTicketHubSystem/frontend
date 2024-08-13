@@ -2,15 +2,18 @@
 import React from "react";
 import { Layout } from "antd";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../../../context/UserContext";
 
 const { Sider } = Layout;
 
 const SideBar = () => {
+  const {user} = useContext(UserContext);
   return (
     <Sider style={{ height: "100vh" }}>
       <div style={{ color: "#fff", display: "flex" }}>
         <img
-          src="https://via.placeholder.com/80"
+          src={user.avatar ? user.avatar: "https://via.placeholder.com/80"}
           alt="Profile"
           style={{ borderRadius: "50%", width: "40px", marginBottom: "10px" }}
         />
@@ -20,7 +23,7 @@ const SideBar = () => {
           }}
         >
           <div style={{ fontSize: "12px", color: "#aaa" }}>Tài khoản của</div>
-          <h5 style={{ color: "#fff", margin: "5px 0" }}>Phạm Phú Đức</h5>
+          <h5 style={{ color: "#fff", margin: "5px 0" }}>{user.fullName}</h5>
         </div>
       </div>
       <div style={{ margin: "1rem" }}>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './component/ProtectedRoute';
+import PublicRoute from './component/PublicRoute';
 import Login from './pages/Login';
 import HomePage from './pages/HomePage';
 import Profile from './pages/User/Profile';
@@ -37,7 +38,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<PublicRoute element={<Login />} />} />
         <Route path="/profile" element={<ProtectedRoute element={<Profile />} allowedRoles={[1, 2, 3, 4]} />} />
         <Route path="/confirmaccount/:email" element={<ConfirmAccount />}/>
         <Route path="/event-detail/:encodedId" element={<EventDetail />} />

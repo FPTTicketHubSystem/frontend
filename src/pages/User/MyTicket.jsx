@@ -8,6 +8,7 @@ import { UserContext } from "../../context/UserContext";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 import {GetTicketByAccountService} from "../../services/TicketService";
 
@@ -137,10 +138,10 @@ const MyTicket = () => {
                                 eventName={ticket.eventName}
                                 status={ticket.isCheckedIn ? "Đã sử dụng" : "Chưa sử dụng"}
                                 ticketType={ticket.typeName}
-                                date={new Date(ticket.startTime).toLocaleDateString('vi-VN')}
-                                time={new Date(ticket.startTime).toLocaleTimeString('vi-VN')}
-                                endDate={new Date(ticket.endTime).toLocaleDateString('vi-VN')}
-                                endTime={new Date(ticket.endTime).toLocaleTimeString('vi-VN')}
+                                date={moment.utc(ticket.startTime).local().format('DD/MM/YYYY')}
+                                time={moment.utc(ticket.startTime).local().format('HH:mm')}
+                                endDate={moment.utc(ticket.endTime).local().format('DD/MM/YYYY')}
+                                endTime={moment.utc(ticket.endTime).local().format('HH:mm')}
                                 location={ticket.location}
                                 fullLocation={ticket.address}
                             />
