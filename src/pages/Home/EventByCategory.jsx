@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { GetEventByCategoryService } from "../../services/EventService";
 import { encodeId } from "../../utils/utils";
 
-function EventByCategory({ categoryId, categoryName }) {
+function EventByCategory({ categoryId, categoryName, filter }) {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -27,15 +27,26 @@ function EventByCategory({ categoryId, categoryName }) {
 
   return (
     <div className="app">
-      <div className="titleCategory" style={{display: "flex", margin: "auto", justifyContent: "space-between"}}>
+      <div
+        className="titleCategory"
+        style={{
+          display: "flex",
+          margin: "auto",
+          justifyContent: "space-between",
+        }}
+      >
         <div>
           <h1 style={{ color: "white", marginLeft: "128px", fontSize: "2rem" }}>
             {categoryName}
           </h1>
         </div>
-        <div style={{marginRight: "9%"}}>
-          <Link to={`/events/${categoryId}`} className="see-more-button" >
-            Xem thêm <i class="bi bi-chevron-right"></i>
+        <div style={{ marginRight: "9%" }}>
+          <Link
+            to="/search"
+            state={{ category: filter }}
+            className="see-more-button"
+          >
+            Xem thêm <i className="bi bi-chevron-right"></i>
           </Link>
         </div>
       </div>
