@@ -109,8 +109,6 @@ const EditEvent = () => {
   const HandleGetEventForEdit = async () => {
     const response = await GetEventForEdit(eventId);
     if (response.accountId !== user?.accountId) {
-      // console.log('response accountId', response.accountId);
-      // console.log('context accountId', user?.accountId);
       toast.error('Không có quyền truy cập!')
       navigate('/organizer/events');
     }
@@ -118,11 +116,11 @@ const EditEvent = () => {
       setFormData((prevFormData) => ({
         ...prevFormData,
         ...response,
-        startTime: response.startTime ? moment(response.startTime) : null,
-        endTime: response.endTime ? moment(response.endTime) : null,
+        startTime: response.startTime ? moment.utc(response.startTime).local() : null,
+        endTime: response.endTime ? moment.utc(response.endTime).local() : null,
       }));
     }
-  };
+  };  
 
   const HandleGetTicketType = async () => {
     const response = await GetTicketTypeByEventService(eventId);
@@ -287,7 +285,16 @@ const EditEvent = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await UpdateEventService(formData);
+      const startTimeUtc = formData.startTime ? moment(formData.startTime).utc().toISOString() : null;
+      const endTimeUtc = formData.endTime ? moment(formData.endTime).utc().toISOString() : null;
+  
+      const eventData = {
+        ...formData,
+        startTime: startTimeUtc,
+        endTime: endTimeUtc,
+      };
+  
+      const response = await UpdateEventService(eventData);
       if (response.status === 200) {
         toast.success('Chỉnh sửa thành công!');
         navigate('/organizer/events');
@@ -299,6 +306,8 @@ const EditEvent = () => {
       toast.error('An error occurred while updating the event!');
     }
   };
+  
+  
 
   const handleAddQuantity = async () => {
     if (isNaN(addQuantity) || addQuantity <= 0) {

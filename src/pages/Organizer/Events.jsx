@@ -7,6 +7,7 @@ import { Input, Segmented, Table, Button } from 'antd';
 import { GetEventsByAccountService } from '../../services/EventService';
 import Footer from '../../component/Footer';
 import { encodeId } from '../../utils/utils';
+import moment from 'moment';
 
 
 const CustomSearch = styled(Input)`
@@ -121,6 +122,10 @@ const Events = () => {
         setFilteredEvents(filtered);
     };
 
+    const formatDateTime = (dateString) => {
+        return moment.utc(dateString).local().format('DD/MM/YYYY HH:mm');
+    };
+
     const columns = [
         {
             title: 'Tên sự kiện',
@@ -150,13 +155,13 @@ const Events = () => {
             title: 'Thời gian bắt đầu',
             dataIndex: 'startTime',
             key: 'startTime',
-            render: (text) => new Date(text).toLocaleString("vi"),
+            render: (text) => formatDateTime(text),
         },
         {
             title: 'Thời gian kết thúc',
             dataIndex: 'endTime',
             key: 'endTime',
-            render: (text) => new Date(text).toLocaleString("vi"),
+            render: (text) => formatDateTime(text),
             responsive: ['md'],
         },
         {

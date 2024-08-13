@@ -7,6 +7,7 @@ import { GetUpcomingEventsByOrganizerService, GetStaffByEventService, AddStaffBy
 import { CloseOutlined, UserAddOutlined } from '@ant-design/icons';
 import Footer from '../../component/Footer';
 import { toast } from 'react-toastify';
+import moment from 'moment';
 
 const { Meta } = Card;
 
@@ -165,6 +166,10 @@ const ManageStaff = () => {
     setFilteredEvents(filtered);
   };
 
+  const formatDateTime = (dateString) => {
+    return moment.utc(dateString).local().format('DD/MM/YYYY HH:mm');
+  };
+
   const columns = [
     {
       title: 'Tên sự kiện',
@@ -175,13 +180,13 @@ const ManageStaff = () => {
       title: 'Thời gian bắt đầu',
       dataIndex: 'startTime',
       key: 'startTime',
-      render: (text) => new Date(text).toLocaleString("vi"),
+      render: (text) => formatDateTime(text),
     },
     {
       title: 'Thời gian kết thúc',
       dataIndex: 'endTime',
       key: 'endTime',
-      render: (text) => new Date(text).toLocaleString("vi"),
+      render: (text) => formatDateTime(text),
     },
     {
       title: 'Địa điểm',

@@ -249,7 +249,17 @@ const CreateEvent = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await AddEventService(formData);
+      //to utc time
+      const startTimeUTC = formData.startTime ? moment(formData.startTime).utc().toISOString() : null;
+      const endTimeUTC = formData.endTime ? moment(formData.endTime).utc().toISOString() : null;
+  
+      const dataToSubmit = {
+        ...formData,
+        startTime: startTimeUTC,
+        endTime: endTimeUTC,
+      };
+  
+      const response = await AddEventService(dataToSubmit);
       if (response.status === 200) {
         toast.success('Sự kiện đã được tạo thành công!');
         navigate('/organizer/events');
@@ -261,6 +271,7 @@ const CreateEvent = () => {
       toast.error('Có lỗi xảy ra khi tạo sự kiện!');
     }
   };
+  
 
   const uploadProps = {
     name: 'file',
@@ -385,10 +396,10 @@ const CreateEvent = () => {
                     <DatePicker
                       showTime
                       disabledDate={(current) => current && current < startOfDay}
-                      disabledTime={() => ({
-                        disabledHours: () => now.hour() < 23 ? [...Array(now.hour()).keys()] : [],
-                        disabledMinutes: () => now.hour() === now.hour() && now.minute() > 0 ? [...Array(now.minute()).keys()] : [],
-                      })}
+                      // disabledTime={() => ({
+                      //   disabledHours: () => now.hour() < 23 ? [...Array(now.hour()).keys()] : [],
+                      //   disabledMinutes: () => now.hour() === now.hour() && now.minute() > 0 ? [...Array(now.minute()).keys()] : [],
+                      // })}
                       onChange={(value) => {
                         setFormData({ ...formData, startTime: value });
                         if (value && formData.endTime && value.isAfter(formData.endTime)) {
@@ -417,10 +428,11 @@ const CreateEvent = () => {
                       { required: true, message: 'Vui lòng chọn thời gian kết thúc!' },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!value || (formData.startTime && value.isAfter(formData.startTime))) {
+                          const startTime = getFieldValue('startTime');
+                          if (!value || (startTime && value.isAfter(startTime))) {
                             return Promise.resolve();
                           }
-                          return Promise.reject(new Error('Thời gian kết thúc không sớm hơn thời gian bắt đầu'));
+                          return Promise.reject(new Error('Thời gian kết thúc phải sau thời gian bắt đầu'));
                         },
                       }),
                     ]}
@@ -428,23 +440,25 @@ const CreateEvent = () => {
                     <DatePicker
                       showTime
                       disabledDate={(current) => {
-                        const endTimeMin = now.isBefore(startOfDay) ? startOfDay : now;
-                        return current && (current < endTimeMin || (startTime && current.isBefore(startTime, 'minute')));
+                        const startTime = formData.startTime ? moment(formData.startTime) : null;
+                        return current && startTime && current.isBefore(startTime, 'day');
                       }}
                       disabledTime={() => {
-                        if (!startTime) return {}; // If no startTime is set, allow all times
+                        const startTime = formData.startTime ? moment(formData.startTime) : null;
+                        if (!startTime) return {};
 
                         const startHour = startTime.hour();
                         const startMinute = startTime.minute();
 
                         return {
-                          disabledHours: () => startHour > 0 ? [...Array(startHour).keys()] : [],
-                          disabledMinutes: () => now.hour() === startHour ? [...Array(startMinute).keys()] : [],
+                          disabledHours: () => (startHour > 0 ? [...Array(startHour).keys()] : []),
+                          disabledMinutes: () => (startHour === startTime.hour() ? [...Array(startMinute).keys()] : []),
                         };
                       }}
                       onChange={(value) => setFormData({ ...formData, endTime: value })}
                     />
                   </Form.Item>
+
                 </div>
               </div>
               <Form.Item name="categoryId" label="Thể loại sự kiện" rules={[{ required: true, message: 'Vui lòng chọn loại sự kiện!' }]}>

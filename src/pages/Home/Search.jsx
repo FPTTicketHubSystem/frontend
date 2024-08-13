@@ -9,6 +9,7 @@ import { encodeId } from "../../utils/utils";
 import EventCard from "./EventCard";
 import { GetEventsUserService } from "../../services/EventService";
 import { SearchEventByFilter } from "../../services/EventService";
+import moment from "moment";
 
 const Search = () => {
   const [showFilter, setShowFilter] = useState(false);
@@ -173,6 +174,10 @@ const Search = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    return moment.utc(dateString).local().format('DD/MM/YYYY');
+  };
+
   return (
     <>
       <Header />
@@ -257,14 +262,7 @@ const Search = () => {
                       image={event.themeImage}
                       title={event.eventName}
                       price={priceDisplay}
-                      date={new Date(event.startTime).toLocaleDateString(
-                        "vi-VN",
-                        {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "numeric",
-                        }
-                      )}
+                      date= {formatDate(event.startTime)}
                     />
                   </Link>
                 </div>
