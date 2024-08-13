@@ -1,6 +1,6 @@
 .dashboard-container {
     padding: 20px;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
   }
   
@@ -22,24 +22,26 @@
     overflow: hidden;
   }
   
-  .card-header {
+  .card-header1 {
     padding: 15px;
     color: #fff;
   }
   
-  .card-title {
+  .card-title1 {
     margin: 0;
     font-size: 18px;
-    color:#EC6C21;
+    color:#ffffff;
   }
   
-  .revenue-header { background-color: #007bff; }
+  .revenue-header { background-color: #2b0bb8; }
   .participants-header { background-color: #28a745; }
   .rating-header { background-color: #17a2b8; }
   .revenue-events-header { background-color: #ffc107; }
   .participants-events-header { background-color: #dc3545; }
-  
-  .card-body {
+  .active-users-header { background-color: #c927bb; }
+  .top-participants-header { background-color: #cd8809; }
+
+  .card-body1 {
     padding: 15px;
     height: 300px;
   }

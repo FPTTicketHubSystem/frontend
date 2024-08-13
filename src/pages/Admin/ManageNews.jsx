@@ -1,26 +1,26 @@
-import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
-import { Button, Input, Modal, Pagination, Table, notification } from "antd";
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Header from "../../component/Admin/Header";
-import Navbar from "../../component/Admin/Navbar";
-import { UserContext } from "../../context/UserContext";
+import { CheckCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { Button, Input, Modal, Pagination, Table, notification } from 'antd';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Header from '../../component/Admin/Header';
+import Navbar from '../../component/Admin/Navbar';
+import { UserContext } from '../../context/UserContext';
 import {
   ChangeStatusNewsService,
   GetAllNewsAdminService,
-} from "../../services/NewsService";
+} from '../../services/NewsService';
 
 export default function ManageNews() {
   const { user, render, onSetRender } = useContext(UserContext);
   const [newsData, setNewsData] = useState([]);
   const [filteredNewsData, setFilteredNewsData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [newsPerPage] = useState(10);
   const navigate = useNavigate();
 
-  const fetchAllNews = async (status = "") => {
+  const fetchAllNews = async (status = '') => {
     const result = await GetAllNewsAdminService(status);
     if (result) {
       setNewsData(result);
@@ -35,15 +35,15 @@ export default function ManageNews() {
 
   const handleChangeStatusActivate = async (record) => {
     Modal.confirm({
-      title: "Bạn muốn duyệt bài viết này?",
-      okText: "Đồng ý",
-      okType: "default",
-      cancelText: "Thoát",
+      title: 'Bạn muốn duyệt bài viết này?',
+      okText: 'Đồng ý',
+      okType: 'default',
+      cancelText: 'Thoát',
       onOk: async () => {
-        const status = "Đã duyệt";
+        const status = 'Đã duyệt';
         const result = await ChangeStatusNewsService(record.newsId, status);
         if (result.status === 200) {
-          openNotificationEnable("topRight");
+          openNotificationEnable('topRight');
         }
         onSetRender();
       },
@@ -52,15 +52,15 @@ export default function ManageNews() {
 
   const handleChangeStatusDeActivate = async (record) => {
     Modal.confirm({
-      title: "Bạn muốn hủy duyệt bài viết này?",
-      okText: "Đồng ý",
-      okType: "danger",
-      cancelText: "Thoát",
+      title: 'Bạn muốn hủy duyệt bài viết này?',
+      okText: 'Đồng ý',
+      okType: 'danger',
+      cancelText: 'Thoát',
       onOk: async () => {
-        const status = "Chưa duyệt";
+        const status = 'Chưa duyệt';
         const result = await ChangeStatusNewsService(record.newsId, status);
         if (result.status === 200) {
-          openNotificationEnable("topRight");
+          openNotificationEnable('topRight');
         }
         onSetRender();
       },
@@ -69,8 +69,8 @@ export default function ManageNews() {
 
   const openNotificationEnable = (placement) => {
     notification.success({
-      message: "Thành công",
-      description: "Thao tác thành công",
+      message: 'Thành công',
+      description: 'Thao tác thành công',
       placement,
     });
   };
@@ -97,12 +97,12 @@ export default function ManageNews() {
 
   const columns = [
     {
-      title: "Tiêu đề",
-      dataIndex: "title",
-      key: "title",
+      title: 'Tiêu đề',
+      dataIndex: 'title',
+      key: 'title',
       render: (text, record) => (
         <a
-          href={`/news-detail/${record.newsId}`}
+          href={`/admin/news/news-detail/${record.newsId}`}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -111,21 +111,21 @@ export default function ManageNews() {
       ),
     },
     {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
       render: (text, record) => (
-        <span style={{ color: text === "Đã duyệt" ? "green" : "red" }}>
+        <span style={{ color: text === 'Đã duyệt' ? 'green' : 'red' }}>
           {text}
         </span>
       ),
     },
     {
-      title: "Hành động",
-      key: "action",
+      title: 'Hành động',
+      key: 'action',
       render: (text, record) => (
         <span>
-          {record.status === "Đã duyệt" ? (
+          {record.status === 'Đã duyệt' ? (
             <Button
               icon={<MinusCircleOutlined />}
               onClick={() => handleChangeStatusDeActivate(record)}
@@ -165,7 +165,10 @@ export default function ManageNews() {
                     <ol className="breadcrumb mb-0">
                       <li className="breadcrumb-item">
                         <i className="icon-home lh-1"></i>
-                        <a href="/" className="text-decoration-none">
+                        <a
+                          href="/admin/dashboard"
+                          className="text-decoration-none"
+                        >
                           Home
                         </a>
                       </li>
@@ -178,37 +181,39 @@ export default function ManageNews() {
                     <div className="btn-group me-3">
                       <button
                         className={`btn ${
-                          filterStatus === ""
-                            ? "btn-primary"
-                            : "btn-outline-primary"
+                          filterStatus === ''
+                            ? 'btn-primary'
+                            : 'btn-outline-primary'
                         }`}
-                        onClick={() => handleFilterChange("")}
+                        onClick={() => handleFilterChange('')}
                       >
                         Tất cả
                       </button>
                       <button
                         className={`btn ${
-                          filterStatus === "Đã duyệt"
-                            ? "btn-primary"
-                            : "btn-outline-primary"
+                          filterStatus === 'Đã duyệt'
+                            ? 'btn-primary'
+                            : 'btn-outline-primary'
                         }`}
-                        onClick={() => handleFilterChange("Đã duyệt")}
+                        onClick={() => handleFilterChange('Đã duyệt')}
                       >
                         Đã duyệt
                       </button>
                       <button
                         className={`btn ${
-                          filterStatus === "Chưa duyệt"
-                            ? "btn-primary"
-                            : "btn-outline-primary"
+                          filterStatus === 'Chờ duyệt'
+                            ? 'btn-primary'
+                            : 'btn-outline-primary'
                         }`}
-                        onClick={() => handleFilterChange("Chưa duyệt")}
+                        onClick={() => handleFilterChange('Chờ duyệt')}
                       >
-                        Chưa duyệt
+                        Chờ duyệt
                       </button>
                     </div>
                     <div className="search-bar">
-                      <Input
+                      <input
+                        type="text"
+                        className="form-control"
                         placeholder="Tìm kiếm..."
                         value={searchTerm}
                         onChange={handleSearchChange}
@@ -252,4 +257,3 @@ export default function ManageNews() {
     </div>
   );
 }
- 

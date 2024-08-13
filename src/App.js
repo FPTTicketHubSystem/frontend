@@ -38,35 +38,137 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/profile" element={<ProtectedRoute element={<Profile />} allowedRoles={[1, 2, 3, 4]} />} />
-        <Route path="/confirmaccount/:email" element={<ConfirmAccount />}/>
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute element={<Profile />} allowedRoles={[1, 2, 3, 4]} />
+          }
+        />
+        <Route path="/confirmaccount/:email" element={<ConfirmAccount />} />
         <Route path="/event-detail/:encodedId" element={<EventDetail />} />
-        <Route path="/forum" element={<ProtectedRoute element={<Forum />} allowedRoles={[2]} />} />
-        <Route path="/rate/:ratingid" element={<ProtectedRoute element={<RateEvent />} allowedRoles={[2]} />} />
-        <Route path="/organizer/create-event" element={<ProtectedRoute element={<CreateEvent />} allowedRoles={[2, 3]} />} />
-        <Route path="/admin/user" element={<ProtectedRoute element={<User />} allowedRoles={[1]} />} />
-        <Route path="/admin/events" element={<ProtectedRoute element={<EventAdmin />} allowedRoles={[1]} />} />
-        <Route path="/admin/forum" element={<ProtectedRoute element={<ForumAdmin />} allowedRoles={[1]} />} />
-        <Route path="/organizer/events" element={<ProtectedRoute element={<Events />} allowedRoles={[2, 3]} />} />
-        <Route path="admin/dashboard" element={<ProtectedRoute element={<Dashboard />} allowedRoles={[1]} />} />
-        <Route path="/manage-category" element={<ProtectedRoute element={<CategoryList />} allowedRoles={[1]} />} />
-        <Route path="/seclectTicket" element={<ProtectedRoute element={<ChooseTicket />} allowedRoles={[2]} />} />
-        <Route path="/payment" element={<ProtectedRoute element={<Payment />} allowedRoles={[2]} />} />
-        <Route path="/myticket" element={<ProtectedRoute element={<MyTicket />} allowedRoles={[2]} />} />
-        <Route path="/myticket/detail/:id" element={<ProtectedRoute element={<TicketDetail />} allowedRoles={[2]} />} />
-        <Route path="/organizer/edit-event/:encodedId" element={<ProtectedRoute element={<EditEvent />} allowedRoles={[2, 3]} />} />
-        <Route path="/organizer/manage-news" element={<ProtectedRoute element={<NewsManage />} allowedRoles={[3]} />} />
-        <Route path="/organizer/manage-staff" element={<ProtectedRoute element={<ManageStaff />} allowedRoles={[3]} />} />
-        <Route path="/staff/checkin" element={<ProtectedRoute element={<CheckinTicket />} allowedRoles={[4]} />} />
+        <Route
+          path="/forum"
+          element={<ProtectedRoute element={<Forum />} allowedRoles={[2]} />}
+        />
+        <Route
+          path="/rate/:ratingid"
+          element={
+            <ProtectedRoute element={<RateEvent />} allowedRoles={[2]} />
+          }
+        />
+        <Route
+          path="/organizer/create-event"
+          element={
+            <ProtectedRoute element={<CreateEvent />} allowedRoles={[2, 3]} />
+          }
+        />
+        <Route
+          path="/admin/user"
+          element={<ProtectedRoute element={<User />} allowedRoles={[1]} />}
+        />
+        <Route
+          path="/admin/events"
+          element={
+            <ProtectedRoute element={<EventAdmin />} allowedRoles={[1]} />
+          }
+        />
+        <Route
+          path="/admin/forum"
+          element={
+            <ProtectedRoute element={<ForumAdmin />} allowedRoles={[1]} />
+          }
+        />
+        <Route
+          path="/organizer/events"
+          element={
+            <ProtectedRoute element={<Events />} allowedRoles={[2, 3]} />
+          }
+        />
+        <Route
+          path="admin/dashboard"
+          element={
+            <ProtectedRoute element={<Dashboard />} allowedRoles={[1]} />
+          }
+        />
+        <Route
+          path="/manage-category"
+          element={
+            <ProtectedRoute element={<CategoryList />} allowedRoles={[1]} />
+          }
+        />
+        <Route
+          path="/seclectTicket"
+          element={
+            <ProtectedRoute element={<ChooseTicket />} allowedRoles={[2]} />
+          }
+        />
+        <Route
+          path="/payment"
+          element={<ProtectedRoute element={<Payment />} allowedRoles={[2]} />}
+        />
+        <Route
+          path="/myticket"
+          element={<ProtectedRoute element={<MyTicket />} allowedRoles={[2]} />}
+        />
+        <Route
+          path="/myticket/detail/:id"
+          element={
+            <ProtectedRoute element={<TicketDetail />} allowedRoles={[2]} />
+          }
+        />
+        <Route
+          path="/organizer/edit-event/:encodedId"
+          element={
+            <ProtectedRoute element={<EditEvent />} allowedRoles={[2, 3]} />
+          }
+        />
+        <Route
+          path="/organizer/manage-news"
+          element={
+            <ProtectedRoute element={<NewsManage />} allowedRoles={[3]} />
+          }
+        />
+        <Route
+          path="/organizer/manage-staff"
+          element={
+            <ProtectedRoute element={<ManageStaff />} allowedRoles={[3]} />
+          }
+        />
+        <Route
+          path="/staff/checkin"
+          element={
+            <ProtectedRoute element={<CheckinTicket />} allowedRoles={[4]} />
+          }
+        />
         <Route path="/search" element={<Search />} />
-        <Route path="/manage-news" element={<ProtectedRoute element={<ManageNews />} allowedRoles={[1]} />} />
-        <Route path="/news-detail/:newsId" element={<NewsDetail />} />
-        <Route path="/event-statistics/:encodedId" element={<ProtectedRoute element={<EventStatistics />} allowedRoles={[3]} />} />
-        <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
-        <Route path="/payment-success/:orderId" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
-        <Route path="/403" element={<Status403/>}/>
-        <Route path="/500" element={<Status500/>}/>
-        <Route path="*" element={<Status404/>}/>
+        <Route
+          path="admin/manage-news"
+          element={
+            <ProtectedRoute element={<ManageNews />} allowedRoles={[1]} />
+          }
+        />
+        <Route path="admin/news/news-detail/:newsId" element={<NewsDetail />} />
+        <Route
+          path="/event-statistics/:encodedId"
+          element={
+            <ProtectedRoute element={<EventStatistics />} allowedRoles={[3]} />
+          }
+        />
+        <Route
+          path="/payment-success"
+          element={
+            <ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />
+          }
+        />
+        <Route
+          path="/payment-success/:orderId"
+          element={
+            <ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />
+          }
+        />
+        <Route path="/403" element={<Status403 />} />
+        <Route path="/500" element={<Status500 />} />
+        <Route path="*" element={<Status404 />} />
       </Routes>
     </Router>
   );

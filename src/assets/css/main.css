@@ -4147,7 +4147,7 @@ textarea.form-control-lg {
   border-top-right-radius: 0;
 }
 
-.nav1 {
+.nav {
   --bs-nav-link-padding-x: 1rem;
   --bs-nav-link-padding-y: 0.5rem;
   --bs-nav-link-font-weight: ;
@@ -5073,7 +5073,7 @@ textarea.form-control-lg {
   --bs-pagination-padding-y: 0.375rem;
   --bs-pagination-font-size: 0.825rem;
   --bs-pagination-color: var(--bs-link-color);
-  --bs-pagination-bg: rgba(0, 0, 0, 0.2);
+  --bs-pagination-bg: #0003;
   --bs-pagination-border-width: var(--bs-border-width);
   --bs-pagination-border-color: var(--bs-border-color);
   --bs-pagination-border-radius: var(--bs-border-radius);
@@ -5082,16 +5082,16 @@ textarea.form-control-lg {
   --bs-pagination-hover-border-color: var(--bs-border-color);
   --bs-pagination-focus-color: var(--bs-link-hover-color);
   --bs-pagination-focus-bg: var(--bs-secondary-bg);
-  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(168, 122, 80, 0.25);
-  --bs-pagination-active-color: rgb(255, 255, 255);
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem #a87a5040;
+  --bs-pagination-active-color: #fff;
   --bs-pagination-active-bg: #a87a50;
   --bs-pagination-active-border-color: #a87a50;
   --bs-pagination-disabled-color: var(--bs-secondary-color);
-  --bs-pagination-disabled-bg: rgba(0, 0, 0, 0.2);
+  --bs-pagination-disabled-bg: #0003;
   --bs-pagination-disabled-border-color: var(--bs-border-color);
   display: flex;
-  padding-left: 0;
   list-style: none;
+  padding-left: 0;
 }
 
 .page-link {

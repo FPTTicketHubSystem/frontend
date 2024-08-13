@@ -4,7 +4,6 @@ import '../../assets/vendor/overlay-scroll/OverlayScrollbars.min.css';
 import '../../assets/images/favicon.svg';
 import Header from '../../component/Admin/Header';
 import Navbar from '../../component/Admin/Navbar';
-import Footer from '../../component/Footer';
 import React, { useState, useEffect } from 'react';
 import ChangeStatusButton from '../../component/Admin/ChangeStatusButton';
 import '../../assets/css/Event.css';
@@ -244,13 +243,14 @@ const EventAdmin = () => {
                     <ol className="breadcrumb mb-0">
                       <li className="breadcrumb-item">
                         <i className="icon-home lh-1"></i>
-                        <a href="/" className="text-decoration-none">
+                        <a
+                          href="/admin/dashboard"
+                          className="text-decoration-none"
+                        >
                           Home
                         </a>
                       </li>
-                      <li className="breadcrumb-item text-light">
-                        Event Approval
-                      </li>
+                      <li className="breadcrumb-item text-light">Event</li>
                     </ol>
                   </div>
                   <div className="d-flex">
@@ -335,7 +335,7 @@ const EventAdmin = () => {
 
             <div className="row">
               <div className="col-12 d-flex justify-content-center">
-                <nav1>
+                <nav>
                   <ul
                     className="pagination"
                     role="navigation"
@@ -388,7 +388,7 @@ const EventAdmin = () => {
                       </button>
                     </li>
                   </ul>
-                </nav1>
+                </nav>
               </div>
             </div>
           </div>
@@ -594,7 +594,7 @@ const EventAdmin = () => {
                   </table>
 
                   <div className="d-flex justify-content-center">
-                    <nav1>
+                    <nav>
                       <ul className="pagination">
                         <li
                           className={`page-item ${
@@ -647,7 +647,7 @@ const EventAdmin = () => {
                           </button>
                         </li>
                       </ul>
-                    </nav1>
+                    </nav>
                   </div>
                 </div>
               )}
@@ -655,7 +655,6 @@ const EventAdmin = () => {
           </div>
         </div>
       )}
-      <Footer />
     </div>
   );
 };
