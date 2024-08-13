@@ -292,7 +292,7 @@ const User = () => {
 
             <div className="row">
               <div className="col-12 d-flex justify-content-center">
-                <nav>
+                <nav1>
                   <ul className="pagination" role="navigation" aria-label="Pagination">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                       <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>
@@ -310,7 +310,7 @@ const User = () => {
                       <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
                     </li>
                   </ul>
-                </nav>
+                </nav1>
               </div>
             </div>
           </div>

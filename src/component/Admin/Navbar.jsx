@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+const NavbarAdmin = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -98,4 +98,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarAdmin;

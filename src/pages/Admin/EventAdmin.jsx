@@ -335,7 +335,7 @@ const EventAdmin = () => {
 
             <div className="row">
               <div className="col-12 d-flex justify-content-center">
-                <nav>
+                <nav1>
                   <ul
                     className="pagination"
                     role="navigation"
@@ -388,7 +388,7 @@ const EventAdmin = () => {
                       </button>
                     </li>
                   </ul>
-                </nav>
+                </nav1>
               </div>
             </div>
           </div>
@@ -594,7 +594,7 @@ const EventAdmin = () => {
                   </table>
 
                   <div className="d-flex justify-content-center">
-                    <nav>
+                    <nav1>
                       <ul className="pagination">
                         <li
                           className={`page-item ${
@@ -647,7 +647,7 @@ const EventAdmin = () => {
                           </button>
                         </li>
                       </ul>
-                    </nav>
+                    </nav1>
                   </div>
                 </div>
               )}

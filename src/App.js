@@ -48,7 +48,7 @@ function App() {
         <Route path="/admin/events" element={<ProtectedRoute element={<EventAdmin />} allowedRoles={[1]} />} />
         <Route path="/admin/forum" element={<ProtectedRoute element={<ForumAdmin />} allowedRoles={[1]} />} />
         <Route path="/organizer/events" element={<ProtectedRoute element={<Events />} allowedRoles={[2, 3]} />} />
-        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} allowedRoles={[1]} />} />
+        <Route path="admin/dashboard" element={<ProtectedRoute element={<Dashboard />} allowedRoles={[1]} />} />
         <Route path="/manage-category" element={<ProtectedRoute element={<CategoryList />} allowedRoles={[1]} />} />
         <Route path="/seclectTicket" element={<ProtectedRoute element={<ChooseTicket />} allowedRoles={[2]} />} />
         <Route path="/payment" element={<ProtectedRoute element={<Payment />} allowedRoles={[2]} />} />

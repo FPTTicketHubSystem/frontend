@@ -144,7 +144,7 @@ export default function Header() {
                         )}
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/tickets">
+                        <Link className="dropdown-item" to="/myticket">
                           <span>
                             <i className="bi bi-ticket-perforated"></i>
                           </span>{" "}

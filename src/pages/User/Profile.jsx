@@ -1,4 +1,7 @@
 import Header from "../../component/Header";
+import HeaderAdmin from "../../component/Admin/Header";
+import Navbar from "../../component/Organizer/Navbar";
+import NavbarStaff from "../../component/Staff/NavbarStaff";
 import { Form, Button, Modal } from 'react-bootstrap';
 import { useState, useContext, useEffect, useRef } from "react";
 import { UserContext } from "../../context/UserContext";
@@ -37,6 +40,24 @@ const CustomButton = styled(Button)`
 function Profile() {
 
     const { user, setUser, onSetRender } = useContext(UserContext);
+
+    const renderNavbar = () => {
+        if (user) {
+            switch (user.roleId) {
+                case 1:
+                    return <HeaderAdmin />;
+                case 2:
+                    return <Header />;
+                case 3:
+                    return <Navbar />;
+                case 4:
+                    return <NavbarStaff />;
+                default:
+                    return <Header />;
+            }
+        }
+    };
+
     const [userInfo, setUserInfo] = useState({
         fullName: user.fullName || '',
         phone: user.phone || '',
@@ -174,7 +195,7 @@ function Profile() {
     return (
         <>
             <div className="bg bg-dark">
-                <Header />
+                {renderNavbar()}
                 <Form onSubmit={handleSubmit} className="p-3 border rounded shadow-sm col-lg-4" style={{ maxWidth: '400px', margin: '10px auto', backgroundColor: '#101316' }}>
                     <div className="text-center mb-3">
                         <img

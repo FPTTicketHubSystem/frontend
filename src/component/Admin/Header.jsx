@@ -5,7 +5,7 @@ import logo from "../../assets/images/logo/3.png";
 import logo2 from "../../assets/images/logo/logo2.png";
 import { toast } from "react-toastify";
 
-const Header = () => {
+const HeaderAdmin = () => {
   const navigate = useNavigate();
   const { user, onSetUser, onSetRender } = useContext(UserContext);
 
@@ -80,4 +80,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderAdmin;

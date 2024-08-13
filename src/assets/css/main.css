@@ -4147,7 +4147,7 @@ textarea.form-control-lg {
   border-top-right-radius: 0;
 }
 
-.nav {
+.nav1 {
   --bs-nav-link-padding-x: 1rem;
   --bs-nav-link-padding-y: 0.5rem;
   --bs-nav-link-font-weight: ;
@@ -6091,7 +6091,7 @@ textarea.form-control-lg {
   .modal-fullscreen-xxl-down .modal-body {
     overflow-y: auto;
   }
-} */
+}
 .tooltip {
   --bs-tooltip-zindex: 1080;
   --bs-tooltip-max-width: 200px;
