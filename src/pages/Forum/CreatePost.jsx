@@ -1,100 +1,178 @@
-import React, { useState } from "react";
-import styles from "../../assets/css/CreatePost.module.css";
-import { AddPost } from "../../services/ForumService";
+import { Avatar, Form, Input, Modal, notification, Select } from "antd";
+import { useContext, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
+import { v4 } from "uuid";
+import { Spinner } from "react-bootstrap";
+import TextArea from "antd/es/input/TextArea";
+import { PostContext } from "../../context/PostContext";
 
-const CreatePost = ({ onAddPost }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [subject, setSubject] = useState("");
-  const [content, setContent] = useState("");
-  const [file, setFile] = useState(null);
+const defaultAvatar = "../avatar.png";
+const upload = "../upload.png";
+const tag = "../saved.png";
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+export default function CreatePost() {
+  const [open, setOpen] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [formValue, setFormValue] = useState({
+    subjectId: null,
+    postText: "",
+    postFile: "",
+  });
+  const [imageUpload, setImageUpload] = useState(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const { addPost, getPostByStatus } = useContext(PostContext);
+  const { user } = useContext(UserContext);
+  const { accountId } = user;
+  const imageUrlRef = useRef("");
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  let imageUrlUpload = "";
+  const normFile = (e) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newPost = {
-      AccountId: 1, // Giả sử tài khoản có ID là 1
-      PostText: content,
-      PostFile: file ? URL.createObjectURL(file) : null, // Giả sử bạn upload file lên và lưu đường dẫn file
-    };
-
-    try {
-      const response = await AddPost(newPost);
-      if (response.status === 200) {
-        onAddPost(newPost); // Cập nhật danh sách bài viết trên giao diện nếu cần
-        closeModal();
-        setSubject("");
-        setContent("");
-        setFile(null);
-      } else {
-        console.error("Failed to add post");
-      }
-    } catch (error) {
-      console.error("Error adding post:", error);
+  const showModal = () => {
+    if (!user) {
+      setOpenLogin(true);
+    } else {
+      setOpen(true);
     }
+  };
+
+  const cancelModal = () => {
+    if (!user) {
+      setOpenLogin(false);
+    } else {
+      setOpen(false);
+    }
+    form.resetFields();
+  };
+  const uploadImage = async () => {
+    if (imageUpload == null) return;
+    setUploadingImage(true);
+    const imageRef = ref(storage, `forum_images/${imageUpload.name + v4()}`);
+    try {
+      const snapshot = await uploadBytes(imageRef, imageUpload);
+      const url = await getDownloadURL(snapshot.ref);
+      imageUrlRef.current = url;
+      imageUrlUpload = imageUrlRef.current;
+      setUploadingImage(false);
+      return imageUrlUpload;
+    } catch (error) {
+      console.log(error);
+      setUploadingImage(false);
+    }
+  };
+
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationAddPostSuccess = (placement) => {
+    api.success({
+      message: "Thông báo",
+      description: "Bài viết của bạn đang chờ được phê duyệt !",
+      placement,
+    });
+  };
+
+  const handleSubmitAddPostForm = async () => {
+    const postFile = await uploadImage();
+    await addPost({ ...formValue, accountId, postFile });
+    openNotificationAddPostSuccess("topRight");
+    await getPostByStatus("Pending", accountId);
+    cancelModal();
+    navigate("/forum?status=Pending");
   };
 
   return (
     <>
-      <button onClick={openModal} className={styles.createButton}>
-        Tạo bài viết
-      </button>
-
-      {isModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <h2>Tạo bài viết</h2>
-            <form onSubmit={handleSubmit}>
-              <div className={styles.formGroup}>
-                <label htmlFor="subject">Sự kiện:</label>
-                <select
-                  id="subject"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  required
-                >
-                  <option value="">Chọn sự kiện</option>
-                  <option value="Âm nhạc">Âm nhạc</option>
-                  <option value="Thể thao">Thể thao</option>
-                  <option value="Nghệ thuật">Nghệ thuật</option>
-                </select>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="content">Nội dung:</label>
-                <textarea
-                  id="content"
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="Ghi gì đó đi..."
-                  required
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label>Ảnh/Video:</label>
-                <div className={styles.uploadArea}>
-                  <input type="file" onChange={handleFileChange} />
-                </div>
-              </div>
-
-              <div className={styles.buttonGroup}>
-                <button type="button" onClick={closeModal}>
-                  Đóng
-                </button>
-                <button type="submit">Đăng bài</button>
-              </div>
-            </form>
+      {contextHolder}
+      <div className="createPost" type="primary">
+        <div className="form">
+          <Input
+            onClick={showModal}
+            size="large"
+            placeholder="Bạn đang nghĩ gì thế?"
+            prefix={
+              user && <Avatar src={user.avatar ? user.avatar : defaultAvatar} />
+            }
+          />
+          <hr></hr>
+          <div className="bottom-form">
+            <div className="item-bottom-form">
+              <img src={upload}></img>
+              <label>Ảnh/Video</label>
+            </div>
+            <div className="item-bottom-form">
+              <img src={tag}></img>
+              <label>Tag</label>
+            </div>
           </div>
         </div>
-      )}
+
+        <Modal
+          title="Tạo bài viết"
+          open={open}
+          okText={uploadingImage ? <Spinner /> : "Đăng bài"}
+          cancelText="Đóng"
+          onCancel={cancelModal}
+          onOk={form.submit}
+          okButtonProps={uploadingImage && { style: { pointerEvents: "none" } }}
+        >
+          <Form
+            form={form}
+            layout="horizontal"
+            initialValues={formValue}
+            onFinish={handleSubmitAddPostForm}
+          >
+            <Form.Item
+              name="content"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập nội dung!",
+                },
+              ]}
+            >
+              <TextArea
+                rows={6}
+                placeholder="Bạn đang nghĩ gì thế?"
+                onChange={(e) =>
+                  setFormValue({ ...formValue, postText: e.target.value })
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              label="Ảnh/Video"
+              valuePropName="fileList"
+              getValueFromEvent={normFile}
+              style={{
+                marginTop: 10,
+              }}
+              className="form-item upload-image"
+            >
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(event) => setImageUpload(event.target.files[0])}
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Modal
+          title="Tạo bài viết"
+          open={openLogin}
+          okText="Đồng ý"
+          cancelText="Hủy bỏ"
+          onCancel={cancelModal}
+          onOk={() => navigate("/login")}
+        >
+          <h5>Vui lòng đăng nhập để đăng bài viết !</h5>
+        </Modal>
+      </div>
     </>
   );
-};
-
-export default CreatePost;
+}

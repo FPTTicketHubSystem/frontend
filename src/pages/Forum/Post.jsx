@@ -1,119 +1,256 @@
-import React, { useState, useEffect } from "react";
-import { LikePost } from "../../services/ForumService";
-import { AddComment } from "../../services/PostCommentService";
-import styles from "../../assets/css/Post.module.css";
+const defaultAvatar = "../avatar.png";
+const like = "../like.png";
+const liked = "../liked.png";
+const save = "../Image/Forum/luu.png";
+const saved = "../Image/Forum/daluu.png";
+const comment = "../Image/Forum/comment.png";
 
-const Post = ({ post }) => {
-  const [comments, setComments] = useState([]);
-  const [likes, setLikes] = useState(0);
-  const [newComment, setNewComment] = useState("");
-  const [userAvatar, setUserAvatar] = useState("");
+export default function PostContent({ post }) {
+  const {
+    postId,
+    avatar,
+    fullName,
+    createdTime,
+    postText,
+    postFile,
+    status,
+    postlikes,
+    postfavourites,
+    countComment,
+    countLike,
+  } = post || {};
 
-  useEffect(() => {
-    if (post) {
-      setComments(post.postcomments || []);
-      setLikes(post.countLike || 0);
-      setUserAvatar(post.avatar || "");
-    }
-  }, [post]);
+  const {
+    getAllPost,
+    currentPost,
+    getPostById,
+    getPostByStatus,
+    likePost,
+    unlikePost,
+    savePost,
+    unSavePost,
+    getSavedPost,
+  } = useContext(PostContext);
+  const { comments, getCommentsByPost } = useContext(CommentContext);
+  const { user } = useContext(UserContext);
+  const [searchParams] = useSearchParams();
+  const statusQueryParams = searchParams.get("status");
+  const navigate = useNavigate();
 
-  const handleLike = async () => {
-    try {
-      const response = await LikePost(post.postId, post.accountId);
-      if (response.status === 200) {
-        setLikes((prevLikes) => prevLikes + 1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [messageModal, setMessageModal] = useState("");
+
+  const userLiked = postlikes?.find(
+    (like) => like.accountId === user?.accountId
+  );
+  const userSaved = postfavourites?.find(
+    (postfavourite) => postfavourite.accountId === user?.accountId
+  );
+
+  const showModal = useCallback(
+    (postId) => {
+      setIsModalOpen(true);
+      getPostById(postId);
+      getCommentsByPost(postId);
+    },
+    [getPostById, getCommentsByPost]
+  );
+
+  const cancelModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  const showLoginModal = useCallback(() => {
+    setIsLoginOpen(true);
+  }, []);
+
+  const cancelLoginModal = useCallback(() => {
+    setIsLoginOpen(false);
+  }, []);
+
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationSavePostSuccess = useCallback(
+    (placement) => {
+      api.success({
+        message: "Thông báo",
+        description: "Lưu bài viết thành công !",
+        placement,
+      });
+    },
+    [api]
+  );
+
+  const openNotificationUnSavePostSuccess = useCallback(
+    (placement) => {
+      api.success({
+        message: "Thông báo",
+        description: "Bỏ lưu bài viết thành công !",
+        placement,
+      });
+    },
+    [api]
+  );
+
+  const handleLikedClick = useCallback(async () => {
+    if (user) {
+      if (!userLiked) {
+        await likePost(postId, user.accountId);
       } else {
-        console.error("Failed to like post");
+        await unlikePost(postId, user.accountId);
       }
-    } catch (error) {
-      console.error("Error liking post:", error);
-    }
-  };
 
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
-
-    const commentData = {
-      postId: post.postId,
-      accountId: post.accountId,
-      content: newComment,
-      status: "Uploaded",
-    };
-
-    try {
-      const response = await AddComment(commentData);
-      if (response.status === 200) {
-        setComments((prevComments) => [
-          ...prevComments,
-          {
-            postCommentId: Date.now(),
-            fullName: "Current User",
-            content: newComment,
-          },
-        ]);
-        setNewComment("");
+      if (statusQueryParams) {
+        if (statusQueryParams === "Saved") {
+          await getSavedPost(user.accountId);
+        } else {
+          await getPostByStatus(statusQueryParams, user.accountId);
+        }
       } else {
-        console.error("Failed to add comment");
+        await getAllPost();
       }
-    } catch (error) {
-      console.error("Error adding comment:", error);
+    } else {
+      showLoginModal();
+      setMessageModal("like");
     }
-  };
+  }, [
+    user,
+    userLiked,
+    postId,
+    statusQueryParams,
+    likePost,
+    unlikePost,
+    getSavedPost,
+    getPostByStatus,
+    getAllPost,
+    showLoginModal,
+  ]);
+
+  const handleSaveClick = useCallback(async () => {
+    if (user) {
+      if (!userSaved) {
+        await savePost(postId, user.accountId);
+        openNotificationSavePostSuccess("topRight");
+      } else {
+        await unSavePost(postId, user.accountId);
+        openNotificationUnSavePostSuccess("topRight");
+      }
+
+      if (statusQueryParams) {
+        if (statusQueryParams === "Saved") {
+          await getSavedPost(user.accountId);
+        } else {
+          await getPostByStatus(statusQueryParams, user.accountId);
+        }
+      } else {
+        await getAllPost();
+      }
+    } else {
+      showLoginModal();
+      setMessageModal("lưu");
+    }
+  }, [
+    user,
+    userSaved,
+    postId,
+    statusQueryParams,
+    savePost,
+    unSavePost,
+    getSavedPost,
+    getPostByStatus,
+    getAllPost,
+    showLoginModal,
+    openNotificationSavePostSuccess,
+    openNotificationUnSavePostSuccess,
+  ]);
 
   if (!post) {
-    return <div>Loading...</div>;
+    return null; // or some loading indicator
   }
 
   return (
-    <div className={styles.post}>
-      <div className={styles.postHeader}>
-        <div className={styles.avatar}>
-          <img src={post.avatar || "/default-avatar.png"} alt="User avatar" />
+    <>
+      {contextHolder}
+      <div className="form-info">
+        <div className="form-left">
+          <Avatar
+            src={
+              <img
+                src={avatar || defaultAvatar}
+                alt="avatar"
+                className="avatar"
+              />
+            }
+          />
         </div>
-        <h3>
-          {post.fullName} •{" "}
-          <span>
-            {post.createDate
-              ? new Date(post.createDate).toLocaleString()
-              : "Chưa xác định"}
-          </span>
-        </h3>
-        <p className={styles.event}>{post.status}</p>
-      </div>
-      <div className={styles.content}>
-        <p>{post.postText}</p>
-        {post.postFile && <img src={post.postFile} alt="Post file" />}
-      </div>
-      <div className={styles.postFooter}>
-        <button className={styles.likeButton} onClick={handleLike}>
-          <i className="icon-thumbs-up"></i> {likes}
-        </button>
-        <div className={styles.comments}>
-          {comments.map((comment) => (
-            <div key={comment.postCommentId} className={styles.comment}>
-              <strong>{comment.fullName}:</strong> {comment.content}
+        <div className="form-mid">
+          <div className="form-mid-top">
+            <div>
+              {fullName} • {createdTime}
             </div>
-          ))}
-          <div className={styles.commentInputWrapper}>
-            <div className={styles.avatar}>
-              <img src={userAvatar} alt="User avatar" />
+            <div className="form-mid-top-subject">
+              <p>{subjectName}</p>
             </div>
-            <input
-              type="text"
-              placeholder="Bình luận gì đó đi..."
-              className={styles.commentInput}
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
-            <button className={styles.sendButton} onClick={handleCommentSubmit}>
-              Gửi
-            </button>
+          </div>
+          <div className="form-mid-content">
+            <div>
+              <p>{postText}</p>
+            </div>
+            {postFile && <img src={postFile} alt="post" />}
           </div>
         </div>
+        <div className="form-right">
+          <img
+            src={userSaved ? saved : save}
+            onClick={handleSaveClick}
+            alt="save"
+          />
+        </div>
       </div>
-    </div>
-  );
-};
+      {status === "Approved" && (
+        <div className="form-like">
+          <img
+            onClick={handleLikedClick}
+            src={userLiked ? liked : like}
+            alt="heart"
+          />
+          <p>{countLike}</p>
+          <img src={comment} onClick={() => showModal(postId)} alt="comment" />
+          <p>{countComment}</p>
+        </div>
+      )}
 
-export default Post;
+      <Modal
+        title={`Bài viết của ${fullName}`}
+        cancelText="Đóng"
+        okButtonProps={{ style: { display: "none" } }}
+        open={isModalOpen}
+        onCancel={cancelModal}
+        className="comment-modal"
+      >
+        <PostDetails data={currentPost} />
+        {comments.length > 0 ? (
+          <>
+            <h6 className="comment-title">Bình luận</h6>
+            <CommentList comments={comments} />
+          </>
+        ) : (
+          <h6 className="comment-title-empty"> Chưa có bình luận nào !</h6>
+        )}
+      </Modal>
+
+      <Modal
+        title={`${
+          messageModal.charAt(0).toUpperCase() + messageModal.slice(1)
+        } bài viết`}
+        open={isLoginOpen}
+        okText="Đồng ý"
+        cancelText="Hủy bỏ"
+        onCancel={cancelLoginModal}
+        onOk={() => navigate("/login")}
+      >
+        <h5>Vui lòng đăng nhập để {messageModal} bài viết !</h5>
+      </Modal>
+    </>
+  );
+}

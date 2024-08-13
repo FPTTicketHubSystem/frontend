@@ -13,9 +13,7 @@ import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
 import EventAdmin from './pages/Admin/EventAdmin';
 import ForumAdmin from './pages/Admin/ForumAdmin';
-import Forum from './pages/Home/Forum';
 import RateEvent from './pages/Home/RateEvent';
-// import Eventapproval from './pages/Admin/Eventapproval';
 import Dashboard from './pages/Admin/Dashboard';
 import CategoryList from './pages/Admin/ManageCategory';
 import MyTicket from './pages/User/MyTicket';
@@ -30,7 +28,9 @@ import Search from './pages/Home/Search';
 import ManageNews from './pages/Admin/ManageNews';
 import NewsDetail from './pages/Admin/NewsDetail';
 import Post from './pages/Forum/Post';
-import CreatePost from './pages/Forum/CreatePost';
+import PostProvider from './context/PostContext';
+import CommentProvider from './context/CommentContext';
+import Forum from './pages/Forum/Forum';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -43,7 +43,6 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/confirmaccount/:email" element={<ConfirmAccount />} />
           <Route path="/event-detail" element={<EventDetail />} />
-          <Route path="/forum" element={<Forum />} />
           <Route path="/rate/:ratingid" element={<RateEvent />} />
           <Route path="/organizer/create-event" element={<CreateEvent />} />
           <Route path="/admin/user" element={<User />} />
@@ -67,8 +66,7 @@ function App() {
           <Route path="/search" element={<Search/>}/>
           <Route path="/manage-news" element={<ManageNews />} />
           <Route path="/news-detail/:newsId" element={<NewsDetail />} />
-          <Route path="/post" element={<Post />} />
-          <Route path="/createPost" element={<CreatePost />} />
+          <Route path="/forum" element={<PostProvider><CommentProvider><Forum /></CommentProvider></PostProvider>}></Route>
         </Routes>
       </Router>
     </>
