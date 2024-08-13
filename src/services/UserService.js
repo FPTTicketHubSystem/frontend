@@ -155,18 +155,31 @@ export const GetAllUserAccountsService = async () => {
   }
 };
 
-// export const ChangeStatusUserService = async (accountId, newStatus) => {
-//   try {
-//     const response = await request({
-//       method: 'post',
-//       url: 'user/ChangeStatusUser',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       data: JSON.stringify({ accountId, newStatus }),
-//     });
-//     return response;
-//   } catch (error) {
-//     throw new Error(`Error changing user status: ${error.message}`);
-//   }
-// };
+export const ChangeStatusUserService = async (accountId, newStatus) => {
+  try {
+    const response = await request({
+      method: 'post',
+      url: `user/ChangeStatusUser?accountId=${accountId}&newStatus=${newStatus}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (error) {
+    throw new Error(`Error changing user status: ${error.message}`);
+  }
+};
+export const ChangeRoleService = async (accountId, newRoleId) => {
+  try {
+    const response = await request({
+      method: 'post',
+      url: `user/changeRole?accountId=${accountId}&newRoleId=${newRoleId}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (e) {
+    return e;
+  }
+};

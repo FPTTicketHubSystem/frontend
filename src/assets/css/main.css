@@ -2539,7 +2539,7 @@ progress {
   background-color: rgba(255, 255, 255, 0.1);
   background-clip: padding-box;
   border: var(--bs-border-width) solid rgba(255, 255, 255, 0.3);
-  border-radius: var(--bs-border-radius);
+  border-radius: 20px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -3438,8 +3438,8 @@ textarea.form-control-lg {
 
 .btn-success {
   --bs-btn-color: #101316;
-  --bs-btn-bg: #009a62;
-  --bs-btn-border-color: #009a62;
+  --bs-btn-bg: #ed685d;
+  --bs-btn-border-color: #ed685d;
   --bs-btn-hover-color: #101316;
   --bs-btn-hover-bg: #26a97a;
   --bs-btn-hover-border-color: #1aa472;
@@ -13006,7 +13006,7 @@ textarea.form-control-lg {
  ********************
 ********************/
 body {
-  background: linear-gradient(145deg, #8a6137, #6a3e1f 40%, #522710);
+  background: rgb(42, 45, 52);
   background-size: cover;
   background-position: center center;
 }

@@ -14,7 +14,7 @@ const CustomSearch = styled(Input)`
     background-color: #EC6C21;
     border-color: #EC6C21;
 
-    &:hover, 
+    &:hover,
     &:focus {
       background-color: #EC6C21 !important;
       border-color: #EC6C21 !important;
@@ -105,9 +105,9 @@ const Events = () => {
         let filtered = events;
 
         if (filter === 'SẮP DIỄN RA') {
-            filtered = filtered.filter(event => new Date(event.startTime) > now);
+            filtered = filtered.filter(event => new Date(event.startTime) > now && event.status === 'Đã duyệt');
         } else if (filter === 'ĐÃ QUA') {
-            filtered = filtered.filter(event => new Date(event.endTime) < now);
+            filtered = filtered.filter(event => new Date(event.endTime) < now && event.status === 'Đã duyệt');
         } else if (filter === 'CHỜ DUYỆT') {
             filtered = filtered.filter(event => event.status === 'Chờ duyệt');
         } else if (filter === 'NHÁP') {
@@ -163,7 +163,7 @@ const Events = () => {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            
+
         },
         {
             title: 'Thao tác',
@@ -171,12 +171,21 @@ const Events = () => {
             render: (_, record) => {
                 const encodedId = encodeId(record.eventId);
                 return (
-                    <CustomButton type="primary" href={`/organizer/edit-event/${encodedId}`}>
-                        <i className="bi bi-pen"></i>
-                    </CustomButton>
+                    <>
+                        <CustomButton type="primary" href={`/organizer/edit-event/${encodedId}`} style={{ marginRight: '8px' }}>
+                            <i className="bi bi-pen"></i>
+                        </CustomButton>
+                        {record.status === 'Đã duyệt' && (
+                            <CustomButton type="primary" href={`/event-statistics/${encodedId}`}>
+                                <i className="bi bi-clipboard-data"></i>
+                            </CustomButton>
+                        )}
+                    </>
+
                 );
             },
         },
+
     ];
 
     return (
@@ -210,7 +219,7 @@ const Events = () => {
                     loading={loading}
                 />
             </div>
-            <Footer/>
+            <Footer />
         </>
     );
 };

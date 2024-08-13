@@ -1,6 +1,5 @@
 import request from '../utils/request';
 
-
 export const GetTicketByAccountService = async (accountId) => {
     try {
         const response = await request({

@@ -13,6 +13,7 @@ import LocationPicker from '../../component/LocationPicker';
 import styled from "styled-components";
 import Navbar from '../../component/Organizer/Navbar';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment';
 
 
 const { Dragger } = Upload;
@@ -94,8 +95,12 @@ const CreateEvent = () => {
     status: '',
     // eventImages: [],
     ticketTypes: [],
-    discountCodes: []
+    // discountCodes: []
   });
+
+  const now = moment(); // Current date and time
+  const startOfDay = now.clone().startOf('day'); // Start of the current day
+  const startTime = formData.startTime ? moment(formData.startTime) : null;
 
   useEffect(() => {
     if (user?.accountId) {
@@ -152,60 +157,78 @@ const CreateEvent = () => {
 
   const handleAddTicketType = () => {
     setFormData(prevState => {
-      const newTicketTypes = [...prevState.ticketTypes, { typeName: '', price: 0, quantity: 0, status: '' }];
-      //const newTicketQuantity = calculateTotalTicketQuantity(newTicketTypes);
+      const newTicketTypes = [...prevState.ticketTypes];
+      const existingNames = new Set(newTicketTypes.map(tt => tt.typeName.trim().toLowerCase()));
+
+      if (!existingNames.has("")) {
+        newTicketTypes.push({ typeName: '', price: 0, quantity: 0, status: '' });
+      } else {
+        toast.error('Tên loại vé không được để trống hoặc trùng lặp!');
+      }
+
       return {
         ...prevState,
         ticketTypes: newTicketTypes,
-        //ticketQuantity: newTicketQuantity
       };
     });
   };
 
-  const handleAddDiscountCode = () => {
-    setFormData(prevState => ({
-      ...prevState,
-      discountCodes: [...prevState.discountCodes, { code: '', discountAmount: 0, quantity: 0, status: '' }]
-    }));
-  };
+  // const handleAddDiscountCode = () => {
+  //   setFormData(prevState => ({
+  //     ...prevState,
+  //     discountCodes: [...prevState.discountCodes, { code: '', discountAmount: 0, quantity: 0, status: '' }]
+  //   }));
+  // };
 
   const handleTicketTypeChange = (index, e) => {
     const { name, value } = e.target;
     setFormData(prevState => {
       const updatedTicketTypes = [...prevState.ticketTypes];
+
+      // Check for duplicate typeName, ignoring blank names
+      if (name === 'typeName' && value.trim() !== '') {
+        const isDuplicate = updatedTicketTypes.some((ticket, i) =>
+          ticket.typeName.trim().toLowerCase() === value.trim().toLowerCase() && i !== index
+        );
+        if (isDuplicate) {
+          toast.error('Tên loại vé đã tồn tại!');
+          return prevState;
+        }
+      }
+
+      // Continue with the regular change handling
       if (name === 'price' && value < 0) {
-        message.error('Giá tiền không hợp lệ!');
+        toast.error('Giá tiền không hợp lệ!');
         return prevState;
       }
       if (name === 'quantity' && value < 0) {
-        message.error('Số lượng không hợp lệ!');
+        toast.error('Số lượng không hợp lệ!');
         return prevState;
       }
+
       updatedTicketTypes[index][name] = value;
-      //const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
       return {
         ...prevState,
-        ticketTypes: updatedTicketTypes,
-        //ticketQuantity: newTicketQuantity
+        ticketTypes: updatedTicketTypes
       };
     });
   };
 
-  const handleDiscountCodeChange = (index, e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => {
-      const updatedDiscountCodes = [...prevState.discountCodes];
-      if ((name === 'discountAmount' || name === 'quantity') && value < 0) {
-        message.error(`${name === 'discountAmount' ? 'Giá trị giảm giá' : 'Số lượng'} không hợp lệ!`);
-        return prevState;
-      }
-      updatedDiscountCodes[index][name] = value;
-      return {
-        ...prevState,
-        discountCodes: updatedDiscountCodes,
-      };
-    });
-  };
+  // const handleDiscountCodeChange = (index, e) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prevState => {
+  //     const updatedDiscountCodes = [...prevState.discountCodes];
+  //     if ((name === 'discountAmount' || name === 'quantity') && value < 0) {
+  //       message.error(`${name === 'discountAmount' ? 'Giá trị giảm giá' : 'Số lượng'} không hợp lệ!`);
+  //       return prevState;
+  //     }
+  //     updatedDiscountCodes[index][name] = value;
+  //     return {
+  //       ...prevState,
+  //       discountCodes: updatedDiscountCodes,
+  //     };
+  //   });
+  // };
 
   const handleRemoveTicketType = (index) => {
     setFormData(prevState => {
@@ -254,7 +277,7 @@ const CreateEvent = () => {
             if (img.width === 1280 && img.height === 720) {
               resolve();
             } else {
-              message.error('Kích thước ảnh phải là 1280x720!');
+              toast.error('Kích thước ảnh phải là 1280x720!');
               reject(new Error('Kích thước ảnh không hợp lệ'));
             }
           };
@@ -273,9 +296,11 @@ const CreateEvent = () => {
         console.log(info.file, info.fileList);
       }
       if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
+        // message.success(`${info.file.name} file uploaded successfully.`);
+        console.log(`${info.file.name} file uploaded successfully.`);
       } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+        //message.error(`${info.file.name} file upload failed.`);
+        console.log(`${info.file.name} file upload failed.`);
       }
     },
     onDrop(e) {
@@ -352,12 +377,27 @@ const CreateEvent = () => {
               </div>
               <div className="row mb-3">
                 <div className="col-md-6 mb-3">
-                  <Form.Item name="startTime" label="Thời gian bắt đầu" rules={[{ required: true, message: 'Vui lòng chọn thời gian bắt đầu!' }]}>
+                  <Form.Item
+                    name="startTime"
+                    label="Thời gian bắt đầu"
+                    rules={[{ required: true, message: 'Vui lòng chọn thời gian bắt đầu!' }]}
+                  >
                     <DatePicker
                       showTime
-                      onChange={(value) =>
-                        setFormData({ ...formData, startTime: value })
-                      }
+                      disabledDate={(current) => current && current < startOfDay}
+                      disabledTime={() => ({
+                        disabledHours: () => now.hour() < 23 ? [...Array(now.hour()).keys()] : [],
+                        disabledMinutes: () => now.hour() === now.hour() && now.minute() > 0 ? [...Array(now.minute()).keys()] : [],
+                      })}
+                      onChange={(value) => {
+                        setFormData({ ...formData, startTime: value });
+                        if (value && formData.endTime && value.isAfter(formData.endTime)) {
+                          setFormData(prevState => ({
+                            ...prevState,
+                            endTime: null
+                          }));
+                        }
+                      }}
                     />
                   </Form.Item>
                 </div>
@@ -377,18 +417,32 @@ const CreateEvent = () => {
                       { required: true, message: 'Vui lòng chọn thời gian kết thúc!' },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!value || getFieldValue('startTime') && value.isAfter(getFieldValue('startTime'))) {
+                          if (!value || (formData.startTime && value.isAfter(formData.startTime))) {
                             return Promise.resolve();
                           }
                           return Promise.reject(new Error('Thời gian kết thúc không sớm hơn thời gian bắt đầu'));
                         },
                       }),
-                    ]}>
+                    ]}
+                  >
                     <DatePicker
                       showTime
-                      onChange={(value) =>
-                        setFormData({ ...formData, endTime: value })
-                      }
+                      disabledDate={(current) => {
+                        const endTimeMin = now.isBefore(startOfDay) ? startOfDay : now;
+                        return current && (current < endTimeMin || (startTime && current.isBefore(startTime, 'minute')));
+                      }}
+                      disabledTime={() => {
+                        if (!startTime) return {}; // If no startTime is set, allow all times
+
+                        const startHour = startTime.hour();
+                        const startMinute = startTime.minute();
+
+                        return {
+                          disabledHours: () => startHour > 0 ? [...Array(startHour).keys()] : [],
+                          disabledMinutes: () => now.hour() === startHour ? [...Array(startMinute).keys()] : [],
+                        };
+                      }}
+                      onChange={(value) => setFormData({ ...formData, endTime: value })}
                     />
                   </Form.Item>
                 </div>
@@ -495,7 +549,7 @@ const CreateEvent = () => {
               {/* <CustomButton type="primary" onClick={handleAddTicketType}>
           Thêm loại vé
         </CustomButton> */}
-              <h3 className='mt-3'>Mã giảm giá <span onClick={handleAddDiscountCode} style={{ cursor: 'pointer' }}><i class="bi bi-plus-circle"></i></span></h3>
+              {/* <h3 className='mt-3'>Mã giảm giá <span onClick={handleAddDiscountCode} style={{ cursor: 'pointer' }}><i class="bi bi-plus-circle"></i></span></h3>
               <Table
                 dataSource={formData.discountCodes}
                 pagination={false}
@@ -557,7 +611,7 @@ const CreateEvent = () => {
                     </Button>
                   )}
                 />
-              </Table>
+              </Table> */}
               {/* <CustomButton type="primary" onClick={handleAddDiscountCode}>
           Thêm mã giảm giá
         </CustomButton> */}

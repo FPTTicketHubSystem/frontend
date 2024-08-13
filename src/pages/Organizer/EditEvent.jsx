@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { Form, Input, Button, DatePicker, Select, Table, Upload, message, Modal, Row, Col, Switch } from 'antd';
 import { UserContext } from '../../context/UserContext';
-import { AddEventService, GetEventForEdit, UpdateEventService } from '../../services/EventService';
+import { AddEventService, GetEventForEdit, GetTicketTypeByEventService, UpdateEventService, UpdateTicketQuantityService } from '../../services/EventService';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from '../../firebase';
 import { v4 } from "uuid";
@@ -101,6 +101,10 @@ const EditEvent = () => {
     ticketTypes: [],
     discountCodes: []
   });
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedTicketTypeId, setSelectedTicketTypeId] = useState(null);
+  const [addQuantity, setAddQuantity] = useState(0);
+  const [ticketTypes, setTicketTypes] = useState([]);
 
   const HandleGetEventForEdit = async () => {
     const response = await GetEventForEdit(eventId);
@@ -120,6 +124,19 @@ const EditEvent = () => {
     }
   };
 
+  const HandleGetTicketType = async () => {
+    const response = await GetTicketTypeByEventService(eventId);
+    try {
+      if (response) {
+        setTicketTypes(response.result || []);
+      }
+    }
+    catch (e) {
+      console.error('error', e);
+    }
+  };
+
+
 
   useEffect(() => {
     if (!user.accountId) {
@@ -129,6 +146,7 @@ const EditEvent = () => {
     }
     try {
       HandleGetEventForEdit();
+      HandleGetTicketType();
     }
     catch (e) {
       console.error('error', e);
@@ -159,13 +177,13 @@ const EditEvent = () => {
   }, []);
 
 
-  const handleAddressChange = ({ provinceName, districtName, wardName, details }) => {
-    const address = `${details}, ${wardName}, ${districtName}, ${provinceName}`;
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      address: address
-    }));
-  };
+  // const handleAddressChange = ({ provinceName, districtName, wardName, details }) => {
+  //   const address = `${details}, ${wardName}, ${districtName}, ${provinceName}`;
+  //   setFormData(prevFormData => ({
+  //     ...prevFormData,
+  //     address: address
+  //   }));
+  // };
 
   const handleInputImage = async (file) => {
     const imgRef = ref(storage, `images/event_images/theme_images${v4()}`);
@@ -187,85 +205,92 @@ const EditEvent = () => {
   //   return ticketTypes.reduce((total, ticket) => total + Number(ticket.quantity), 0);
   // };
 
-  const handleAddTicketType = () => {
-    setFormData(prevState => {
-      const newTicketTypes = [...prevState.ticketTypes, { typeName: '', price: 0, quantity: 0, status: '' }];
-      //const newTicketQuantity = calculateTotalTicketQuantity(newTicketTypes);
-      return {
-        ...prevState,
-        ticketTypes: newTicketTypes,
-        //ticketQuantity: newTicketQuantity
-      };
-    });
+  // const handleAddTicketType = () => {
+  //   setFormData(prevState => {
+  //     const newTicketTypes = [...prevState.ticketTypes, { typeName: '', price: 0, quantity: 0, status: '' }];
+  //     //const newTicketQuantity = calculateTotalTicketQuantity(newTicketTypes);
+  //     return {
+  //       ...prevState,
+  //       ticketTypes: newTicketTypes,
+  //       //ticketQuantity: newTicketQuantity
+  //     };
+  //   });
+  // };
+
+  // const handleAddDiscountCode = () => {
+  //   setFormData(prevState => ({
+  //     ...prevState,
+  //     discountCodes: [...prevState.discountCodes, { code: '', discountAmount: 0, quantity: 0, status: '' }]
+  //   }));
+  // };
+
+  // const handleTicketTypeChange = (index, e) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prevState => {
+  //     const updatedTicketTypes = [...prevState.ticketTypes];
+  //     if (name === 'price' && value < 0) {
+  //       message.error('Invalid price!');
+  //       return prevState;
+  //     }
+  //     if (name === 'quantity' && value <= 0) {
+  //       message.error('Invalid quantity!');
+  //       return prevState;
+  //     }
+  //     updatedTicketTypes[index][name] = value;
+  //     //const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
+  //     return {
+  //       ...prevState,
+  //       ticketTypes: updatedTicketTypes,
+  //       //ticketQuantity: newTicketQuantity
+  //     };
+  //   });
+  // };
+
+  // const handleDiscountCodeChange = (index, e) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prevState => {
+  //     const updatedDiscountCodes = [...prevState.discountCodes];
+  //     if ((name === 'discountAmount' || name === 'quantity') && value < 0) {
+  //       message.error(`${name === 'discountAmount' ? 'Invalid discount amount' : 'Invalid quantity'}`);
+  //       return prevState;
+  //     }
+  //     updatedDiscountCodes[index][name] = value;
+  //     return {
+  //       ...prevState,
+  //       discountCodes: updatedDiscountCodes,
+  //     };
+  //   });
+  // };
+
+  // const handleRemoveTicketType = (index) => {
+  //   setFormData(prevState => {
+  //     const updatedTicketTypes = prevState.ticketTypes.filter((_, i) => i !== index);
+  //     //const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
+  //     return {
+  //       ...prevState,
+  //       ticketTypes: updatedTicketTypes,
+  //       //ticketQuantity: newTicketQuantity
+  //     };
+  //   });
+  // };
+
+  // const handleRemoveDiscountCode = (index) => {
+  //   const updatedDiscountCodes = formData.discountCodes.filter((_, i) => i !== index);
+  //   setFormData(prevState => ({ ...prevState, discountCodes: updatedDiscountCodes }));
+  // };
+  const showAddQuantityModal = (ticketTypeId) => {
+    setSelectedTicketTypeId(ticketTypeId);
+    setAddQuantity(0); // Reset the quantity input
+    setIsModalVisible(true);
   };
 
-  const handleAddDiscountCode = () => {
-    setFormData(prevState => ({
-      ...prevState,
-      discountCodes: [...prevState.discountCodes, { code: '', discountAmount: 0, quantity: 0, status: '' }]
-    }));
-  };
-
-  const handleTicketTypeChange = (index, e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => {
-      const updatedTicketTypes = [...prevState.ticketTypes];
-      if (name === 'price' && value < 0) {
-        message.error('Invalid price!');
-        return prevState;
-      }
-      if (name === 'quantity' && value <= 0) {
-        message.error('Invalid quantity!');
-        return prevState;
-      }
-      updatedTicketTypes[index][name] = value;
-      //const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
-      return {
-        ...prevState,
-        ticketTypes: updatedTicketTypes,
-        //ticketQuantity: newTicketQuantity
-      };
-    });
-  };
-
-  const handleDiscountCodeChange = (index, e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => {
-      const updatedDiscountCodes = [...prevState.discountCodes];
-      if ((name === 'discountAmount' || name === 'quantity') && value < 0) {
-        message.error(`${name === 'discountAmount' ? 'Invalid discount amount' : 'Invalid quantity'}`);
-        return prevState;
-      }
-      updatedDiscountCodes[index][name] = value;
-      return {
-        ...prevState,
-        discountCodes: updatedDiscountCodes,
-      };
-    });
-  };
-
-  const handleRemoveTicketType = (index) => {
-    setFormData(prevState => {
-      const updatedTicketTypes = prevState.ticketTypes.filter((_, i) => i !== index);
-      //const newTicketQuantity = calculateTotalTicketQuantity(updatedTicketTypes);
-      return {
-        ...prevState,
-        ticketTypes: updatedTicketTypes,
-        //ticketQuantity: newTicketQuantity
-      };
-    });
-  };
-
-  const handleRemoveDiscountCode = (index) => {
-    const updatedDiscountCodes = formData.discountCodes.filter((_, i) => i !== index);
-    setFormData(prevState => ({ ...prevState, discountCodes: updatedDiscountCodes }));
-  };
 
   const handleSubmit = async () => {
     try {
       const response = await UpdateEventService(formData);
       if (response.status === 200) {
         toast.success('Chỉnh sửa thành công!');
+        navigate('/organizer/events');
       } else if (response.status === 400) {
         toast.error('Có lỗi xảy ra!');
       }
@@ -274,6 +299,34 @@ const EditEvent = () => {
       toast.error('An error occurred while updating the event!');
     }
   };
+
+  const handleAddQuantity = async () => {
+    if (isNaN(addQuantity) || addQuantity <= 0) {
+      message.error("Vui lòng nhập số lượng hợp lệ.");
+      return;
+    }
+
+    try {
+      const response = await UpdateTicketQuantityService(selectedTicketTypeId, addQuantity);
+      if (response.result.result.status === 200) {
+        toast.success("Đã cập nhật số lượng vé thành công!");
+        setTicketTypes((prevTicketTypes) =>
+          prevTicketTypes.map((ticket) =>
+            ticket.ticketTypeId === selectedTicketTypeId
+              ? { ...ticket, quantity: ticket.quantity + addQuantity }
+              : ticket
+          )
+        );
+        setIsModalVisible(false);
+      } else {
+        message.error("Có lỗi xảy ra khi cập nhật số lượng vé.");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("An error occurred while updating the ticket quantity.");
+    }
+  };
+
 
   const uploadProps = {
     name: 'file',
@@ -405,116 +458,41 @@ const EditEvent = () => {
                 onChange={handleCKEditorChange}
               />
             </Form.Item>
-            <Form.Item name="status" label="Trạng thái" className='mt-3' rules={[{ required: true, message: 'Vui lòng chọn!' }]}>
-              <CustomSwitch
-                checked={formData.status === 'Chờ duyệt'}
-                onChange={(checked) => setFormData({ ...formData, status: checked ? 'Chờ duyệt' : 'Nháp' })}
-                checkedChildren="Chờ duyệt"
-                unCheckedChildren="Nháp"
-              />
-            </Form.Item>
-            {/* <Form.Item label="Ticket Types">
-              <Button type="dashed" onClick={handleAddTicketType} style={{ marginBottom: '16px' }}>
-                Add Ticket Type
-              </Button>
-              <Table dataSource={formData.ticketTypes} pagination={false} rowKey={(record, index) => index}>
-                <Column title="Type Name" dataIndex="typeName" key="typeName"
-                  render={(text, record, index) => (
-                    <Input
-                      value={text}
-                      name="typeName"
-                      onChange={(e) => handleTicketTypeChange(index, e)}
-                    />
-                  )}
-                />
-                <Column title="Price" dataIndex="price" key="price"
-                  render={(text, record, index) => (
-                    <Input
-                      value={text}
-                      name="price"
-                      type="number"
-                      onChange={(e) => handleTicketTypeChange(index, e)}
-                    />
-                  )}
-                />
-                <Column title="Quantity" dataIndex="quantity" key="quantity"
-                  render={(text, record, index) => (
-                    <Input
-                      value={text}
-                      name="quantity"
-                      type="number"
-                      onChange={(e) => handleTicketTypeChange(index, e)}
-                    />
-                  )}
-                />
-                <Column title="Status" dataIndex="status" key="status"
-                  render={(text, record, index) => (
-                    <Select value={text} onChange={(value) => handleTicketTypeChange(index, { target: { name: 'status', value } })}>
-                      <Option value="active">Active</Option>
-                      <Option value="inactive">Inactive</Option>
-                    </Select>
-                  )}
-                />
+            <Form.Item label="Các loại vé">
+              <Table dataSource={ticketTypes} rowKey="ticketTypeId" pagination={false}>
+                <Column title="Tên loại vé" dataIndex="typeName" key="typeName" />
+                <Column title="Giá" dataIndex="price" key="price" render={(price) => `${price.toLocaleString()} VND`} />
+                <Column title="Số lượng" dataIndex="quantity" key="quantity" />
                 <Column
-                  title="Action"
+                  title="Hành động"
                   key="action"
-                  render={(text, record, index) => (
-                    <Button type="link" onClick={() => handleRemoveTicketType(index)}>Remove</Button>
+                  render={(_, record) => (
+                    <CustomButton
+                      type="primary"
+                      onClick={() => showAddQuantityModal(record.ticketTypeId)}
+                    >
+                      Thêm số lượng
+                    </CustomButton>
                   )}
                 />
               </Table>
             </Form.Item>
-            <Form.Item label="Discount Codes">
-              <Button type="dashed" onClick={handleAddDiscountCode} style={{ marginBottom: '16px' }}>
-                Add Discount Code
-              </Button>
-              <Table dataSource={formData.discountCodes} pagination={false} rowKey={(record, index) => index}>
-                <Column title="Code" dataIndex="code" key="code"
-                  render={(text, record, index) => (
-                    <Input
-                      value={text}
-                      name="code"
-                      onChange={(e) => handleDiscountCodeChange(index, e)}
-                    />
-                  )}
+            <Form.Item name="status" label="Trạng thái" className='mt-3'>
+              {formData.status === 'Nháp' && (
+                <CustomSwitch
+                  checked={formData.status === 'Chờ duyệt'}
+                  onChange={(checked) => setFormData({ ...formData, status: checked ? 'Chờ duyệt' : 'Nháp' })}
+                  checkedChildren="Chờ duyệt"
+                  unCheckedChildren="Nháp"
                 />
-                <Column title="Discount Amount" dataIndex="discountAmount" key="discountAmount"
-                  render={(text, record, index) => (
-                    <Input
-                      value={text}
-                      name="discountAmount"
-                      type="number"
-                      onChange={(e) => handleDiscountCodeChange(index, e)}
-                    />
-                  )}
-                />
-                <Column title="Quantity" dataIndex="quantity" key="quantity"
-                  render={(text, record, index) => (
-                    <Input
-                      value={text}
-                      name="quantity"
-                      type="number"
-                      onChange={(e) => handleDiscountCodeChange(index, e)}
-                    />
-                  )}
-                />
-                <Column title="Status" dataIndex="status" key="status"
-                  render={(text, record, index) => (
-                    <Select value={text} onChange={(value) => handleDiscountCodeChange(index, { target: { name: 'status', value } })}>
-                      <Option value="active">Active</Option>
-                      <Option value="inactive">Inactive</Option>
-                    </Select>
-                  )}
-                />
-                <Column
-                  title="Action"
-                  key="action"
-                  render={(text, record, index) => (
-                    <Button type="link" onClick={() => handleRemoveDiscountCode(index)}>Remove</Button>
-                  )}
-                />
-              </Table>
-            </Form.Item> */}
+              )}
+              {formData.status === 'Chờ duyệt' && (
+                <span>Chờ duyệt</span>
+              )}
+              {formData.status === 'Đã duyệt' && (
+                <span>Đã duyệt</span>
+              )}
+            </Form.Item>
             <Form.Item>
               <CustomButton type="primary" onClick={handleSubmit}>
                 Lưu thay đổi
@@ -524,6 +502,26 @@ const EditEvent = () => {
         </div>
       </div>
       <Footer />
+      <Modal
+        title="Thêm số lượng vé"
+        open={isModalVisible}
+        //onOk={handleAddQuantity}
+        onCancel={() => setIsModalVisible(false)}
+        footer={[
+          <CustomButton key="submit" type="primary" onClick={handleAddQuantity}>
+            Thêm
+          </CustomButton>,
+        ]}
+      >
+        <Input
+          type="number"
+          min={1}
+          value={addQuantity}
+          onChange={(e) => setAddQuantity(parseInt(e.target.value, 10))}
+          placeholder="Nhập số lượng vé muốn thêm"
+        />
+      </Modal>
+
     </div>
   );
 };
