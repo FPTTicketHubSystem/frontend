@@ -7,7 +7,6 @@ import { GetUpcomingEventsByOrganizerService, GetStaffByEventService, AddStaffBy
 import { CloseOutlined, UserAddOutlined } from '@ant-design/icons';
 import Footer from '../../component/Footer';
 import { toast } from 'react-toastify';
-import moment from 'moment';
 
 const { Meta } = Card;
 
@@ -166,10 +165,6 @@ const ManageStaff = () => {
     setFilteredEvents(filtered);
   };
 
-  const formatDateTime = (dateString) => {
-    return moment.utc(dateString).local().format('DD/MM/YYYY HH:mm');
-  };
-
   const columns = [
     {
       title: 'Tên sự kiện',
@@ -180,13 +175,13 @@ const ManageStaff = () => {
       title: 'Thời gian bắt đầu',
       dataIndex: 'startTime',
       key: 'startTime',
-      render: (text) => formatDateTime(text),
+      render: (text) => new Date(text).toLocaleString("vi"),
     },
     {
       title: 'Thời gian kết thúc',
       dataIndex: 'endTime',
       key: 'endTime',
-      render: (text) => formatDateTime(text),
+      render: (text) => new Date(text).toLocaleString("vi"),
     },
     {
       title: 'Địa điểm',
@@ -201,16 +196,11 @@ const ManageStaff = () => {
     {
       title: 'Thêm',
       key: 'actions',
-      render: (_, record) => {
-        const currentTime = moment();
-        const startTime = moment(record.startTime);
-        
-        return startTime.isAfter(currentTime) ? (
-          <CustomButton type="primary" onClick={() => showAddStaffModal(record)}>
-            <UserAddOutlined />
-          </CustomButton>
-        ) : null;
-      },
+      render: (_, record) => (
+        <CustomButton type="primary" onClick={() => showAddStaffModal(record)}>
+          <UserAddOutlined />
+        </CustomButton>
+      ),
     },
   ];
 
@@ -289,21 +279,12 @@ const ManageStaff = () => {
               onChange={handleSearch}
             />
           </div>
-          {/* <div className="col-md-4">
-            <CustomSegmented
-              options={['TẤT CẢ']}
-              style={{ width: '100%' }}
-              onChange={handleSegmentedChange}
-              value={filter}
-            />
-          </div> */}
         </div>
         <Table
           columns={columns}
           dataSource={filteredEvents}
           rowKey="eventId"
           loading={loading}
-          pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15']}}
           expandable={{
             expandedRowRender,
             onExpand: handleExpand,
