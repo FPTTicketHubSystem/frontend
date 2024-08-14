@@ -120,7 +120,7 @@ const EditEvent = () => {
         endTime: response.endTime ? moment.utc(response.endTime).local() : null,
       }));
     }
-  };  
+  };
 
   const HandleGetTicketType = async () => {
     const response = await GetTicketTypeByEventService(eventId);
@@ -165,6 +165,15 @@ const EditEvent = () => {
       [id]: value,
     }));
   }, []);
+
+  const handleDateChange = (field, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [field]: value ? value.toISOString() : null,
+    }));
+  };
+
+
 
   const handleCKEditorChange = useCallback((event, editor) => {
     const data = editor.getData();
@@ -285,15 +294,15 @@ const EditEvent = () => {
 
   const handleSubmit = async () => {
     try {
-      const startTimeUtc = formData.startTime ? moment(formData.startTime).utc().toISOString() : null;
-      const endTimeUtc = formData.endTime ? moment(formData.endTime).utc().toISOString() : null;
-  
+      const startTime = formData.startTime ? moment(formData.startTime).utc().toISOString() : null;
+      const endTime = formData.endTime ? moment(formData.endTime).utc().toISOString() : null;
+
       const eventData = {
         ...formData,
-        startTime: startTimeUtc,
-        endTime: endTimeUtc,
+        startTime,
+        endTime,
       };
-  
+
       const response = await UpdateEventService(eventData);
       if (response.status === 200) {
         toast.success('Chỉnh sửa thành công!');
@@ -306,8 +315,9 @@ const EditEvent = () => {
       toast.error('An error occurred while updating the event!');
     }
   };
-  
-  
+
+
+
 
   const handleAddQuantity = async () => {
     if (isNaN(addQuantity) || addQuantity <= 0) {
@@ -446,8 +456,8 @@ const EditEvent = () => {
                 <Form.Item label="Thời gian bắt đầu">
                   <DatePicker
                     showTime
-                    value={formData.startTime}
-                    onChange={(value) => setFormData({ ...formData, startTime: value })}
+                    value={formData.startTime ? moment(formData.startTime) : null}
+                    onChange={(value) => handleDateChange('startTime', value)}
                   />
                 </Form.Item>
               </Col>
@@ -455,12 +465,13 @@ const EditEvent = () => {
                 <Form.Item label="Thời gian kết thúc">
                   <DatePicker
                     showTime
-                    value={formData.endTime}
-                    onChange={(value) => setFormData({ ...formData, endTime: value })}
+                    value={formData.endTime ? moment(formData.endTime) : null}
+                    onChange={(value) => handleDateChange('endTime', value)}
                   />
                 </Form.Item>
               </Col>
             </Row>
+
             <Form.Item label="Mô tả sự kiện">
               <CustomCKEditor
                 value={formData.eventDescription}

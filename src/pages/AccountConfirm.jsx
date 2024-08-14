@@ -34,7 +34,7 @@ export default function ConfirmAccount() {
                     <Result
                         status="error"
                         title="Xác thực tài khoản không thành công"
-                        subTitle="Hãy thử xác thực lại bằng các truy cập fth.com/emaicuaban"
+                        subTitle="Hãy liên hệ fpttickethub@gmail.com để được hỗ trợ"
                     />
                 )}
                 {confirmationStatus === 200 && (

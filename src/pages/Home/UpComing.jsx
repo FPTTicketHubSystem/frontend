@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { GetUpcomingEventService } from "../../services/EventService";
 import { Link } from "react-router-dom";
 import { encodeId } from "../../utils/utils";
+import moment from "moment";
 
 function Upcoming() {
   const [events, setEvents] = useState([]);
@@ -67,6 +68,10 @@ function Upcoming() {
     ],
   };
 
+  const formatDateTime = (dateString) => {
+    return moment.utc(dateString).local().format('DD/MM/YYYY HH:mm');
+  };
+
   return (
     <>
       <section className="event spad">
@@ -96,9 +101,7 @@ function Upcoming() {
                     >
                       <div className="tag-date">
                         <span>
-                          {new Date(event.startTime).toLocaleDateString(
-                            "vi-VN"
-                          )}
+                          {formatDateTime(event.startTime)}
                         </span>
                       </div>
                     </div>
