@@ -11,6 +11,7 @@ import qrCodeImage from "../../assets/images/qrcode.png";
 import { DeleteTimeOutOrder } from "../../services/PaymentService";
 import { ReturnPaymentUrl } from "../../services/PaymentService";
 import { CheckInputCoupon } from "../../services/PaymentService";
+import moment from "moment";
 
 const Payment = () => {
   const location = useLocation();
@@ -165,16 +166,8 @@ const Payment = () => {
             </p>
             <p>
               <i className="bi bi-calendar3 me-2"></i>
-              {new Date(event.startTime).toLocaleTimeString("vi-VN", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-              ,{" "}
-              {new Date(event.startTime).toLocaleDateString("vi-VN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
+              {moment.utc(event.startTime).local().format('HH:mm')},{" "}
+              {moment.utc(event.startTime).local().format('DD/MM/YYYY')}
             </p>
           </div>
           <div className="countdown-timer">

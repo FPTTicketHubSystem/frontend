@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { CancelOrderOfUser } from "../../services/PaymentService";
 import { CheckOrderdOfUser } from "../../services/PaymentService";
 import { faArrowUpAZ } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function ChooseTicket() {
   const location = useLocation();
@@ -199,16 +200,8 @@ function ChooseTicket() {
           <div className="ticket-summary" style={{ backgroundColor: "black" }}>
             <h2>{event.eventName}</h2>
             <p>
-              {new Date(event.startTime).toLocaleTimeString("vi-VN", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-              ,{" "}
-              {new Date(event.startTime).toLocaleDateString("vi-VN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
+            {moment.utc(event.startTime).local().format('HH:mm')},{" "}
+            {moment.utc(event.startTime).local().format('DD/MM/YYYY')}
             </p>
             <p>{event.location}</p>
             <div className="ticket-prices">

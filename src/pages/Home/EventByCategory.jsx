@@ -4,6 +4,7 @@ import EventCard from "./EventCard";
 import { Link } from "react-router-dom";
 import { GetEventByCategoryService } from "../../services/EventService";
 import { encodeId } from "../../utils/utils";
+import moment from "moment";
 
 function EventByCategory({ categoryId, categoryName, filter }) {
   const [events, setEvents] = useState([]);
@@ -24,6 +25,10 @@ function EventByCategory({ categoryId, categoryName, filter }) {
 
     fetchEvents();
   }, [categoryId]);
+
+  const formatDate = (dateString) => {
+    return moment.utc(dateString).local().format('DD/MM/YYYY');
+  };
 
   return (
     <div className="app">
@@ -76,11 +81,7 @@ function EventByCategory({ categoryId, categoryName, filter }) {
                 image={event.themeImage}
                 title={event.eventName}
                 price={priceDisplay}
-                date={new Date(event.startTime).toLocaleDateString("vi-VN", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                })}
+                date= {formatDate(event.startTime)}
               />
             </Link>
           );

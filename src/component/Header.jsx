@@ -29,8 +29,7 @@ export default function Header() {
     navigate("/search", { state: { category } });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     navigate("/search");
   };
 
@@ -61,17 +60,19 @@ export default function Header() {
               <div className="app">
                 <div className="background">
                   <div className="search-container">
-                    <form className="d-flex" onSubmit={handleSubmit}>
+                    <form className="d-flex">
                       <input
                         className="form-control d-lg-block d-none me-2"
                         type="search"
                         placeholder="Tìm kiếm"
                         aria-label="Search"
+                        onClick={handleSubmit}
                       />
                       <button
                         className="btn btn-outline-light"
                         type="submit"
                         style={{ backgroundColor: "#EC6C21", color: "white" }}
+                        onClick={handleSubmit}
                       >
                         <i className="bi bi-search"></i>
                       </button>
