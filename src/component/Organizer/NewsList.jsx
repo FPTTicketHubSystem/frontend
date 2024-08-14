@@ -206,6 +206,7 @@ const NewsList = () => {
                     rowKey="newsId"
                     loading={loading}
                     expandable={{ expandedRowRender }}
+                    pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15']}}
                 />
             </div>
         </>

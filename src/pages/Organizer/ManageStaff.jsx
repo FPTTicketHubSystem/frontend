@@ -201,11 +201,16 @@ const ManageStaff = () => {
     {
       title: 'Thêm',
       key: 'actions',
-      render: (_, record) => (
-        <CustomButton type="primary" onClick={() => showAddStaffModal(record)}>
-          <UserAddOutlined />
-        </CustomButton>
-      ),
+      render: (_, record) => {
+        const currentTime = moment();
+        const startTime = moment(record.startTime);
+        
+        return startTime.isAfter(currentTime) ? (
+          <CustomButton type="primary" onClick={() => showAddStaffModal(record)}>
+            <UserAddOutlined />
+          </CustomButton>
+        ) : null;
+      },
     },
   ];
 
@@ -284,20 +289,21 @@ const ManageStaff = () => {
               onChange={handleSearch}
             />
           </div>
-          <div className="col-md-4">
+          {/* <div className="col-md-4">
             <CustomSegmented
               options={['TẤT CẢ']}
               style={{ width: '100%' }}
               onChange={handleSegmentedChange}
               value={filter}
             />
-          </div>
+          </div> */}
         </div>
         <Table
           columns={columns}
           dataSource={filteredEvents}
           rowKey="eventId"
           loading={loading}
+          pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15']}}
           expandable={{
             expandedRowRender,
             onExpand: handleExpand,

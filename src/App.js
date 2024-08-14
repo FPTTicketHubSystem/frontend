@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ScrollToTop from './component/ScrollToTop';
 import ProtectedRoute from './component/ProtectedRoute';
 import PublicRoute from './component/PublicRoute';
 import Login from './pages/Login';
@@ -36,6 +37,7 @@ import Status500 from './pages/Error/500';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<PublicRoute element={<Login />} />} />
