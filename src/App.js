@@ -51,7 +51,7 @@ function App() {
         <Route path="/admin/events" element={<ProtectedRoute element={<EventAdmin />} allowedRoles={[1]} />} />
         <Route path="/admin/forum" element={<ProtectedRoute element={<ForumAdmin />} allowedRoles={[1]} />} />
         <Route path="/organizer/events" element={<ProtectedRoute element={<Events />} allowedRoles={[2, 3]} />} />
-        <Route path="admin/dashboard" element={<ProtectedRoute element={<Dashboard />} allowedRoles={[1]} />} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute element={<Dashboard />} allowedRoles={[1]} />} />
         <Route path="/manage-category" element={<ProtectedRoute element={<CategoryList />} allowedRoles={[1]} />} />
         <Route path="/seclectTicket" element={<ProtectedRoute element={<ChooseTicket />} allowedRoles={[2]} />} />
         <Route path="/payment" element={<ProtectedRoute element={<Payment />} allowedRoles={[2]} />} />
@@ -62,8 +62,8 @@ function App() {
         <Route path="/organizer/manage-staff" element={<ProtectedRoute element={<ManageStaff />} allowedRoles={[3]} />} />
         <Route path="/staff/checkin" element={<ProtectedRoute element={<CheckinTicket />} allowedRoles={[4]} />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/manage-news" element={<ProtectedRoute element={<ManageNews />} allowedRoles={[1]} />} />
-        <Route path="/news-detail/:newsId" element={<NewsDetail />} />
+        <Route path="/admin/manage-news" element={<ProtectedRoute element={<ManageNews />} allowedRoles={[1]} />} />
+        <Route path="/admin/news/news-detail/:newsId" element={<NewsDetail />} />
         <Route path="/event-statistics/:encodedId" element={<ProtectedRoute element={<EventStatistics />} allowedRoles={[3]} />} />
         <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
         <Route path="/payment-success/:orderId" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />

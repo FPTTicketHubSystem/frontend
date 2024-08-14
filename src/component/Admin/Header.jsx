@@ -30,7 +30,7 @@ const HeaderAdmin = () => {
             <a href="/" class="d-lg-block d-none">
               <img src={logo} class="logo" alt="FPTTicketHub" />
             </a>
-            <a href="/" class="d-lg-none d-md-block">
+            <a href="/admin/dashboard" class="d-lg-none d-md-block">
               <img src={logo2} class="logo2" alt="FPTTicketHub" />
             </a>
           </div>
