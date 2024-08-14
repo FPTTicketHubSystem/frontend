@@ -5,7 +5,11 @@ import LockButton from '../../component/Admin/LockButton';
 import EditButton from '../../component/Admin/EditButton';
 import ConfirmButton from '../../component/Admin/ConfirmButton';
 import '../../assets/css/editprofile.css';
-import { GetAllUserAccountsService, ChangeStatusUserService, ChangeRoleService } from '../../services/UserService';
+import {
+  GetAllUserAccountsService,
+  ChangeStatusUserService,
+  ChangeRoleService,
+} from '../../services/UserService';
 import { format } from 'date-fns';
 import { Select } from 'antd';
 import { useToast } from '../../context/ToastContext';
@@ -59,7 +63,9 @@ const User = () => {
           : user
       );
       setUsers(updatedUsers);
-      showSuccessToast(`User ${newStatus ? 'locked' : 'unlocked'} successfully`); // Add this line
+      showSuccessToast(
+        `User ${newStatus ? 'locked' : 'unlocked'} successfully`
+      ); // Add this line
     } catch (error) {
       console.error('Error changing user status:', error);
       showErrorToast('Failed to change user status'); // Add this line
@@ -70,7 +76,9 @@ const User = () => {
     try {
       await ChangeStatusUserService(accountId, 'Đang hoạt động');
       const updatedUsers = users.map((user) =>
-        user.accountId === accountId ? { ...user, status: 'Đang hoạt động' } : user
+        user.accountId === accountId
+          ? { ...user, status: 'Đang hoạt động' }
+          : user
       );
       setUsers(updatedUsers);
       showSuccessToast('User confirmed successfully'); // Add this line
@@ -86,7 +94,9 @@ const User = () => {
       if (currentUser) {
         await ChangeRoleService(currentUser.accountId, newRoleId);
         const updatedUsers = users.map((user) =>
-          user.accountId === currentUser.accountId ? { ...user, roleId: newRoleId } : user
+          user.accountId === currentUser.accountId
+            ? { ...user, roleId: newRoleId }
+            : user
         );
         setUsers(updatedUsers);
         setShowModal(false);
@@ -130,9 +140,13 @@ const User = () => {
     if (filterStatus !== 'All' && user.status !== filterStatus) {
       return false;
     }
-    if (searchTerm && 
-        !(user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
-          user.email.toLowerCase().includes(searchTerm.toLowerCase()))) {
+    if (
+      searchTerm &&
+      !(
+        user.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    ) {
       return false;
     }
     return true;
@@ -140,15 +154,19 @@ const User = () => {
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser).map((user, index) => ({
-    ...user,
-    index: indexOfFirstUser + index + 1,
-  }));
+  const currentUsers = filteredUsers
+    .slice(indexOfFirstUser, indexOfLastUser)
+    .map((user, index) => ({
+      ...user,
+      index: indexOfFirstUser + index + 1,
+    }));
 
   const columns = [
     { title: 'STT', dataIndex: 'index', key: 'index' },
     {
-      title: 'Họ và tên', dataIndex: 'fullName', key: 'fullName',
+      title: 'Họ và tên',
+      dataIndex: 'fullName',
+      key: 'fullName',
       render: (user) => (
         <>
           <img src={user.avatar} className="me-2 img-3x rounded-3" alt="avt" />
@@ -157,13 +175,26 @@ const User = () => {
       ),
     },
     { title: 'Email', dataIndex: 'email', key: 'email' },
-    { title: 'Ngày sinh', dataIndex: 'birthDay', key: 'birthDay', render: (user) => formatDate(user.birthDay) },
     {
-      title: 'Trạng thái', dataIndex: 'status', key: 'status',
+      title: 'Ngày sinh',
+      dataIndex: 'birthDay',
+      key: 'birthDay',
+      render: (user) => formatDate(user.birthDay),
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
       render: (user) => (
         <div className="d-flex align-items-center">
           <i
-            className={`icon-circle1 me-2 fs-5 ${user.status === 'Chờ xác thực' ? 'text-danger' : user.status === 'Đang khóa' ? 'text-light' : 'text-success'}`}
+            className={`icon-circle1 me-2 fs-5 ${
+              user.status === 'Chờ xác thực'
+                ? 'text-danger'
+                : user.status === 'Đang khóa'
+                ? 'text-light'
+                : 'text-success'
+            }`}
           ></i>
           {user.status}
         </div>
@@ -172,7 +203,8 @@ const User = () => {
     { title: 'Số điện thoại', dataIndex: 'phone', key: 'phone' },
     { title: 'Giới tính', dataIndex: 'gender', key: 'gender' },
     {
-      title: 'Hành động', key: 'actions' ,
+      title: 'Hành động',
+      key: 'actions',
       render: (user) => (
         <>
           {user.status === 'Đang hoạt động' || user.status === 'Đang khóa' ? (
@@ -180,12 +212,17 @@ const User = () => {
               <EditButton onEdit={() => handleEditButtonClick(user)} />
               <LockButton
                 isLocked={user.status === 'Đang khóa'}
-                onLockChange={(newStatus) => handleLockChange(user.accountId, newStatus)}
+                onLockChange={(newStatus) =>
+                  handleLockChange(user.accountId, newStatus)
+                }
               />
             </>
           ) : user.status === 'Chờ xác thực' ? (
             <>
-              <ConfirmButton accountId={user.accountId} onConfirm={() => handleConfirmChange(user.accountId)} />
+              <ConfirmButton
+                accountId={user.accountId}
+                onConfirm={() => handleConfirmChange(user.accountId)}
+              />
             </>
           ) : null}
         </>
@@ -211,7 +248,10 @@ const User = () => {
                     <ol className="breadcrumb mb-0">
                       <li className="breadcrumb-item">
                         <i className="icon-home lh-1"></i>
-                        <a href="/" className="text-decoration-none">
+                        <a
+                          href="/admin/dashboard"
+                          className="text-decoration-none"
+                        >
                           Home
                         </a>
                       </li>
@@ -221,25 +261,41 @@ const User = () => {
                   <div className="d-flex">
                     <div className="btn-group me-3">
                       <button
-                        className={`btn ${filterStatus === 'All' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        className={`btn ${
+                          filterStatus === 'All'
+                            ? 'btn-primary'
+                            : 'btn-outline-primary'
+                        }`}
                         onClick={() => handleFilterChange('All')}
                       >
                         All
                       </button>
                       <button
-                        className={`btn ${filterStatus === 'Đang hoạt động' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        className={`btn ${
+                          filterStatus === 'Đang hoạt động'
+                            ? 'btn-primary'
+                            : 'btn-outline-primary'
+                        }`}
                         onClick={() => handleFilterChange('Đang hoạt động')}
                       >
                         Đang hoạt động
                       </button>
                       <button
-                        className={`btn ${filterStatus === 'Đang khóa' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        className={`btn ${
+                          filterStatus === 'Đang khóa'
+                            ? 'btn-primary'
+                            : 'btn-outline-primary'
+                        }`}
                         onClick={() => handleFilterChange('Đang khóa')}
                       >
                         Đang khóa
                       </button>
                       <button
-                        className={`btn ${filterStatus === 'Chờ xác thực' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        className={`btn ${
+                          filterStatus === 'Chờ xác thực'
+                            ? 'btn-primary'
+                            : 'btn-outline-primary'
+                        }`}
                         onClick={() => handleFilterChange('Chờ xác thực')}
                       >
                         Chờ xác thực
@@ -249,7 +305,7 @@ const User = () => {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Search..."
+                        placeholder="Tìm kiếm..."
                         value={searchTerm}
                         onChange={handleSearchChange}
                       />
@@ -277,7 +333,9 @@ const User = () => {
                             <tr key={user.accountId}>
                               {columns.map((column) => (
                                 <td key={column.key}>
-                                  {column.render ? column.render(user) : user[column.dataIndex]}
+                                  {column.render
+                                    ? column.render(user)
+                                    : user[column.dataIndex]}
                                 </td>
                               ))}
                             </tr>
@@ -292,25 +350,60 @@ const User = () => {
 
             <div className="row">
               <div className="col-12 d-flex justify-content-center">
-                <nav1>
-                  <ul className="pagination" role="navigation" aria-label="Pagination">
-                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                      <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>
+                <nav>
+                  <ul
+                    className="pagination"
+                    role="navigation"
+                    aria-label="Pagination"
+                  >
+                    <li
+                      className={`page-item ${
+                        currentPage === 1 ? 'disabled' : ''
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                      >
                         Previous
                       </button>
                     </li>
-                    {[...Array(Math.ceil(filteredUsers.length / usersPerPage)).keys()].map((number) => (
-                      <li key={number} className={`page-item ${currentPage === number + 1 ? 'active' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageChange(number + 1)}>
+                    {[
+                      ...Array(
+                        Math.ceil(filteredUsers.length / usersPerPage)
+                      ).keys(),
+                    ].map((number) => (
+                      <li
+                        key={number}
+                        className={`page-item ${
+                          currentPage === number + 1 ? 'active' : ''
+                        }`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(number + 1)}
+                        >
                           {number + 1}
                         </button>
                       </li>
                     ))}
-                    <li className={`page-item ${currentPage === Math.ceil(filteredUsers.length / usersPerPage) ? 'disabled' : ''}`}>
-                      <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>Next</button>
+                    <li
+                      className={`page-item ${
+                        currentPage ===
+                        Math.ceil(filteredUsers.length / usersPerPage)
+                          ? 'disabled'
+                          : ''
+                      }`}
+                    >
+                      <button
+                        className="page-link"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                      >
+                        Next
+                      </button>
                     </li>
                   </ul>
-                </nav1>
+                </nav>
               </div>
             </div>
           </div>
@@ -324,7 +417,11 @@ const User = () => {
               <div className="row">
                 <div className="col-sm-6 picture">
                   <center>
-                    <img className="circle responsive-img" src={currentUser.avatar} alt={`Profile picture of ${currentUser.fullName}`} />
+                    <img
+                      className="circle responsive-img"
+                      src={currentUser.avatar}
+                      alt={`Profile picture of ${currentUser.fullName}`}
+                    />
                     <span className="btn-tooltip" title="Add Friend"></span>
                   </center>
                 </div>
@@ -347,17 +444,23 @@ const User = () => {
                 <div className="row">
                   <div className="col-sm-6">
                     <label htmlFor="gender">Gender:</label>
-                    <p id="gender" className="form-control-static">{currentUser.gender}</p>
+                    <p id="gender" className="form-control-static">
+                      {currentUser.gender}
+                    </p>
                   </div>
                   <div className="col-sm-6">
                     <label htmlFor="status">Status:</label>
-                    <p id="status" className="form-control-static">{currentUser.status}</p>
+                    <p id="status" className="form-control-static">
+                      {currentUser.status}
+                    </p>
                   </div>
                 </div>
                 <div className="row mt-3">
                   <div className="col-sm-6">
                     <label htmlFor="birthday">Birthday:</label>
-                    <p id="birthday" className="form-control-static">{formatDate(currentUser.birthDay)}</p>
+                    <p id="birthday" className="form-control-static">
+                      {formatDate(currentUser.birthDay)}
+                    </p>
                   </div>
                   <div className="col-sm-6">
                     <label htmlFor="role">Role:</label>
@@ -374,10 +477,18 @@ const User = () => {
                   </div>
                 </div>
                 <div className="buttons-container mt-4">
-                  <button type="button" className="waves-effect waves-light btn edit back-btn" onClick={handleCloseModal}>
+                  <button
+                    type="button"
+                    className="waves-effect waves-light btn edit back-btn"
+                    onClick={handleCloseModal}
+                  >
                     Trở lại
                   </button>
-                  <button type="button" className="waves-effect waves-light btn edit change-role-btn" onClick={handleChangeRole}>
+                  <button
+                    type="button"
+                    className="waves-effect waves-light btn edit change-role-btn"
+                    onClick={handleChangeRole}
+                  >
                     Xác nhận
                   </button>
                 </div>

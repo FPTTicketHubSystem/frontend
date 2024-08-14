@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   getCategoriesService,
   searchCategoriesService,
   addCategoryService,
   updateCategoryService,
   deleteCategoryService,
-} from "../../services/CategoryService";
+} from '../../services/CategoryService';
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [newCategory, setNewCategory] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [newCategory, setNewCategory] = useState('');
   const [editCategoryId, setEditCategoryId] = useState(null);
-  const [editCategoryName, setEditCategoryName] = useState("");
+  const [editCategoryName, setEditCategoryName] = useState('');
 
   useEffect(() => {
     fetchCategories();
@@ -23,7 +23,7 @@ const Category = () => {
       const response = await getCategoriesService();
       setCategories(response.data);
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error('Error fetching categories:', error);
     }
   };
 
@@ -32,17 +32,17 @@ const Category = () => {
       const response = await searchCategoriesService(searchTerm);
       setCategories(response.data);
     } catch (error) {
-      console.error("Error searching categories:", error);
+      console.error('Error searching categories:', error);
     }
   };
 
   const handleAddCategory = async () => {
     try {
       await addCategoryService({ name: newCategory });
-      setNewCategory("");
+      setNewCategory('');
       fetchCategories();
     } catch (error) {
-      console.error("Error adding category:", error);
+      console.error('Error adding category:', error);
     }
   };
 
@@ -50,10 +50,10 @@ const Category = () => {
     try {
       await updateCategoryService(editCategoryId, { name: editCategoryName });
       setEditCategoryId(null);
-      setEditCategoryName("");
+      setEditCategoryName('');
       fetchCategories();
     } catch (error) {
-      console.error("Error updating category:", error);
+      console.error('Error updating category:', error);
     }
   };
 
@@ -62,7 +62,7 @@ const Category = () => {
       await deleteCategoryService(id);
       fetchCategories();
     } catch (error) {
-      console.error("Error deleting category:", error);
+      console.error('Error deleting category:', error);
     }
   };
 

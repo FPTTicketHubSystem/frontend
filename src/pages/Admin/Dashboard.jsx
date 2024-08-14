@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Header from "../../component/Admin/Header";
-import Navbar from "../../component/Admin/Navbar";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import React, { useEffect, useState } from 'react';
+import Header from '../../component/Admin/Header';
+import Navbar from '../../component/Admin/Navbar';
+import { Bar, Line, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   Title,
@@ -13,7 +13,7 @@ import {
   PointElement,
   LineElement,
   ArcElement,
-} from "chart.js";
+} from 'chart.js';
 import {
   getMonthlyRevenue,
   getActiveAccount,
@@ -22,9 +22,9 @@ import {
   getTopRevenueEvents,
   getTopParticipantsEvents,
   generateEventStatisticsReport,
-} from "../../services/StatisticService";
-import "../../assets/css/dashboard.css";
-import Footer from "../../component/Footer";
+} from '../../services/StatisticService';
+import '../../assets/css/dashboard.css';
+import Footer from '../../component/Footer';
 
 ChartJS.register(
   Title,
@@ -74,7 +74,7 @@ const Dashboard = () => {
         setTopRevenueEvents(revenueEventsResult);
         setTopParticipantsEvents(participantsEventsResult);
       } catch (error) {
-        console.error("Failed to fetch data", error);
+        console.error('Failed to fetch data', error);
       } finally {
         setLoading(false);
       }
@@ -92,10 +92,10 @@ const Dashboard = () => {
       labels,
       datasets: [
         {
-          label: "Monthly Revenue",
+          label: 'Monthly Revenue',
           data: values,
-          backgroundColor: "rgba(75, 192, 192, 0.2)",
-          borderColor: "rgba(75, 192, 192, 1)",
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
           borderWidth: 2,
         },
       ],
@@ -111,10 +111,10 @@ const Dashboard = () => {
       labels,
       datasets: [
         {
-          label: "Events Participated",
+          label: 'Events Participated',
           data: values,
-          backgroundColor: "rgba(255, 99, 132, 0.2)",
-          borderColor: "rgba(255, 99, 132, 1)",
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
           borderWidth: 1,
         },
       ],
@@ -134,10 +134,10 @@ const Dashboard = () => {
       labels,
       datasets: [
         {
-          label: "Active Users",
+          label: 'Active Users',
           data: values,
-          backgroundColor: "rgba(255, 159, 64, 0.2)",
-          borderColor: "rgba(255, 159, 64, 1)",
+          backgroundColor: 'rgba(255, 159, 64, 0.2)',
+          borderColor: 'rgba(255, 159, 64, 1)',
           borderWidth: 1,
         },
       ],
@@ -155,18 +155,18 @@ const Dashboard = () => {
           label: valueKey,
           data: values,
           backgroundColor: [
-            "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
-            "rgba(255, 206, 86, 0.2)",
-            "rgba(75, 192, 192, 0.2)",
-            "rgba(153, 102, 255, 0.2)",
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
           ],
           borderColor: [
-            "rgba(255, 99, 132, 1)",
-            "rgba(54, 162, 235, 1)",
-            "rgba(255, 206, 86, 1)",
-            "rgba(75, 192, 192, 1)",
-            "rgba(153, 102, 255, 1)",
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
           ],
           borderWidth: 1,
         },
@@ -179,30 +179,30 @@ const Dashboard = () => {
   const revenueData = formatMonthlyRevenueData(monthlyRevenue);
   const topRevenueEventsData = formatTopEventsData(
     topRevenueEvents,
-    "totalRevenue",
-    "eventName"
+    'totalRevenue',
+    'eventName'
   );
   const topParticipantsEventsData = formatTopEventsData(
     topParticipantsEvents,
-    "participantsCount",
-    "eventName"
+    'participantsCount',
+    'eventName'
   );
 
   const handleDownloadReport = async () => {
     try {
       const response = await generateEventStatisticsReport();
       const url = window.URL.createObjectURL(
-        new Blob([response], { type: "application/pdf" })
+        new Blob([response], { type: 'application/pdf' })
       );
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.setAttribute("download", "StatisticsReport.pdf");
+      link.setAttribute('download', 'StatisticsReport.pdf');
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Failed to download report", error);
+      console.error('Failed to download report', error);
     }
   };
 
@@ -239,114 +239,121 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div className="dashboard-container">
-        <Header />
+      <div className="app-container">
+        <div className="app-header d-flex align-items-center">
+          <Header />
+        </div>
         <Navbar />
-        <div className="dashboard-grid">
-          <div className="dashboard-card">
-            <div className="card-header revenue-header">
-              <h5 className="card-title">Monthly Revenue</h5>
+        <div className="dashboard-container">
+          <div className="dashboard-grid">
+            <div className="dashboard-card">
+              <div className="card-header1 revenue-header">
+                <h5 className="card-title1">Monthly Revenue</h5>
+              </div>
+              <div className="card-body1">
+                {loading ? (
+                  <div className="loader-container">
+                    <div className="loader"></div>
+                  </div>
+                ) : (
+                  <Line data={revenueData} options={chartOptions} />
+                )}
+              </div>
             </div>
-            <div className="card-body">
-              {loading ? (
-                <div className="loader-container">
-                  <div className="loader"></div>
-                </div>
-              ) : (
-                <Line data={revenueData} options={chartOptions} />
-              )}
+            <div className="dashboard-card">
+              <div className="card-header1 active-users-header">
+                <h5 className="card-title1">Active Users</h5>
+              </div>
+              <div className="card-body1">
+                {loading ? (
+                  <div className="loader-container">
+                    <div className="loader"></div>
+                  </div>
+                ) : (
+                  <Line data={activeUsersData} options={chartOptions} />
+                )}
+              </div>
+            </div>
+            <div className="dashboard-card">
+              <div className="card-header1 top-participants-header">
+                <h5 className="card-title1">Top Participants</h5>
+              </div>
+              <div className="card-body1">
+                {loading ? (
+                  <div className="loader-container">
+                    <div className="loader"></div>
+                  </div>
+                ) : (
+                  <Pie data={topParticipantsData} options={chartOptions} />
+                )}
+              </div>
+            </div>
+            <div className="dashboard-card">
+              <div className="card-header1 rating-header">
+                <h5 className="card-title1">Top Rated Events</h5>
+              </div>
+              <div className="card-body1">
+                {loading ? (
+                  <div className="loader-container">
+                    <div className="loader"></div>
+                  </div>
+                ) : (
+                  <ul className="event-list">
+                    {topRatedEvents
+                      .sort((a, b) => b.averageRating - a.averageRating)
+                      .slice(0, 5)
+                      .map((event, index) => (
+                        <li key={index} className="event-item">
+                          <span className="event-name">{event.eventName}</span>
+                          <span className="event-rating">
+                            {renderStars(event.averageRating)}
+                          </span>
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+            <div className="dashboard-card">
+              <div className="card-header1 revenue-events-header">
+                <h5 className="card-title1">Top Revenue Events</h5>
+              </div>
+              <div className="card-body1">
+                {loading ? (
+                  <div className="loader-container">
+                    <div className="loader"></div>
+                  </div>
+                ) : (
+                  <Bar data={topRevenueEventsData} options={chartOptions} />
+                )}
+              </div>
+            </div>
+            <div className="dashboard-card">
+              <div className="card-header1 participants-events-header">
+                <h5 className="card-title1">Top Participants Events</h5>
+              </div>
+              <div className="card-body1">
+                {loading ? (
+                  <div className="loader-container">
+                    <div className="loader"></div>
+                  </div>
+                ) : (
+                  <Bar
+                    data={topParticipantsEventsData}
+                    options={chartOptions}
+                  />
+                )}
+              </div>
             </div>
           </div>
-          <div className="dashboard-card">
-            <div className="card-header active-users-header">
-              <h5 className="card-title">Active Users</h5>
-            </div>
-            <div className="card-body">
-              {loading ? (
-                <div className="loader-container">
-                  <div className="loader"></div>
-                </div>
-              ) : (
-                <Line data={activeUsersData} options={chartOptions} />
-              )}
-            </div>
-          </div>
-          <div className="dashboard-card">
-            <div className="card-header top-participants-header">
-              <h5 className="card-title">Top Participants</h5>
-            </div>
-            <div className="card-body">
-              {loading ? (
-                <div className="loader-container">
-                  <div className="loader"></div>
-                </div>
-              ) : (
-                <Pie data={topParticipantsData} options={chartOptions} />
-              )}
-            </div>
-          </div>
-          <div className="dashboard-card">
-            <div className="card-header rating-header">
-              <h5 className="card-title">Top Rated Events</h5>
-            </div>
-            <div className="card-body">
-              {loading ? (
-                <div className="loader-container">
-                  <div className="loader"></div>
-                </div>
-              ) : (
-                <ul className="event-list">
-                  {topRatedEvents
-                    .sort((a, b) => b.averageRating - a.averageRating)
-                    .slice(0, 5)
-                    .map((event, index) => (
-                      <li key={index} className="event-item">
-                        <span className="event-name">{event.eventName}</span>
-                        <span className="event-rating">
-                          {renderStars(event.averageRating)}
-                        </span>
-                      </li>
-                    ))}
-                </ul>
-              )}
-            </div>
-          </div>
-          <div className="dashboard-card">
-            <div className="card-header revenue-events-header">
-              <h5 className="card-title">Top Revenue Events</h5>
-            </div>
-            <div className="card-body">
-              {loading ? (
-                <div className="loader-container">
-                  <div className="loader"></div>
-                </div>
-              ) : (
-                <Bar data={topRevenueEventsData} options={chartOptions} />
-              )}
-            </div>
-          </div>
-          <div className="dashboard-card">
-            <div className="card-header participants-events-header">
-              <h5 className="card-title">Top Participants Events</h5>
-            </div>
-            <div className="card-body">
-              {loading ? (
-                <div className="loader-container">
-                  <div className="loader"></div>
-                </div>
-              ) : (
-                <Bar data={topParticipantsEventsData} options={chartOptions} />
-              )}
-            </div>
+          <div className="download-section">
+            <button className="download-button" onClick={handleDownloadReport}>
+              <i className="bi bi-file-earmark-pdf"></i> Download Report
+            </button>
           </div>
         </div>
-        <div className="download-section">
-          <button className="download-button" onClick={handleDownloadReport}>
-            <i className="bi bi-file-earmark-pdf"></i> Download Report
-          </button>
-        </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 };

@@ -6,7 +6,6 @@ import { GetAllPostAdmin, ChangeStatusPost } from '../../services/ForumService';
 import { format } from 'date-fns';
 import styles from '../../assets/css/ForumAdmin.module.css';
 import { useToast } from '../../context/ToastContext';
-import Footer from '../../component/Footer';
 
 const ForumAdmin = () => {
   const [posts, setPosts] = useState([]);
@@ -132,7 +131,7 @@ const ForumAdmin = () => {
             <ol className="breadcrumb mb-0">
               <li className="breadcrumb-item">
                 <i className="icon-home lh-1"></i>
-                <a href="/" className="text-decoration-none">
+                <a href="/admin/dashboard" className="text-decoration-none">
                   Home
                 </a>
               </li>
@@ -259,7 +258,6 @@ const ForumAdmin = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Footer />
     </div>
   );
 };
