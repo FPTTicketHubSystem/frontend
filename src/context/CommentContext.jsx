@@ -1,10 +1,10 @@
 import { createContext, useReducer } from "react";
 import commentReducer from "../reduces/commentReducer";
 import {
-  AddComment,
-  DeleteComment,
-  EditComment,
-  GetCommentByPost,
+  addCommentService,
+  deleteCommentService,
+  editCommentService,
+  getCommentsByPostService,
 } from "../services/PostCommentService";
 
 const initialState = {
@@ -20,7 +20,7 @@ const CommentProvider = ({ children }) => {
 
   const addComment = async (data) => {
     try {
-      await AddComment(data);
+      await addCommentService(data);
       await getCommentsByPost(data.postId);
     } catch (error) {
       console.log(error);
@@ -29,7 +29,7 @@ const CommentProvider = ({ children }) => {
 
   const getCommentsByPost = async (postId) => {
     try {
-      const response = await GetCommentByPost(postId);
+      const response = await getCommentsByPostService(postId);
       dispatch({
         type: "GET_COMMENTS",
         payload: response,
@@ -42,7 +42,7 @@ const CommentProvider = ({ children }) => {
 
   const editComment = async (data) => {
     try {
-      await EditComment(data);
+      await editCommentService(data);
     } catch (error) {
       console.log(error);
     }
@@ -50,7 +50,7 @@ const CommentProvider = ({ children }) => {
 
   const deleteComment = async (commentId) => {
     try {
-      await DeleteComment(commentId);
+      await deleteCommentService(commentId);
     } catch (error) {
       console.log(error);
     }
