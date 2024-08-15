@@ -27,10 +27,9 @@ import ManageStaff from './pages/Organizer/ManageStaff';
 import Search from './pages/Home/Search';
 import ManageNews from './pages/Admin/ManageNews';
 import NewsDetail from './pages/Admin/NewsDetail';
-import Post from './pages/Forum/Post';
 import PostProvider from './context/PostContext';
 import CommentProvider from './context/CommentContext';
-import Forum from './pages/Forum/Forum';
+import Forum from './component/Forum/Forum';
 
 function App() {
   const { token, user } = useContext(UserContext);
@@ -66,7 +65,7 @@ function App() {
           <Route path="/search" element={<Search/>}/>
           <Route path="/manage-news" element={<ManageNews />} />
           <Route path="/news-detail/:newsId" element={<NewsDetail />} />
-          <Route path="/forum" element={<PostProvider><CommentProvider><Forum /></CommentProvider></PostProvider>}></Route>
+          <Route path="/forum" element={<PostProvider><CommentProvider><Forum/></CommentProvider></PostProvider>}></Route>
         </Routes>
       </Router>
     </>
