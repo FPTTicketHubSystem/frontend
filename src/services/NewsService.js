@@ -152,3 +152,34 @@ export const GetNewsByAccountService = async (accountId) => {
         return e;
     }
 }
+
+export const GetNewsForEdit = async (id) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `news/getNewsForEdit?newsId=${id}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const UpdateNewsService = async (data) => {
+    try {
+        const response = await request({
+            method: "put",
+            url: "news/editNews",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify(data),
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}

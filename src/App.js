@@ -39,7 +39,7 @@ function App() {
     <Router>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<PublicRoute element={<HomePage />} />} />
         <Route path="/login" element={<PublicRoute element={<Login />} />} />
         <Route path="/profile" element={<ProtectedRoute element={<Profile />} allowedRoles={[1, 2, 3, 4]} />} />
         <Route path="/confirmaccount/:email" element={<ConfirmAccount />}/>

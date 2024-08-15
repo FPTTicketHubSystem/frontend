@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import Navbar from "../../component/Organizer/Navbar";
 import { UserContext } from '../../context/UserContext';
 import { Input, Segmented, Table, Button } from 'antd';
-//import { SearchOutlined } from '@ant-design/icons';
 import { GetNewsByAccountService } from '../../services/NewsService';
 import Footer from '../../component/Footer';
 import { encodeId } from '../../utils/utils';
+import moment from 'moment/moment';
 
 const CustomSearch = styled(Input)`
   .ant-btn-primary {
@@ -47,6 +48,7 @@ const CustomSegmented = styled(Segmented)`
 
 const NewsList = () => {
     const { user } = useContext(UserContext);
+    const navigate = useNavigate();
     const [news, setNews] = useState([]);
     const [filteredNews, setFilteredNews] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -113,6 +115,10 @@ const NewsList = () => {
         setFilteredNews(filtered);
     };
 
+    const handleEditClick = (newsId) => {
+        navigate(`/organizer/manage-news?edit=${encodeId(newsId)}`);
+    };
+
     const columns = [
         {
             title: 'Ảnh bìa',
@@ -136,7 +142,9 @@ const NewsList = () => {
             title: 'Thời gian tạo',
             dataIndex: 'createDate',
             key: 'createDate',
-            render: (text) => new Date(text).toLocaleString("vi"),
+            render: (text) => {
+                return moment.utc(text).local().format('DD/MM/YYYY HH:mm:ss');
+            },
         },
         {
             title: 'Trạng thái',
@@ -146,35 +154,32 @@ const NewsList = () => {
         {
             title: 'Thao tác',
             key: 'action',
-            render: (_, record) => {
-                const encodedId = encodeId(record.newsId);
-                return (
-                    <CustomButton type="primary" href={`/organizer/edit-news/${encodedId}`}>
-                        <i className="bi bi-pen"></i>
-                    </CustomButton>
-                );
-            },
+            render: (_, record) => (
+                <CustomButton type="primary" onClick={() => handleEditClick(record.newsId)}>
+                    <i className="bi bi-pen"></i>
+                </CustomButton>
+            ),
         },
     ];
 
-    const expandedRowRender = (record) => {
-        return (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <img
-                    src={record.coverImage}
-                    alt="Cover Image"
-                    style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
-                />
-                <p><strong>Tiêu đề:</strong> {record.title}</p>
-                <p><strong>Tiêu đề phụ:</strong> {record.subtitle}</p>
-                <div>
-                    <p><strong>Nội dung:</strong></p>
-                    <div dangerouslySetInnerHTML={{ __html: record.content }} />
-                </div>
-                <p><strong>Ngày tạo:</strong> {new Date(record.createDate).toLocaleString("vi")}</p>
-            </div>
-        );
-    };
+    // const expandedRowRender = (record) => {
+    //     return (
+    //         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    //             <img
+    //                 src={record.coverImage}
+    //                 alt="Cover Image"
+    //                 style={{ width: '100%', height: 'auto', borderRadius: '10px' }}
+    //             />
+    //             <p><strong>Tiêu đề:</strong> {record.title}</p>
+    //             <p><strong>Tiêu đề phụ:</strong> {record.subtitle}</p>
+    //             <div>
+    //                 <p><strong>Nội dung:</strong></p>
+    //                 <div dangerouslySetInnerHTML={{ __html: record.content }} />
+    //             </div>
+    //             <p><strong>Ngày tạo:</strong> {new Date(record.createDate).toLocaleString("vi")}</p>
+    //         </div>
+    //     );
+    // };
 
 
     return (
@@ -205,7 +210,7 @@ const NewsList = () => {
                     dataSource={filteredNews}
                     rowKey="newsId"
                     loading={loading}
-                    expandable={{ expandedRowRender }}
+                    // expandable={{ expandedRowRender }}
                     pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15']}}
                 />
             </div>

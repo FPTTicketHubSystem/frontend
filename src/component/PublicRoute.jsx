@@ -9,11 +9,20 @@ const PublicRoute = ({ element }) => {
 
   if (token && location.pathname === '/login') {
     switch (user?.roleId) {
-        case 1: return <Navigate to="/admin/dashboard" replace />;
-        case 2: return <Navigate to="/" replace />;
-        case 3: return <Navigate to="/organizer/events" replace />;
-        case 4: return <Navigate to="/staff/checkin" replace />;
-        default: return <Navigate to="/" replace />;
+      case 1: return <Navigate to="/admin/dashboard" replace />;
+      case 2: return <Navigate to="/" replace />;
+      case 3: return <Navigate to="/organizer/events" replace />;
+      case 4: return <Navigate to="/staff/checkin" replace />;
+      default: return <Navigate to="/" replace />;
+    }
+  }
+  else if (token && location.pathname === '/') {
+    switch (user?.roleId) {
+      case 1: return <Navigate to="/admin/dashboard" replace />;
+      case 2: return <Navigate to="/" replace />;
+      case 3: return <Navigate to="/organizer/events" replace />;
+      case 4: return <Navigate to="/staff/checkin" replace />;
+      default: return <Navigate to="/" replace />;
     }
   }
   return element;

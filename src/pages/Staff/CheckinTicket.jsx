@@ -49,7 +49,7 @@ const CheckinTicket = () => {
 
   const formatDateTime = (date) => {
     if (!date) return '';
-    return moment(date).format('DD/MM/YY HH:mm');
+    return moment.utc(date).local().format('DD/MM/YYYY HH:mm:ss');
   };
 
   const handleScanResult = (result) => {
