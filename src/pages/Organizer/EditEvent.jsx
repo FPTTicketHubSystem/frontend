@@ -12,7 +12,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import LocationPicker from '../../component/LocationPicker';
 import styled from "styled-components";
 import Navbar from '../../component/Organizer/Navbar';
-import Footer from '../../component/Footer'
+import Footer from '../../component/Footer';
 import { useNavigate, useParams } from 'react-router-dom';
 import { decodeId } from '../../utils/utils';
 import moment from 'moment/moment';

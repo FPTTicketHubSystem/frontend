@@ -93,13 +93,13 @@ const CreateEvent = () => {
     endTime: '',
     //ticketQuantity: 0,
     status: '',
-    // eventImages: [],
+    //eventImages: [],
     ticketTypes: [],
     // discountCodes: []
   });
 
-  const now = moment(); // Current date and time
-  const startOfDay = now.clone().startOf('day'); // Start of the current day
+  const now = moment();
+  const startOfDay = now.clone().startOf('day');
   const startTime = formData.startTime ? moment(formData.startTime) : null;
 
   useEffect(() => {
@@ -185,7 +185,6 @@ const CreateEvent = () => {
     setFormData(prevState => {
       const updatedTicketTypes = [...prevState.ticketTypes];
 
-      // Check for duplicate typeName, ignoring blank names
       if (name === 'typeName' && value.trim() !== '') {
         const isDuplicate = updatedTicketTypes.some((ticket, i) =>
           ticket.typeName.trim().toLowerCase() === value.trim().toLowerCase() && i !== index
@@ -196,7 +195,6 @@ const CreateEvent = () => {
         }
       }
 
-      // Continue with the regular change handling
       if (name === 'price' && value < 0) {
         toast.error('Giá tiền không hợp lệ!');
         return prevState;
@@ -263,8 +261,13 @@ const CreateEvent = () => {
       if (response.status === 200) {
         toast.success('Sự kiện đã được tạo thành công!');
         navigate('/organizer/events');
-      } else if (response.status === 400) {
-        toast.error('Có lỗi xảy ra!');
+      } else if (response.status === 400 && response.message === "Tickettype is required") {
+        toast.error('Vui lòng nhập loại vé!');
+      } else if (response.status === 400 && response.message === "Description is required") {
+        toast.error('Vui lòng nhập mô tả!');
+      }
+       else if (response.status === 400 && response.message === "Add Event Fail") {
+        toast.error('Có lỗi xảy ra, vui lòng thử lại!');
       }
     } catch (error) {
       console.error(error);
@@ -319,6 +322,12 @@ const CreateEvent = () => {
     },
   };
 
+  const handleDateChange = (field, value) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [field]: value ? value.toISOString() : null,
+    }));
+  };
 
   const handleResizeObserverError = useCallback((e) => {
     e.preventDefault();
@@ -401,7 +410,7 @@ const CreateEvent = () => {
                       //   disabledMinutes: () => now.hour() === now.hour() && now.minute() > 0 ? [...Array(now.minute()).keys()] : [],
                       // })}
                       onChange={(value) => {
-                        setFormData({ ...formData, startTime: value });
+                        handleDateChange('startTime', value);
                         if (value && formData.endTime && value.isAfter(formData.endTime)) {
                           setFormData(prevState => ({
                             ...prevState,
@@ -455,7 +464,7 @@ const CreateEvent = () => {
                           disabledMinutes: () => (startHour === startTime.hour() ? [...Array(startMinute).keys()] : []),
                         };
                       }}
-                      onChange={(value) => setFormData({ ...formData, endTime: value })}
+                      onChange={(value) => handleDateChange('endTime', value)}
                     />
                   </Form.Item>
 

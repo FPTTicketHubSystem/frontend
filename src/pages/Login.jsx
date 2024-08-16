@@ -91,7 +91,7 @@ function Login() {
     if (result.status !== undefined && result.status === 200) {
       onSetUser(result);
       localStorage.setItem('authToken', result.token);
-      localStorage.setItem('user', JSON.stringify(result.data));
+      //localStorage.setItem('user', JSON.stringify(result.data));
       if (result.roleId === 1) {
         toast.success('Admin đăng nhập thành công');
         navigate('/admin/dashboard')
