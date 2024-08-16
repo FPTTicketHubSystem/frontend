@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import ChangeStatusButton from '../../component/Admin/ChangeStatusButton';
 import '../../assets/css/Event.css';
 import { GetEventsForAdminService } from '../../services/EventService';
-import { format } from 'date-fns';
+import moment from 'moment';
 import { useToast } from '../../context/ToastContext';
 import {
   GetRateByEventIdService,
@@ -78,7 +78,7 @@ const EventAdmin = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
-    return format(new Date(dateString), 'dd/MM/yyyy HH:mm');
+    return moment.utc(dateString).local().format('DD/MM/YYYY HH:mm');
   };
 
   const handleChangeEventStatus = async (eventId, newStatus) => {
@@ -320,6 +320,9 @@ const EventAdmin = () => {
                                 <td key={column.key}>
                                   {column.render
                                     ? column.render(null, event)
+                                    : column.dataIndex === 'startTime' ||
+                                      column.dataIndex === 'endTime'
+                                    ? formatDate(event[column.dataIndex])
                                     : event[column.dataIndex]}
                                 </td>
                               ))}
