@@ -33,6 +33,7 @@ import PaymentSuccess from './pages/Payment/PaymentSuccess';
 import Status403 from './pages/Error/403';
 import Status404 from './pages/Error/404';
 import Status500 from './pages/Error/500';
+// import NewsListPage from './pages/NewsListPage';
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
         <Route path="/event-statistics/:encodedId" element={<ProtectedRoute element={<EventStatistics />} allowedRoles={[3]} />} />
         <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
         <Route path="/payment-success/:orderId" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
+        {/* <Route path="/news" element={<NewsListPage />}/> */}
         <Route path="/403" element={<Status403/>}/>
         <Route path="/500" element={<Status500/>}/>
         <Route path="*" element={<Status404/>}/>
