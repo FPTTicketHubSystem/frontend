@@ -15,11 +15,11 @@ export const GetTicketByAccountService = async (accountId) => {
     }
 }
 
-export const GetTicketByIdService = async (id) => {
+export const GetTicketByIdService = async (id , userId) => {
     try {
         const response = await request({
             method: "get",
-            url: `ticket/getTicketById?ticketId=${id}`,
+            url: `ticket/getTicketById?ticketId=${id}&userId=${userId}`,
             headers: {
                 "Content-Type": "application/json",
             },
