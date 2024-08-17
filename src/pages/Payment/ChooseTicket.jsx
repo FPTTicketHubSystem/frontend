@@ -44,6 +44,9 @@ function ChooseTicket() {
     };
   
     const revertOrderIfNecessary = async () => {
+      if (user) {
+        return;
+      }
       try {
         const result = await CancelOrderOfUser(user.accountId);
         if (result.status === 200) {
