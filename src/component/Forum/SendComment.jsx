@@ -20,12 +20,15 @@ export default function SendComment({ post }) {
   const [searchParams] = useSearchParams();
   const statusQueryParams = searchParams.get("status");
   const navigate = useNavigate();
+
   const handleSendComment = async () => {
     if (content) {
       await addComment({
         postId: post.postId,
         accountId: user.accountId,
         content,
+        status: post.status,
+        fileComment: post.fileComment,
       });
       setContent("");
       openNotificationSendCommentSuccess("topRight");

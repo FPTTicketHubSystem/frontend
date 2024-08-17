@@ -50,7 +50,6 @@ export default function Comment({
     onSaveComment(comment, contentRef.current.textContent);
     contentRef.current.focus();
     if (contentRef.current.textContent.trim() === "") {
-      // Set the cursor to the end of the contentEditable
       setEndOfContentEditable(contentRef.current);
     }
   };
@@ -85,9 +84,10 @@ export default function Comment({
       </div>
       <div className="comment-right">
         <div className="comment-content">
-          <span>{fullName}</span>
+          <span className="comment-name">{fullName}</span>
 
           <p
+            className="comment-description"
             ref={contentRef}
             contentEditable={isEditing}
             suppressContentEditableWarning={true}

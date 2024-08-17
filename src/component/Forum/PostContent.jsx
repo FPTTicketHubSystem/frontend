@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Avatar, Modal, notification } from "antd";
 import PostDetails from "./PostDetails";
 import CommentList from "./CommentList";
+import moment from "moment/moment";
 
 const defaultAvatar = "../avatar.png";
 const like = "../like.png";
@@ -19,13 +20,12 @@ export default function PostContent({ post }) {
     postId,
     avatar,
     fullName,
-    createdDate,
-    // subjectName,
+    createDate,
     postText,
     postFile,
     status,
     postlikes,
-    postfavourites,
+    postfavorites,
     countComment,
     countLike,
   } = post;
@@ -55,7 +55,7 @@ export default function PostContent({ post }) {
   const userLiked = postlikes?.find(
     (like) => like.accountId === user.accountId
   );
-  const userSaved = postfavourites?.find(
+  const userSaved = postfavorites?.find(
     (postfavourite) => postfavourite.accountId === user.accountId
   );
 
@@ -76,6 +76,11 @@ export default function PostContent({ post }) {
   const cancelLoginModal = () => {
     setIsLoginOpen(false);
   };
+
+  const formattedCreateDate = moment
+    .utc(createDate)
+    .local()
+    .format("DD/MM/YYYY HH:mm");
 
   //Display notification
   const [api, contextHolder] = notification.useNotification();
@@ -160,7 +165,7 @@ export default function PostContent({ post }) {
         <div className="form-mid">
           <div className="form-mid-top">
             <div>
-              {fullName} • {createdDate}
+              {fullName} • {formattedCreateDate}
             </div>
           </div>
           <div className="form-mid-content">
@@ -183,11 +188,11 @@ export default function PostContent({ post }) {
           <img
             onClick={handleLikedClick}
             src={userLiked ? liked : like}
-            alt="heart"
+            alt="like"
           />
-          <p>{countLike}</p>
+          <p className="countLikeAndComment">{countLike}</p>
           <img src={comment} onClick={() => showModal(postId)} alt="comment" />
-          <p>{countComment}</p>
+          <p className="countLikeAndComment">{countComment}</p>
         </div>
       )}
 

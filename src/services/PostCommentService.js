@@ -1,10 +1,10 @@
 import request from '../utils/request';
 
 const END_POINTS = {
-  ADD_COMMENT: 'postComment/AddComment',
-  GET_BY_POST: 'postComment/getCommentByPost',
-  EDIT_COMMENT: 'postComment/EditComment',
-  DELETE_COMMENT: 'postComment/DeleteComment'
+  ADD_COMMENT: 'comment/AddComment',
+  GET_BY_POST: 'comment/getCommentByPost',
+  EDIT_COMMENT: 'comment/EditComment',
+  DELETE_COMMENT: 'comment/DeleteComment'
 };
 
 export const addCommentService = async (data) => await request.post(END_POINTS.ADD_COMMENT, data);
@@ -20,7 +20,7 @@ export const AddComment = async (comment) => {
   try {
     const response = await request({
       method: 'post',
-      url: 'postComment/AddComment',
+      url: 'comment/AddComment',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -36,7 +36,7 @@ export const GetCommentByPost = async (postId) => {
   try {
     const response = await request({
       method: 'get',
-      url: `postComment/getCommentByPost?postId=${postId}`,
+      url: `comment/getCommentByPost?postId=${postId}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -51,7 +51,7 @@ export const ChangeStatusPostcomment = async (postcommentId, status) => {
   try {
     const response = await request({
       method: 'post',
-      url: `postComment/ChangeStatusPostcomment?postcommentId=${postcommentId}&status=${status}`,
+      url: `comment/ChangeStatusPostcomment?postcommentId=${postcommentId}&status=${status}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -66,7 +66,7 @@ export const EditComment = async (comment) => {
   try {
     const response = await request({
       method: 'post',
-      url: 'postComment/EditComment',
+      url: 'comment/EditComment',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -82,7 +82,7 @@ export const DeleteComment = async (commentId) => {
   try {
     const response = await request({
       method: 'post',
-      url: `postComment/DeleteComment?commentId=${commentId}`,
+      url: `comment/DeleteComment?commentId=${commentId}`,
       headers: {
         'Content-Type': 'application/json',
       },

@@ -1,16 +1,16 @@
 import { createContext, useReducer } from "react";
 import postReducer from "../reduces/postReducer";
 import {
-  AddPost,
-  ChangeStatusPost,
-  DeletePost,
-  GetAllPost,
-  GetPostById,
-  GetPostByStatus,
+  addPostService,
+  changePostStatusService,
+  deletePostService,
+  getAllPostService,
+  getPostByIdService,
+  getPostByStatusService,
   getSavedPostService,
-  LikePost,
+  likePostService,
   savePostService,
-  UnlikePost,
+  unlikePostService,
   unSavePostService,
 } from "../services/ForumService";
 
@@ -30,7 +30,7 @@ const PostProvider = ({ children }) => {
 
   const getAllPost = async () => {
     try {
-      const response = await GetAllPost();
+      const response = await getAllPostService();
       dispatch({
         type: "GET_POSTS",
         payload: response,
@@ -43,7 +43,7 @@ const PostProvider = ({ children }) => {
 
   const getPostById = async (postId) => {
     try {
-      const response = await GetPostById(postId);
+      const response = await getPostByIdService(postId);
       dispatch({
         type: "GET_POST_DETAILS",
         payload: response,
@@ -56,8 +56,8 @@ const PostProvider = ({ children }) => {
 
   const addPost = async (data) => {
     try {
-      await AddPost(data);
-      const newPosts = await getAllPost();
+      await addPostService(data);
+      const newPosts = await getAllPostService();
       dispatch({
         type: "GET_POSTS",
         payload: newPosts,
@@ -70,7 +70,7 @@ const PostProvider = ({ children }) => {
 
   const getPostByStatus = async (status, accountId) => {
     try {
-      const response = await GetPostByStatus(status, accountId);
+      const response = await getPostByStatusService(status, accountId);
       dispatch({
         type: "GET_POSTS",
         payload: response,
@@ -83,7 +83,7 @@ const PostProvider = ({ children }) => {
 
   const changePostStatus = async (postId, status) => {
     try {
-      await ChangeStatusPost(postId, status);
+      await changePostStatusService(postId, status);
     } catch (error) {
       console.log(error);
     }
@@ -91,7 +91,7 @@ const PostProvider = ({ children }) => {
 
   const likePost = async (postId, accountId) => {
     try {
-      await LikePost(postId, accountId);
+      await likePostService(postId, accountId);
     } catch (error) {
       console.log(error);
     }
@@ -99,7 +99,7 @@ const PostProvider = ({ children }) => {
 
   const unlikePost = async (postId, accountId) => {
     try {
-      await UnlikePost(postId, accountId);
+      await unlikePostService(postId, accountId);
     } catch (error) {
       console.log(error);
     }
@@ -107,7 +107,7 @@ const PostProvider = ({ children }) => {
 
   const deletePost = async (postId) => {
     try {
-      await DeletePost(postId);
+      await deletePostService(postId);
     } catch (error) {
       console.log(error);
     }

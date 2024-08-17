@@ -12,7 +12,7 @@ const initialState = {
   comments: [],
 };
 
-export const CommentContext = createContext();
+export const  CommentContext = createContext();
 
 const CommentProvider = ({ children }) => {
   const [state, dispatch] = useReducer(commentReducer, initialState);
