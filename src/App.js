@@ -32,6 +32,7 @@ import PaymentSuccess from './pages/Payment/PaymentSuccess';
 import PostProvider from './context/PostContext';
 import CommentProvider from './context/CommentContext';
 import Forum from './component/Forum/Forum';
+import CheckinHistory from './pages/Staff/CheckinHistory';
 import Status403 from './pages/Error/403';
 import Status404 from './pages/Error/404';
 import Status500 from './pages/Error/500';
@@ -63,6 +64,7 @@ function App() {
         <Route path="/organizer/manage-news" element={<ProtectedRoute element={<NewsManage />} allowedRoles={[3]} />} />
         <Route path="/organizer/manage-staff" element={<ProtectedRoute element={<ManageStaff />} allowedRoles={[3]} />} />
         <Route path="/staff/checkin" element={<ProtectedRoute element={<CheckinTicket />} allowedRoles={[4]} />} />
+        <Route path="/staff/checkin" element={<ProtectedRoute element={<CheckinHistory />} allowedRoles={[4]} />} />
         <Route path="/search" element={<Search />} />
         <Route path="/admin/manage-news" element={<ProtectedRoute element={<ManageNews />} allowedRoles={[1]} />} />
         <Route path="/admin/news/news-detail/:newsId" element={<NewsDetail />} />
