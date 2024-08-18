@@ -138,9 +138,7 @@ function Upcoming() {
                     >
                       <div className="tag-date">
                         <span>
-                          {new Date(event.startTime).toLocaleDateString(
-                            "vi-VN"
-                          )}
+                          {formatDateTime(event.startTime)}
                         </span>
                       </div>
                     </div>
