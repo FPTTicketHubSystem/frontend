@@ -30,6 +30,9 @@ import ManageNews from './pages/Admin/ManageNews';
 import NewsDetail from './pages/Admin/NewsDetail';
 import EventStatistics from './pages/Organizer/EventStatistics';
 import PaymentSuccess from './pages/Payment/PaymentSuccess';
+import PostProvider from './context/PostContext';
+import CommentProvider from './context/CommentContext';
+import Forum from './component/Forum/Forum';
 import Status403 from './pages/Error/403';
 import Status404 from './pages/Error/404';
 import Status500 from './pages/Error/500';
@@ -68,6 +71,7 @@ function App() {
         <Route path="/event-statistics/:encodedId" element={<ProtectedRoute element={<EventStatistics />} allowedRoles={[3]} />} />
         <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
         <Route path="/payment-success/:orderId" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
+        <Route path="/forum" element={<PostProvider><CommentProvider><Forum/></CommentProvider></PostProvider>}></Route>
         {/* <Route path="/news" element={<NewsListPage />}/> */}
         <Route path="/403" element={<Status403/>}/>
         <Route path="/500" element={<Status500/>}/>
