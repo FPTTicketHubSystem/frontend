@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import QrScanner from "react-qr-scanner";
 import { Form, Select, Typography, Switch } from "antd";
 import styled from "styled-components";
-import debounce from "lodash.debounce";
 
 const { Option } = Select;
 const { Paragraph } = Typography;
@@ -37,14 +36,11 @@ const QrScannerComponent = ({ onScanResult }) => {
     });
   }, []);
 
-  const handleScan = useCallback(
-    debounce((data) => {
-      if (data) {
-        onScanResult(data.text);
-      }
-    }, 1000),
-    [onScanResult]
-  );
+  const handleScan = (data) => {
+    if (data) {
+      onScanResult(data.text);
+    }
+  };
 
   const handleError = (err) => {
     console.error(err);
@@ -86,7 +82,7 @@ const QrScannerComponent = ({ onScanResult }) => {
         </div>
       </div>
       <CustomSwitch
-        checked={cameraActive}
+        checked={cameraActive}  
         onChange={() => setCameraActive(!cameraActive)}
         style={{ marginBottom: '10px' }}
         unCheckedChildren="Tắt"
@@ -97,7 +93,7 @@ const QrScannerComponent = ({ onScanResult }) => {
       <div style={scannerContainerStyle}>
         {cameraActive && (
           <QrScanner
-            delay={300}
+            delay={1000}
             style={previewStyle}
             onError={handleError}
             onScan={handleScan}
