@@ -3,7 +3,7 @@ import { Modal, Button } from 'react-bootstrap';
 import Header from '../../component/Admin/Header';
 import Navbar from '../../component/Admin/Navbar';
 import { GetAllPostAdmin, ChangeStatusPost } from '../../services/ForumService';
-import { format } from 'date-fns';
+import moment from 'moment';
 import styles from '../../assets/css/ForumAdmin.module.css';
 import { useToast } from '../../context/ToastContext';
 
@@ -47,7 +47,7 @@ const ForumAdmin = () => {
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
-    return format(new Date(dateString), 'dd/MM/yyyy HH:mm');
+    return moment.utc(dateString).local().format('DD/MM/YYYY HH:mm');
   };
 
   const filteredPosts = posts.filter((post) => {
