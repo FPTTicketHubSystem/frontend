@@ -47,6 +47,14 @@ function EventDetail() {
 
   // check if the event has ended
   const isEventEnded = moment.utc(event.endTime).isBefore(moment.utc());
+
+  // check if booking should be stopped (1 day before event)
+  const isBookingStopped = () => {
+    const now = moment.utc();
+    const eventStartTime = moment.utc(event.startTime);
+    return now.isAfter(eventStartTime.subtract(1, 'day'));
+  };
+
   // xử lý so sánh ngày
   const formatDate = (date) => {
     return moment.utc(date).local().format('DD/MM/YYYY');
@@ -84,7 +92,7 @@ function EventDetail() {
 
   //#region Handle Buy Ticket
   const handleClickChooseTicket = () => {
-    if (!areAllTicketsSoldOut && !isEventEnded) {
+    if (!areAllTicketsSoldOut && !isEventEnded && !isBookingStopped()) {
       navigate("/seclectTicket", { state: { event } });
     }
   };
@@ -127,6 +135,8 @@ function EventDetail() {
                       <span className="event-ended">Sự kiện đã kết thúc</span>
                     ) : areAllTicketsSoldOut ? (
                       <span className="tickets-sold-out">Hết vé</span>
+                    ) : isBookingStopped() ? (
+                      <span className="booking-stopped">Ngừng đặt vé</span>
                     ) : (
                       "Đặt vé ngay"
                     )}
@@ -196,6 +206,8 @@ function EventDetail() {
                     ? "Sự kiện đã kết thúc"
                     : areAllTicketsSoldOut
                     ? "Hết vé"
+                    : isBookingStopped()
+                    ? "Ngừng đặt vé"
                     : "Đặt vé ngay"}
                 </button>
               </div>
@@ -243,23 +255,6 @@ function EventDetail() {
               </div>
             </div>
           </div>
-          {/* <div className="card" style={{ color: "black" }}>
-            <div className="card-header">Trở thành giám sát viên</div>
-            <div className="staff-content mt-2 mb-2">
-              <div>Bạn muốn trở thành giám sát viên cho sự kiện này?</div>
-              <button
-                className="register-button text-white mt-2"
-                style={{
-                  backgroundColor: "#EC6C21",
-                  width: "175px",
-                  lineHeight: "34px",
-                  borderRadius: "6px",
-                }}
-              >
-                Đăng ký ngay
-              </button>
-            </div>
-          </div> */}
         </div>
 
         <div className="right-part">
