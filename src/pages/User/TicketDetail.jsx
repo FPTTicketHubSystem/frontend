@@ -55,9 +55,9 @@ const TicketDetail = () => {
       <Container>
         <Card className="mb-3 bg-dark">
           <Card.Img variant="top" src={ticket.themeImage} />
-          <Card.Body>
-            <Card.Title className="text-center">{ticket.eventName}</Card.Title>
-            <Card.Text className="text-center">
+          <Card.Body className="card-body-ticket bg-light">
+            <Card.Title className="text-center text-black">{ticket.eventName}</Card.Title>
+            <Card.Text className="text-center" style={{marginTop:"5px"}}>
               <QRCode value={String(ticket.ticketId)} />
             </Card.Text>
           </Card.Body>

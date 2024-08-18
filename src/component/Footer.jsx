@@ -17,7 +17,7 @@ function Footer() {
 
                     <div className="col mb-4">
                     <h5 className="mb-4 fw-bold">
-                    <a href="#" className="fw-bold mb-2" style={{ textDecoration: 'none', color: '#EC6C21' }}><i class="bi bi-newspaper"></i> Tin tức</a>
+                    <a href="/news" className="fw-bold mb-2" style={{ textDecoration: 'none', color: '#EC6C21' }}><i class="bi bi-newspaper"></i> Tin tức</a>
                     </h5>
                     <h5 className="mb-4 fw-bold">Dành cho Khách hàng</h5>
                         <ul className="list-unstyled">
