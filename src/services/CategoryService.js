@@ -16,32 +16,6 @@ export const getCategoriesService = async (data) => {
     }
 }
 
-// export const getCategories = async () => {
-//     try {
-//         const response = await request.get('category');
-//         console.log('Fetched categories:', response);  // Debugging log
-//         return response;
-//     } catch (e) {
-//         console.error('Error fetching categories:', e);  // Error log
-//         throw e;
-//     }
-// };
-
-export const getCategoryByIdService = async (id) => {
-    try {
-        const response = await request({
-            method: "get",
-            url: `category/${id}`,
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        return response;
-    } catch (e) {
-        throw e;
-    }
-}
-
 export const searchCategoriesService = async (name) => {
     try {
         const response = await request({

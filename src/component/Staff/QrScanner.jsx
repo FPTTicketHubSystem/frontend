@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import QrScanner from "react-qr-scanner";
-import { Form, Select, Typography, Switch } from "antd";
+import { Select, Typography, Switch } from "antd";
 import styled from "styled-components";
 
 const { Option } = Select;
-const { Paragraph } = Typography;
 
 const CustomSwitch = styled(Switch)`
   &.ant-switch-checked {
@@ -23,6 +22,7 @@ const QrScannerComponent = ({ onScanResult }) => {
   const [devices, setDevices] = useState([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState("");
   const [cameraActive, setCameraActive] = useState(false);
+  const [scanning, setScanning] = useState(true);
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then((deviceInfos) => {
@@ -39,6 +39,8 @@ const QrScannerComponent = ({ onScanResult }) => {
   const handleScan = (data) => {
     if (data) {
       onScanResult(data.text);
+      setScanning(false);
+      setTimeout(() => setScanning(true), 2000);
     }
   };
 
@@ -91,7 +93,7 @@ const QrScannerComponent = ({ onScanResult }) => {
         {cameraActive ? 'Tắt Camera' : 'Bật Camera'}
       </CustomSwitch>
       <div style={scannerContainerStyle}>
-        {cameraActive && (
+        {cameraActive && scanning && (
           <QrScanner
             delay={300}
             style={previewStyle}
@@ -101,7 +103,6 @@ const QrScannerComponent = ({ onScanResult }) => {
           />
         )}
       </div>
-      {/* <p style={{ marginTop: '10px' }}>{result}</p> */}
     </div>
   );
 };

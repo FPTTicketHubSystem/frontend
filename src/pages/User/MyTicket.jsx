@@ -8,9 +8,9 @@ import { UserContext } from "../../context/UserContext";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
-import {GetTicketByAccountService} from "../../services/TicketService";
-
+import { GetTicketByAccountService } from "../../services/TicketService";
 
 const buttonStyle = {
     height: "1.8rem",
@@ -52,9 +52,8 @@ const activeTabStyle = {
 };
 
 const MyTicket = () => {
-    const {user} = useContext(UserContext);
+    const { user } = useContext(UserContext);
     const [activeTab, setActiveTab] = useState("upcoming");
-    const [activeButton, setActiveButton] = useState("all");
     const [tickets, setTickets] = useState([]);
 
     const fetchTickets = async () => {
@@ -72,12 +71,22 @@ const MyTicket = () => {
         }
         try {
             fetchTickets();
-        }
-        catch (e) {
+        } catch (e) {
             console.error(e);
         }
-
     }, [user.accountId]);
+
+    // Lọc vé dựa trên tab đang được chọn
+    const filteredTickets = tickets.filter(ticket => {
+        const now = moment();
+        const endTime = moment.utc(ticket.endTime).local();
+        if (activeTab === "upcoming") {
+            return now.isBefore(endTime);
+        } else if (activeTab === "ended") {
+            return now.isAfter(endTime);
+        }
+        return true; // Nếu không khớp với tab nào, trả về tất cả
+    });
 
     return (
         <div className="bg bg-dark">
@@ -90,33 +99,18 @@ const MyTicket = () => {
                 <SideBar />
                 <div style={{ marginLeft: "150px" }}>
                     <h2>Vé đã mua</h2>
-                    <Flex className="py-4 my-3" style={{ borderTop: "1px solid #EC6C21", justifyContent: "space-around" }}>
-                        <Button
-                            style={activeButton === "all" ? activeButtonStyle : buttonStyle}
-                            onClick={() => setActiveButton("all")}
-                        >
-                            <b>Tất cả</b>
-                        </Button>
-                        <Button
-                            style={activeButton === "successful" ? activeButtonStyle : buttonStyle}
-                            onClick={() => setActiveButton("successful")}
-                        >
-                            <b>Thành công</b>
-                        </Button>
-                        <Button
-                            style={activeButton === "processing" ? activeButtonStyle : buttonStyle}
-                            onClick={() => setActiveButton("processing")}
-                        >
-                            <b>Đang xử lý</b>
-                        </Button>
-                        <Button
-                            style={activeButton === "canceled" ? activeButtonStyle : buttonStyle}
-                            onClick={() => setActiveButton("canceled")}
-                        >
-                            <b>Đã Hủy</b>
-                        </Button>
-                    </Flex>
-                    <Flex style={{ justifyContent: "center", gap: "1rem", marginBottom: "1rem" }}>
+
+                    <Flex
+                        style={{
+                            justifyContent: "center",
+                            gap: "1rem",
+                            marginBottom: "1rem",
+                            paddingTop: "1rem",
+                            borderTop: "1px solid #EC6C21",
+                            minHeight: "3rem",  // Đảm bảo chiều cao tối thiểu
+                            alignItems: "center" // Căn giữa các nút theo chiều dọc
+                        }}
+                    >
                         <Button
                             style={activeTab === "upcoming" ? activeTabStyle : tabStyle}
                             onClick={() => setActiveTab("upcoming")}
@@ -130,27 +124,41 @@ const MyTicket = () => {
                             Đã kết thúc
                         </Button>
                     </Flex>
-                    {tickets.map(ticket => (
-                        <Link key={ticket.ticketId} to={`/myticket/detail/${ticket.ticketId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <Ticket 
-                                orderCode={ticket.ticketId.toString()}
-                                eventName={ticket.eventName}
-                                status={ticket.isCheckedIn ? "Đã sử dụng" : "Chưa sử dụng"}
-                                ticketType={ticket.typeName}
-                                date={new Date(ticket.startTime).toLocaleDateString('vi-VN')}
-                                time={new Date(ticket.startTime).toLocaleTimeString('vi-VN')}
-                                endDate={new Date(ticket.endTime).toLocaleDateString('vi-VN')}
-                                endTime={new Date(ticket.endTime).toLocaleTimeString('vi-VN')}
-                                location={ticket.location}
-                                fullLocation={ticket.address}
-                            />
-                        </Link>
-                    ))}
+
+                    {filteredTickets.length > 0 ? (
+                        filteredTickets.map(ticket => (
+                            <Link
+                                key={ticket.ticketId}
+                                to={`/myticket/detail/${ticket.ticketId}`}
+                                style={{ textDecoration: "none", color: "inherit" }}
+                            >
+                                <Ticket
+                                    orderCode={ticket.ticketId.toString()}
+                                    eventName={ticket.eventName}
+                                    status={ticket.isCheckedIn ? "Đã sử dụng" : "Chưa sử dụng"}
+                                    ticketType={ticket.typeName}
+                                    date={moment.utc(ticket.startTime).local().format("DD/MM/YYYY")}
+                                    time={moment.utc(ticket.startTime).local().format("HH:mm")}
+                                    endDate={moment.utc(ticket.endTime).local().format("DD/MM/YYYY")}
+                                    endTime={moment.utc(ticket.endTime).local().format("HH:mm")}
+                                    location={ticket.location}
+                                    fullLocation={ticket.address}
+                                    startDay={moment.utc(ticket.startTime).local().format("DD")}
+                                    startMonth={moment.utc(ticket.startTime).local().format("MM")}
+                                    startYear={moment.utc(ticket.startTime).local().format("YYYY")}
+                                />
+                            </Link>
+                        ))
+                    ) : (
+                        <div style={{ textAlign: "center", color: "#ffffff", padding: "2rem 0" }}>
+                            Không có vé nào để hiển thị.
+                        </div>
+                    )}
                 </div>
             </Container>
             <Footer />
         </div>
     );
-}
+};
 
 export default MyTicket;

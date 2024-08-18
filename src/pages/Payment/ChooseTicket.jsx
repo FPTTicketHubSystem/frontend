@@ -7,6 +7,10 @@ import Footer from "../../component/Footer";
 import { UserContext } from "../../context/UserContext";
 import { PaymentForUser } from "../../services/PaymentService";
 import { toast } from "react-toastify";
+import { CancelOrderOfUser } from "../../services/PaymentService";
+import { CheckOrderdOfUser } from "../../services/PaymentService";
+import { faArrowUpAZ } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
 function ChooseTicket() {
   const location = useLocation();
@@ -15,6 +19,7 @@ function ChooseTicket() {
   const [disable, setDisable] = useState(true);
   const [countTicket, setCountTicket] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [allowOrder, setAllowOrder] = useState(0);
   const { user } = useContext(UserContext);
 
   const ticketList =
@@ -28,16 +33,55 @@ function ChooseTicket() {
   const [quantities, setQuantities] = useState(ticketList.map(() => 0));
 
   useEffect(() => {
-    const totalQuantity = quantities.reduce((acc, curr) => acc + curr, 0);
-    setCountTicket(totalQuantity);
-    setDisable(totalQuantity === 0 || totalQuantity > 2);
-
-    const totalPrice = quantities.reduce(
-      (acc, curr, index) => acc + curr * ticketList[index].price,
-      0
-    );
-    setTotalPrice(totalPrice);
-  }, [quantities, ticketList]);
+    const checkOrderOrNot = async () => {
+      try {
+        const resultCheck = await CheckOrderdOfUser(user.accountId, event.eventId);
+        return resultCheck;
+      } catch (error) {
+        console.error('Error checking order:', error);
+        return { status: 500 };
+      }
+    };
+  
+    const revertOrderIfNecessary = async () => {
+      if (user) {
+        return;
+      }
+      try {
+        const result = await CancelOrderOfUser(user.accountId);
+        if (result.status === 200) {
+          console.log('Order successfully reverted');
+        } else {
+          console.warn('Failed to revert order');
+        }
+      } catch (error) {
+        console.error('Error reverting order:', error);
+      }
+    };
+  
+    const handleOrderCheck = async () => {
+      const resultCheck = await checkOrderOrNot();
+      if (resultCheck.status === 400) {
+        await revertOrderIfNecessary();
+        setAllowOrder(0);
+      } else {
+        setAllowOrder(1);
+      }
+  
+      const totalQuantity = quantities.reduce((acc, curr) => acc + curr, 0);
+      setCountTicket(totalQuantity);
+      setDisable(totalQuantity === 0 || totalQuantity > 2);
+  
+      const totalPrice = quantities.reduce(
+        (acc, curr, index) => acc + curr * ticketList[index].price,
+        0
+      );
+      setTotalPrice(totalPrice);
+    };
+  
+    handleOrderCheck();
+  }, [quantities, ticketList, user.accountId, event.eventId]);
+  
 
   const handleQuantityChange = (index, delta) => {
     setQuantities(
@@ -105,6 +149,7 @@ function ChooseTicket() {
           <div className="ticket-list">
             <div className="ticket-row header">
               <span className="ticket-type">Loại vé</span>
+              {/* <span className="ticket-type">Mô tả</span> */}
               <span className="ticket-price">Giá vé</span>
               <span className="ticket-quantity">Số lượng</span>
             </div>
@@ -119,19 +164,35 @@ function ChooseTicket() {
                       : `${ticket.price.toLocaleString()} đ`}
                   </span>
                 <span className="ticket-quantity">
-                  <button
+                  {allowOrder == 0 && (
+                    <button
                     onClick={() => handleQuantityChange(index, -1)}
                     disabled={quantities[index] === 0}
                   >
                     -
                   </button>
-                  <span>{quantities[index]}</span>
-                  <button
-                    onClick={() => handleQuantityChange(index, 1)}
-                    disabled={ticket.quantity === 0}
-                  >
-                    +
+                  )}
+                  {allowOrder == 1 && (
+                    <button>
+                    -
                   </button>
+                  )}
+                  
+                  <span>{quantities[index]}</span>
+                  {allowOrder == 0 && (
+                     <button
+                     onClick={() => handleQuantityChange(index, 1)}
+                     disabled={ticket.quantity === 0}
+                   >
+                     +
+                   </button>
+                  )}
+                  {allowOrder == 1 && (
+                     <button>
+                     +
+                   </button>
+                  )}
+                 
                 </span>
               </div>
             ))}
@@ -142,16 +203,8 @@ function ChooseTicket() {
           <div className="ticket-summary" style={{ backgroundColor: "black" }}>
             <h2>{event.eventName}</h2>
             <p>
-              {new Date(event.startTime).toLocaleTimeString("vi-VN", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-              ,{" "}
-              {new Date(event.startTime).toLocaleDateString("vi-VN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
+            {moment.utc(event.startTime).local().format('HH:mm')},{" "}
+            {moment.utc(event.startTime).local().format('DD/MM/YYYY')}
             </p>
             <p>{event.location}</p>
             <div className="ticket-prices">
@@ -179,7 +232,8 @@ function ChooseTicket() {
                   </>
                 )}
               </div>
-              <button
+              {allowOrder == 0 && (
+                <button
                 disabled={disable}
                 className="select-button mt-1"
                 onClick={handleContinue}
@@ -188,6 +242,15 @@ function ChooseTicket() {
                   ? "Vui lòng chọn vé"
                   : `Tiếp tục - ${totalPrice.toLocaleString()} đ`}
               </button>
+              )}
+              {allowOrder == 1 && (
+                <button
+                disabled={disable}
+                className="select-button mt-1"
+              >
+                Bạn đã đặt vé 
+              </button>
+              )}
             </div>
           </div>
         </div>

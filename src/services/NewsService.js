@@ -30,36 +30,6 @@ export const GetAllNewsAdminService = async (status = "") => {
     }
 };
 
-// export const GetNewsByAccount = async () => {
-//     try {
-//         const response = await request({
-//             method: 'get',
-//             url: `news/getAllNews`,
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//         });
-//         return response;
-//     } catch (e) {
-//         return e;
-//     }
-// };
-
-export const GetNewsByIdService = async (newsId) => {
-    try {
-        const response = await request({
-            method: 'get',
-            url: `news/getNewsById/${newsId}`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        return response;
-    } catch (e) {
-        return e;
-    }
-};
-
 export const AddNewsService = async (data) => {
     try {
         const response = await request({
@@ -91,21 +61,6 @@ export const ChangeStatusNewsService = async (newsId, status) => {
         }
     }
 
-export const GetNewsInUserPageService = async () => {
-    try {
-        const response = await request({
-            method: 'get',
-            url: `news/displayNewsInUserPage`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        return response;
-    } catch (e) {
-        return e;
-    }
-};
-
 export const GetNewsDetailService = async (newsId) => {
     try {
         const response = await request({
@@ -121,22 +76,6 @@ export const GetNewsDetailService = async (newsId) => {
     }
 };
 
-export const GetNewsInPageService = async (currentPage, pageSize) => {
-    console.log(currentPage + " " + pageSize);
-    try {
-        const response = await request({
-            method: 'get',
-            url: `news/getNewsInPage?page=${currentPage}&pageSize=${pageSize}`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log("123 " + response);
-        return response;
-    } catch (e) {
-        return e;
-    }
-}
 
 export const GetNewsByAccountService = async (accountId) => {
     try {
@@ -152,3 +91,50 @@ export const GetNewsByAccountService = async (accountId) => {
         return e;
     }
 }
+
+export const GetNewsForEdit = async (id) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `news/getNewsForEdit?newsId=${id}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const UpdateNewsService = async (data) => {
+    try {
+        const response = await request({
+            method: "put",
+            url: "news/editNews",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify(data),
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
+
+export const GetLastestNewsService = async () => {
+    try {
+        const response = await request({
+            method: 'get',
+            url: `news/getLastestNews`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+};
+

@@ -7,6 +7,10 @@ const instance = axios.create({
 
 instance.interceptors.request.use((config) => {
     //TODO: handle token
+    const token = localStorage.getItem("authToken");
+    if (token) {
+        config.headers.Authorization = `${token}`;
+    }
     return config;
 });
 
@@ -15,6 +19,18 @@ instance.interceptors.response.use(
         return response.data;
     },
     (error) => {
+        if (error.response?.status === 403) {
+            window.location.href = '/403';
+        }
+        else if (error.response?.status === 401) {
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("user");
+            localStorage.clear();
+            window.location.href = '/login';
+        }
+        else if (error.response?.status === 500) {
+            window.location.href = '/500';
+        }
         switch (error.response?.status) {
             case 401:
                 const message401 = error.response.data.error;

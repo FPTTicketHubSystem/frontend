@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { decodeId } from "../utils/utils";
 import { GetEventByIdService } from "../services/EventService";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 function EventDetail() {
   const [isAboutCollapsed, setIsAboutCollapsed] = useState(true);
@@ -45,38 +46,26 @@ function EventDetail() {
   );
 
   // check if the event has ended
-  const isEventEnded = new Date(event.endTime) < new Date();
-
+  const isEventEnded = moment.utc(event.endTime).isBefore(moment.utc());
   // xử lý so sánh ngày
   const formatDate = (date) => {
-    return new Date(date).toLocaleDateString("vi-VN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    return moment.utc(date).local().format('DD/MM/YYYY');
   };
-
-  const formatTime = (date) => {
-    return new Date(date).toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  
+  const formatTime = (time) => {
+    return moment.utc(time).local().format('HH:mm');
   };
-
+  
   const getDateTimeDisplay = (startTime, endTime) => {
-    const startDate = new Date(startTime);
-    const endDate = new Date(endTime);
-
-    if (startDate.toDateString() === endDate.toDateString()) {
-      return `${formatTime(startTime)} - ${formatTime(endTime)}, ${formatDate(
-        startTime
-      )}`;
+    const startDate = moment(startTime);
+    const endDate = moment(endTime);
+  
+    if (startDate.isSame(endDate, 'day')) {
+      return `${formatTime(startTime)} - ${formatTime(endTime)}, ${formatDate(startTime)}`;
     } else {
-      return `${formatTime(startTime)}, ${formatDate(startTime)} - ${formatTime(
-        endTime
-      )}, ${formatDate(endTime)}`;
+      return `${formatTime(startTime)}, ${formatDate(startTime)} - ${formatTime(endTime)}, ${formatDate(endTime)}`;
     }
-  };
+  };  
 
   // xử lý giá tiền
   const getLowestTicketPrice = (tickettypes) => {
@@ -249,16 +238,12 @@ function EventDetail() {
                 <div className="name">{event.fullName}</div>
                 <div className="founding">
                   Ngày thành lập:{" "}
-                  {new Date(event.birthDay).toLocaleDateString("vi-VN", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  })}
+                  {moment(event.birthDay).format('DD/MM/YYYY')}
                 </div>
               </div>
             </div>
           </div>
-          <div className="card" style={{ color: "black" }}>
+          {/* <div className="card" style={{ color: "black" }}>
             <div className="card-header">Trở thành giám sát viên</div>
             <div className="staff-content mt-2 mb-2">
               <div>Bạn muốn trở thành giám sát viên cho sự kiện này?</div>
@@ -274,7 +259,7 @@ function EventDetail() {
                 Đăng ký ngay
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
 
         <div className="right-part">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+const NavbarAdmin = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -19,41 +19,34 @@ const Navbar = () => {
         <div className="offcanvas offcanvas-end" id="MobileMenu">
           <div className="offcanvas-header">
             <h5 className="offcanvas-title semibold">Navigation</h5>
-            <button type="button" className="btn btn-danger btn-sm" data-bs-dismiss="offcanvas">
+            <button
+              type="button"
+              className="btn btn-danger btn-sm"
+              data-bs-dismiss="offcanvas"
+            >
               <i className="icon-clear"></i>
             </button>
           </div>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className={`nav-item dropdown ${isActive('/')}`}>
+              <li className={`nav-item ${isActive('/admin/dashboard')}`}>
+                <a
+                  className="nav-link"
+                  href="#"
+                  onClick={() => handleNavigate('/admin/dashboard')}
+                >
+                  Dashboard
+                </a>
+              </li>
+            </li>
+            <li className={`nav-item ${isActive('/admin/manage-news')}`}>
               <a
-                className="nav-link dropdown-toggle"
+                className="nav-link"
                 href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
+                onClick={() => handleNavigate('/admin/manage-news')}
               >
-                Dashboards
+                News
               </a>
-              <ul className="dropdown-menu">
-                <li>
-                  <a
-                    className="dropdown-item"
-                    href="#"
-                    onClick={() => handleNavigate('/')}
-                  >
-                    <span>Analytics</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item"
-                    href="#"
-                    onClick={() => handleNavigate('/reports')}
-                  >
-                    <span>Reports</span>
-                  </a>
-                </li>
-              </ul>
             </li>
             <li className={`nav-item ${isActive('/admin/events')}`}>
               <a
@@ -98,4 +91,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarAdmin;

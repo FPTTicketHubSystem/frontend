@@ -83,7 +83,7 @@ const LocationPicker = ({ onLocationChange }) => {
 
   return (
     <Form layout="vertical">
-      <Form.Item label="Tỉnh/Thành">
+      <Form.Item label="Tỉnh/Thành" rules={[{ required: true, message: 'Vui lòng chọn Tỉnh/Thành!' }]}>
         <Select
           value={selectedProvince}
           onChange={handleProvinceChange}
@@ -95,7 +95,7 @@ const LocationPicker = ({ onLocationChange }) => {
         </Select>
       </Form.Item>
 
-      <Form.Item label="Quận/Huyện">
+      <Form.Item label="Quận/Huyện" rules={[{ required: true, message: 'Vui lòng chọn Quận/Huyện!' }]}>
         <Select
           value={selectedDistrict}
           onChange={handleDistrictChange}
@@ -108,7 +108,7 @@ const LocationPicker = ({ onLocationChange }) => {
         </Select>
       </Form.Item>
 
-      <Form.Item label="Phường/Xã">
+      <Form.Item label="Phường/Xã" rules={[{ required: true, message: 'Vui lòng chọn Phường/Xã!' }]}>
         <Select
           value={selectedWard}
           onChange={handleWardChange}
@@ -121,7 +121,7 @@ const LocationPicker = ({ onLocationChange }) => {
         </Select>
       </Form.Item>
 
-      <Form.Item label="Số nhà/Đường">
+      <Form.Item label="Số nhà/Đường" rules={[{ required: true, message: 'Vui lòng nhập Số nhà/Đường!' }]}>
         <Input
           placeholder="Nhập số nhà/đường"
           value={details}

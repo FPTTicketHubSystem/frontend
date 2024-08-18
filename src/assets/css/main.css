@@ -5073,7 +5073,7 @@ textarea.form-control-lg {
   --bs-pagination-padding-y: 0.375rem;
   --bs-pagination-font-size: 0.825rem;
   --bs-pagination-color: var(--bs-link-color);
-  --bs-pagination-bg: rgba(0, 0, 0, 0.2);
+  --bs-pagination-bg: #0003;
   --bs-pagination-border-width: var(--bs-border-width);
   --bs-pagination-border-color: var(--bs-border-color);
   --bs-pagination-border-radius: var(--bs-border-radius);
@@ -5082,16 +5082,16 @@ textarea.form-control-lg {
   --bs-pagination-hover-border-color: var(--bs-border-color);
   --bs-pagination-focus-color: var(--bs-link-hover-color);
   --bs-pagination-focus-bg: var(--bs-secondary-bg);
-  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(168, 122, 80, 0.25);
-  --bs-pagination-active-color: rgb(255, 255, 255);
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem #a87a5040;
+  --bs-pagination-active-color: #fff;
   --bs-pagination-active-bg: #a87a50;
   --bs-pagination-active-border-color: #a87a50;
   --bs-pagination-disabled-color: var(--bs-secondary-color);
-  --bs-pagination-disabled-bg: rgba(0, 0, 0, 0.2);
+  --bs-pagination-disabled-bg: #0003;
   --bs-pagination-disabled-border-color: var(--bs-border-color);
   display: flex;
-  padding-left: 0;
   list-style: none;
+  padding-left: 0;
 }
 
 .page-link {
@@ -6091,7 +6091,7 @@ textarea.form-control-lg {
   .modal-fullscreen-xxl-down .modal-body {
     overflow-y: auto;
   }
-} */
+}
 .tooltip {
   --bs-tooltip-zindex: 1080;
   --bs-tooltip-max-width: 200px;
@@ -13006,7 +13006,7 @@ textarea.form-control-lg {
  ********************
 ********************/
 body {
-  background: linear-gradient(145deg, #8a6137, #6a3e1f 40%, #522710);
+  background: rgb(42, 45, 52);
   background-size: cover;
   background-position: center center;
 }

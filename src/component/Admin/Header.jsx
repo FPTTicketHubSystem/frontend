@@ -1,25 +1,25 @@
-import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../../context/UserContext";
-import logo from "../../assets/images/logo/3.png";
-import logo2 from "../../assets/images/logo/logo2.png";
-import { toast } from "react-toastify";
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext';
+import logo from '../../assets/images/logo/3.png';
+import logo2 from '../../assets/images/logo/logo2.png';
+import { toast } from 'react-toastify';
 
-const Header = () => {
+const HeaderAdmin = () => {
   const navigate = useNavigate();
   const { user, onSetUser, onSetRender } = useContext(UserContext);
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
     localStorage.clear();
     onSetUser({
-      data: "",
-      token: "",
+      data: '',
+      token: '',
     });
     onSetRender();
-    navigate("/login");
-    toast.success("Đã đăng xuất!");
+    navigate('/login');
+    toast.success('Đã đăng xuất!');
   };
 
   return (
@@ -30,7 +30,7 @@ const Header = () => {
             <a href="/" class="d-lg-block d-none">
               <img src={logo} class="logo" alt="FPTTicketHub" />
             </a>
-            <a href="/" class="d-lg-none d-md-block">
+            <a href="/admin/dashboard" class="d-lg-none d-md-block">
               <img src={logo2} class="logo2" alt="FPTTicketHub" />
             </a>
           </div>
@@ -80,4 +80,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default HeaderAdmin;

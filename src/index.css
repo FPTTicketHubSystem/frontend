@@ -251,7 +251,8 @@ body {
 
 .event-image {
   width: 100%;
-  height: auto;
+  height: 150px;
+  object-fit: cover;
 }
 
 .event-title {
@@ -263,16 +264,22 @@ body {
 
 .event-info {
   padding: 15px;
+  height: 110px;
 }
 
 .event-info h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  max-width: 100%; 
 }
 
 .event-price {
   color: #EC6C21;
   margin: 10px 0;
+  font-size: 14px;
 }
 
 .event-date {
@@ -284,6 +291,7 @@ body {
   color: white;
   text-decoration: none;
   font-size: 1rem;
+  margin-top: 15px;
 }
 
 /*---------------------------------------

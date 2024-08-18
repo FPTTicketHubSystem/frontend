@@ -1,6 +1,7 @@
 import { IdcardOutlined, FieldTimeOutlined, PushpinFilled } from "@ant-design/icons";
+import moment from "moment/moment";
 
-const Ticket = ({ orderCode, eventName, status, ticketType, date, time, endDate, endTime, location, fullLocation }) => {
+const Ticket = ({ orderCode, eventName, status, ticketType, date, time, endDate, endTime, location, fullLocation, startDay, startMonth, startYear }) => {
     return (
         <>
             <div>
@@ -14,10 +15,10 @@ const Ticket = ({ orderCode, eventName, status, ticketType, date, time, endDate,
                                 borderRadius: "5px 0 0 5px"
                             }}
                         >
-                            <span style={{ fontSize: "50px" }}>11</span>
+                            <span style={{ fontSize: "50px" }}>{startDay}</span>
                             <span style={{ fontSize: "20px" }}>Tháng</span>
-                            <span style={{ fontSize: "20px" }}>07</span>
-                            <span style={{ fontSize: "20px" }}>2024</span>
+                            <span style={{ fontSize: "20px" }}>{startMonth}</span>
+                            <span style={{ fontSize: "20px" }}>{startYear}</span>
                         </div>
                         <div className="ml-3 justify-content-center"
                             style={{

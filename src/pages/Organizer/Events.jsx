@@ -7,6 +7,7 @@ import { Input, Segmented, Table, Button } from 'antd';
 import { GetEventsByAccountService } from '../../services/EventService';
 import Footer from '../../component/Footer';
 import { encodeId } from '../../utils/utils';
+import moment from 'moment';
 
 
 const CustomSearch = styled(Input)`
@@ -14,7 +15,7 @@ const CustomSearch = styled(Input)`
     background-color: #EC6C21;
     border-color: #EC6C21;
 
-    &:hover, 
+    &:hover,
     &:focus {
       background-color: #EC6C21 !important;
       border-color: #EC6C21 !important;
@@ -105,9 +106,9 @@ const Events = () => {
         let filtered = events;
 
         if (filter === 'SẮP DIỄN RA') {
-            filtered = filtered.filter(event => new Date(event.startTime) > now);
+            filtered = filtered.filter(event => new Date(event.startTime) > now && event.status === 'Đã duyệt');
         } else if (filter === 'ĐÃ QUA') {
-            filtered = filtered.filter(event => new Date(event.endTime) < now);
+            filtered = filtered.filter(event => new Date(event.endTime) < now && event.status === 'Đã duyệt');
         } else if (filter === 'CHỜ DUYỆT') {
             filtered = filtered.filter(event => event.status === 'Chờ duyệt');
         } else if (filter === 'NHÁP') {
@@ -119,6 +120,10 @@ const Events = () => {
         }
 
         setFilteredEvents(filtered);
+    };
+
+    const formatDateTime = (dateString) => {
+        return moment.utc(dateString).local().format('DD/MM/YYYY HH:mm');
     };
 
     const columns = [
@@ -150,20 +155,20 @@ const Events = () => {
             title: 'Thời gian bắt đầu',
             dataIndex: 'startTime',
             key: 'startTime',
-            render: (text) => new Date(text).toLocaleString("vi"),
+            render: (text) => formatDateTime(text),
         },
         {
             title: 'Thời gian kết thúc',
             dataIndex: 'endTime',
             key: 'endTime',
-            render: (text) => new Date(text).toLocaleString("vi"),
+            render: (text) => formatDateTime(text),
             responsive: ['md'],
         },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            
+
         },
         {
             title: 'Thao tác',
@@ -171,12 +176,21 @@ const Events = () => {
             render: (_, record) => {
                 const encodedId = encodeId(record.eventId);
                 return (
-                    <CustomButton type="primary" href={`/organizer/edit-event/${encodedId}`}>
-                        <i className="bi bi-pen"></i>
-                    </CustomButton>
+                    <>
+                        <CustomButton type="primary" href={`/organizer/edit-event/${encodedId}`} style={{ marginRight: '8px' }}>
+                            <i className="bi bi-pen"></i>
+                        </CustomButton>
+                        {record.status === 'Đã duyệt' && (
+                            <CustomButton type="primary" href={`/event-statistics/${encodedId}`}>
+                                <i className="bi bi-clipboard-data"></i>
+                            </CustomButton>
+                        )}
+                    </>
+
                 );
             },
         },
+
     ];
 
     return (
@@ -208,9 +222,10 @@ const Events = () => {
                     dataSource={filteredEvents}
                     rowKey="eventId"
                     loading={loading}
+                    pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15']}}
                 />
             </div>
-            <Footer/>
+            <Footer />
         </>
     );
 };

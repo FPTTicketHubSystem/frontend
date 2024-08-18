@@ -91,10 +91,10 @@ function Login() {
     if (result.status !== undefined && result.status === 200) {
       onSetUser(result);
       localStorage.setItem('authToken', result.token);
-      localStorage.setItem('user', JSON.stringify(result.data));
+      //localStorage.setItem('user', JSON.stringify(result.data));
       if (result.roleId === 1) {
         toast.success('Admin đăng nhập thành công');
-        navigate('/user')
+        navigate('/admin/dashboard')
       } else if (result.roleId === 2) {
         toast.success(`Chào ${result.data.fullName}!`);
         navigate('/');
@@ -102,7 +102,7 @@ function Login() {
         navigate('/organizer/events')
         toast.success('Ban tổ chức đăng nhập thành công');
       } else if (result.roleId === 4) {
-        navigate('/staff')
+        navigate('/staff/checkin')
         toast.success('Staff đăng nhập thành công');
       }
     } else if (result.status === 400 && result.message === 'Please check your email to confirm your account') {
@@ -136,7 +136,7 @@ function Login() {
         onSetUser(result);
         localStorage.setItem('authToken', result.token);
         if (result.roleId === 1) {
-          navigate('/user');
+          navigate('/admin/dashboard');
           toast.success('Admin login thành công');
         } else if (result.roleId === 2) {
           toast.success(`Đăng nhập thành công, xin chào!`);

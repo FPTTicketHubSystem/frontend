@@ -4,12 +4,14 @@ import "../../assets/css/Payment.css";
 import { UserContext } from "../../context/UserContext";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
-import vnpayLogo from "../../assets/images/logo/paymentLogo2.png";
+import vnpayLogo from "../../assets/images/logo/vnpay.jpg";
+import payOS from "../../assets/images/logo/payOS.png";
 import { Button, Modal } from "antd";
 import qrCodeImage from "../../assets/images/qrcode.png";
 import { DeleteTimeOutOrder } from "../../services/PaymentService";
 import { ReturnPaymentUrl } from "../../services/PaymentService";
 import { CheckInputCoupon } from "../../services/PaymentService";
+import moment from "moment";
 
 const Payment = () => {
   const location = useLocation();
@@ -24,18 +26,17 @@ const Payment = () => {
 
   const handleApplyDiscount = async () => {
     const result = await CheckInputCoupon(paymentDTO.eventId, discountCode);
-    // Replace with actual discount code validation logic
     if (result.status === 400) {
       setDiscountCode("");
       setDiscountError("Mã giảm giá không hợp lệ hoặc đã hết hạn.");
-      setDiscountAmount(0); // Reset discount amount if invalid
-      setFinalTotalPrice(totalPrice); // Reset to original price if invalid
+      setDiscountAmount(0);
+      setFinalTotalPrice(totalPrice);
     } else {
       setDiscountError("");
-      // Apply the discount if valid
-      const discount = (result.discountAmount/100); // Example discount amount
+      debugger;
+      const discount = (result.discountAmount/100); 
       setDiscountAmount(discount);
-      setFinalTotalPrice(totalPrice * discount);
+      setFinalTotalPrice(totalPrice - (totalPrice * discount));
     }
   };
 
@@ -124,17 +125,22 @@ const Payment = () => {
 
   //#region Handle Modal
   const handleContinue = async () => {
-    debugger;
     var data = {
       orderId: orderId,
       discountCode: discountCode
     };
-    console.log(data);
+    sessionStorage.removeItem("startTime");
     const response = await ReturnPaymentUrl(data);
     if(response.status == 200)
     {
-      
-      window.open(response.paymentUrl);
+      if (response.paymentMethod == 0) {
+        window.location.href = response.createPayment.checkoutUrl;
+      } 
+      if (response.paymentMethod == 1) {
+        //var url = `/payment-success/${data.orderId}`;
+        //window.location.href = url;
+        navigate(`/payment-success/${data.orderId}`);
+      } 
     }
     // setIsModalOpen(true);
   };
@@ -160,16 +166,8 @@ const Payment = () => {
             </p>
             <p>
               <i className="bi bi-calendar3 me-2"></i>
-              {new Date(event.startTime).toLocaleTimeString("vi-VN", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-              ,{" "}
-              {new Date(event.startTime).toLocaleDateString("vi-VN", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-              })}
+              {moment.utc(event.startTime).local().format('HH:mm')},{" "}
+              {moment.utc(event.startTime).local().format('DD/MM/YYYY')}
             </p>
           </div>
           <div className="countdown-timer">
@@ -272,14 +270,22 @@ const Payment = () => {
         <div className="payment-methods-container">
           <h3>Phương thức thanh toán</h3>
           <div className="payment-method">
-            <input type="radio" id="atm" name="payment" value="atm" />
+            {/* <input type="radio" id="atm" name="payment" value="atm" /> */}
+            <label>
+              <img className="rounded rounded-img" src={payOS} alt="ATM" />
+              payOS
+            </label>
+          </div>
+          <div className="payment-method">
+            {/* <input type="radio" id="atm" name="payment" value="atm" />
             <label>
               <img src={vnpayLogo} alt="ATM" />
               VNPAY
-            </label>
+            </label> */}
           </div>
         </div>
       </div>
+      
       {timeUp && (
         <div className="popup">
           <div className="popup-content">
@@ -303,31 +309,6 @@ const Payment = () => {
         </div>
       )}
 
-      <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <h2 className="text-center">Thanh toán bằng VNPAY</h2>
-        <div className="row mt-3">
-          <div className="col-lg-6">
-            {" "}
-            <img src={qrCodeImage} alt="QR Code" className="qr-code"/>
-          </div>
-          <div className="instructions col-lg-6" style={{fontSize:"5px"}}>
-              <p style={{fontSize:"16px"}}>
-                <strong>Quét mã QR để thanh toán</strong>
-              </p>
-              <p style={{fontSize:"14px"}}>1. Mở ứng dụng VNPAY hoặc ngân hàng trên điện thoại</p>
-              <p style={{fontSize:"14px"}}>2. Chọn biểu tượng Quét mã QR</p>
-              <p style={{fontSize:"14px"}}>3. Quét mã QR ở trang này và thanh toán</p>
-          </div>
-        </div>
-
-        <div className="timer">
-          <p className="text-center">Giao dịch sẽ kết thúc sau</p>
-          <div className="time">
-            <span>{String(timeLeft2.minutes).padStart(2, "0")}</span>:
-            <span>{String(timeLeft2.seconds).padStart(2, "0")}</span>
-          </div>
-        </div>
-      </Modal>
       <Footer />
     </div>
   );
