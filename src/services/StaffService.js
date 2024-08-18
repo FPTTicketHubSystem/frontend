@@ -29,3 +29,18 @@ export const GetEventByStaffService = async (staffId) => {
         return e;
     }
 }
+
+export const GetCheckinHistoryService = async (staffId) => {
+    try {
+        const response = await request({
+            method: "get",
+            url: `staff/checkinHistory?staffId=${staffId}`,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
