@@ -1,7 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
-function Forum() {
+function ToForum() {
   return (
     <>
       <section className="about spad">
@@ -18,7 +18,7 @@ function Forum() {
                   <h2>Cộng đồng người dùng FPTTickethub</h2>
                   <h1>About me</h1>
                 </div>
-                <p>description lq gì đó</p>
+                <p>description gì đó</p>
                 <a href="/Post" className="primary-btn">
                   THAM GIA NGAY
                 </a>
@@ -31,4 +31,4 @@ function Forum() {
   );
 }
 
-export default Forum;
+export default ToForum;

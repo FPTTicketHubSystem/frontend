@@ -13,7 +13,6 @@ import Events from './pages/Organizer/Events';
 import User from './pages/Admin/User';
 import EventAdmin from './pages/Admin/EventAdmin';
 import ForumAdmin from './pages/Admin/ForumAdmin';
-import Forum from './pages/Home/Forum';
 import RateEvent from './pages/Home/RateEvent';
 import Dashboard from './pages/Admin/Dashboard';
 import CategoryList from './pages/Admin/ManageCategory';
@@ -48,7 +47,6 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute element={<Profile />} allowedRoles={[1, 2, 3, 4]} />} />
         <Route path="/confirmaccount/:email" element={<ConfirmAccount />}/>
         <Route path="/event-detail/:encodedId" element={<EventDetail />} />
-        <Route path="/forum" element={<ProtectedRoute element={<Forum />} allowedRoles={[2]} />} />
         <Route path="/rate/:ratingid" element={<ProtectedRoute element={<RateEvent />} allowedRoles={[2]} />} />
         <Route path="/organizer/create-event" element={<ProtectedRoute element={<CreateEvent />} allowedRoles={[2, 3]} />} />
         <Route path="/admin/user" element={<ProtectedRoute element={<User />} allowedRoles={[1]} />} />
