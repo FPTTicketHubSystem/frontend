@@ -290,6 +290,7 @@ const ManageStaff = () => {
           dataSource={filteredEvents}
           rowKey="eventId"
           loading={loading}
+          pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15']}}
           expandable={{
             expandedRowRender,
             onExpand: handleExpand,
