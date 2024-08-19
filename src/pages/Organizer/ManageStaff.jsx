@@ -311,7 +311,7 @@ const ManageStaff = () => {
         ]}
       >
         <Form layout="vertical">
-          <Form.Item label="Email" rules={[
+          <Form.Item label="Email" name="email" rules={[
             { required: true, message: 'Vui lòng nhập email' },
             { type: 'email', message: 'Email không hợp lệ' }
           ]}>
