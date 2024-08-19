@@ -33,6 +33,7 @@ import PostProvider from './context/PostContext';
 import CommentProvider from './context/CommentContext';
 import Forum from './component/Forum/Forum';
 import CheckinHistory from './pages/Staff/CheckinHistory';
+import NewsDetails from './pages/NewsDetail';
 import Status403 from './pages/Error/403';
 import Status404 from './pages/Error/404';
 import Status500 from './pages/Error/500';
@@ -72,6 +73,7 @@ function App() {
         <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
         <Route path="/payment-success/:orderId" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
         <Route path="/news" element={<NewsListPage />}/>
+        <Route path="/newsdetail/:newsId" element={<NewsDetails />} />
         <Route path="/forum" element={<PostProvider><CommentProvider><Forum/></CommentProvider></PostProvider>}></Route>
         <Route path="/403" element={<Status403/>}/>
         <Route path="/500" element={<Status500/>}/>
