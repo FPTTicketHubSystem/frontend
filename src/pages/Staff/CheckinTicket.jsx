@@ -207,8 +207,8 @@ const CheckinTicket = () => {
             </Row>
             <Row gutter={[16, 16]} style={{ marginTop: '16px' }}>
               <Col span={12}>
-                <Title level={5}>Đã check-in:</Title>
-                <Text>Đã check-in</Text>
+                <Title level={5}>Số lượng:</Title>
+                <Text>{ticketInfo.ticketQuantity}</Text>
               </Col>
               {ticketInfo.isCheckedIn && (
                 <Col span={12}>
