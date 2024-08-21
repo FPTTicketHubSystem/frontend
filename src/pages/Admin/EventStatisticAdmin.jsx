@@ -111,7 +111,7 @@ const EventStatisticAdmin = () => {
                     </div>
                     <Card.Subtitle className="mb-2 text-muted">
                       <Badge bg="primary">
-                        Top Revenue: {event.totalRevenue.toLocaleString()} dong
+                        Tổng doanh thu: {event.totalRevenue.toLocaleString()}đ
                       </Badge>
                     </Card.Subtitle>
                   </Card.Body>
@@ -126,12 +126,12 @@ const EventStatisticAdmin = () => {
                 <Table responsive striped bordered hover>
                   <thead>
                     <tr>
-                      <th>#</th>
-                      <th>Event Name</th>
-                      <th>Organizer</th>
-                      <th>Revenue</th>
-                      <th>Start Time</th>
-                      <th>End Time</th>
+                      <th>STT</th>
+                      <th>Tên sự kiện</th>
+                      <th>Ban tổ chức</th>
+                      <th>Tổng doanh thu</th>
+                      <th>Thời gian bắt đầu</th>
+                      <th>Thời gian kết thúc</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -140,7 +140,7 @@ const EventStatisticAdmin = () => {
                         <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
                         <td>{event.eventName}</td>
                         <td>{event.organizerName}</td>
-                        <td>{event.totalRevenue.toLocaleString()} dong</td>
+                        <td>{event.totalRevenue.toLocaleString()}đ</td>
                         <td>{event.startTime}</td>
                         <td>{event.endTime}</td>
                       </tr>
