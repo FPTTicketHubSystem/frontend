@@ -1,12 +1,12 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NavbarAdmin = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const isActive = (path) => {
-    return location.pathname === path ? 'active-link' : '';
+    return location.pathname === path ? "active-link" : "";
   };
 
   const handleNavigate = (path) => {
@@ -28,61 +28,71 @@ const NavbarAdmin = () => {
             </button>
           </div>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className={`nav-item dropdown ${isActive('/')}`}>
-              <li className={`nav-item ${isActive('/admin/dashboard')}`}>
-                <a
+            <li className={`nav-item dropdown ${isActive("/")}`}>
+              <li className={`nav-item ${isActive("/admin/dashboard")}`}>
+                <button
                   className="nav-link"
                   href="#"
-                  onClick={() => handleNavigate('/admin/dashboard')}
+                  onClick={() => handleNavigate("/admin/dashboard")}
                 >
                   Dashboard
-                </a>
+                </button>
               </li>
             </li>
-            <li className={`nav-item ${isActive('/admin/manage-news')}`}>
-              <a
+            <li className={`nav-item dropdown ${isActive("/")}`}>
+              <li className={`nav-item ${isActive("/admin/event-statistic")}`}>
+                <button
+                  className="nav-link btn btn-link"
+                  onClick={() => handleNavigate("/admin/event-statistic")}
+                >
+                  Event Statistic
+                </button>
+              </li>
+            </li>
+            <li className={`nav-item ${isActive("/admin/manage-news")}`}>
+              <button
                 className="nav-link"
                 href="#"
-                onClick={() => handleNavigate('/admin/manage-news')}
+                onClick={() => handleNavigate("/admin/manage-news")}
               >
                 News
-              </a>
+              </button>
             </li>
-            <li className={`nav-item ${isActive('/admin/events')}`}>
-              <a
+            <li className={`nav-item ${isActive("/admin/events")}`}>
+              <button
                 className="nav-link"
                 href="#"
-                onClick={() => handleNavigate('/admin/events')}
+                onClick={() => handleNavigate("/admin/events")}
               >
                 Event
-              </a>
+              </button>
             </li>
-            <li className={`nav-item ${isActive('/admin/user')}`}>
-              <a
+            <li className={`nav-item ${isActive("/admin/user")}`}>
+              <button
                 className="nav-link"
                 href="#"
-                onClick={() => handleNavigate('/admin/user')}
+                onClick={() => handleNavigate("/admin/user")}
               >
                 User
-              </a>
+              </button>
             </li>
-            <li className={`nav-item ${isActive('/admin/forum')}`}>
-              <a
+            <li className={`nav-item ${isActive("/admin/forum")}`}>
+              <button
                 className="nav-link"
                 href="#"
-                onClick={() => handleNavigate('/admin/forum')}
+                onClick={() => handleNavigate("/admin/forum")}
               >
                 Forum
-              </a>
+              </button>
             </li>
-            <li className={`nav-item ${isActive('/login')}`}>
-              <a
+            <li className={`nav-item ${isActive("/login")}`}>
+              <button
                 className="nav-link"
                 href="#"
-                onClick={() => handleNavigate('/login')}
+                onClick={() => handleNavigate("/login")}
               >
                 Login
-              </a>
+              </button>
             </li>
           </ul>
         </div>

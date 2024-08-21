@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import Header from '../../component/Admin/Header';
-import Navbar from '../../component/Admin/Navbar';
-import { Bar, Line, Pie } from 'react-chartjs-2';
 import {
+  ArcElement,
+  BarElement,
+  CategoryScale,
   Chart as ChartJS,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
-  Legend,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  ArcElement,
-} from 'chart.js';
+} from "chart.js";
+import React, { useEffect, useState } from "react";
+import { Bar, Line, Pie } from "react-chartjs-2";
+import "../../assets/css/dashboard.css";
+import HeaderAdmin from "../../component/Admin/Header";
+import NavbarAdmin from "../../component/Admin/Navbar";
+import Footer from "../../component/Footer";
 import {
-  getMonthlyRevenue,
-  getActiveAccount,
-  getTopRatedEvents,
-  getTopParticipants,
-  getTopRevenueEvents,
-  getTopParticipantsEvents,
   generateEventStatisticsReport,
-} from '../../services/StatisticService';
-import '../../assets/css/dashboard.css';
-import Footer from '../../component/Footer';
+  getActiveAccount,
+  getMonthlyRevenue,
+  getTopParticipants,
+  getTopParticipantsEvents,
+  getTopRatedEvents,
+  getTopRevenueEvents,
+} from "../../services/StatisticService";
 
 ChartJS.register(
   Title,
@@ -74,7 +74,7 @@ const Dashboard = () => {
         setTopRevenueEvents(revenueEventsResult);
         setTopParticipantsEvents(participantsEventsResult);
       } catch (error) {
-        console.error('Failed to fetch data', error);
+        console.error("Failed to fetch data", error);
       } finally {
         setLoading(false);
       }
@@ -92,10 +92,10 @@ const Dashboard = () => {
       labels,
       datasets: [
         {
-          label: 'Monthly Revenue',
+          label: "Thống kê doanh thu theo tháng",
           data: values,
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 2,
         },
       ],
@@ -111,10 +111,10 @@ const Dashboard = () => {
       labels,
       datasets: [
         {
-          label: 'Events Participated',
+          label: "Sự kiện nhiều người tham gia nhất ",
           data: values,
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: "rgba(255, 99, 132, 0.2)",
+          borderColor: "rgba(255, 99, 132, 1)",
           borderWidth: 1,
         },
       ],
@@ -134,10 +134,10 @@ const Dashboard = () => {
       labels,
       datasets: [
         {
-          label: 'Active Users',
+          label: "Số người dùng hoạt động theo tháng",
           data: values,
-          backgroundColor: 'rgba(255, 159, 64, 0.2)',
-          borderColor: 'rgba(255, 159, 64, 1)',
+          backgroundColor: "rgba(255, 159, 64, 0.2)",
+          borderColor: "rgba(255, 159, 64, 1)",
           borderWidth: 1,
         },
       ],
@@ -155,18 +155,18 @@ const Dashboard = () => {
           label: valueKey,
           data: values,
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(54, 162, 235, 0.2)",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
+            "rgba(255, 99, 132, 1)",
+            "rgba(54, 162, 235, 1)",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
           ],
           borderWidth: 1,
         },
@@ -179,30 +179,30 @@ const Dashboard = () => {
   const revenueData = formatMonthlyRevenueData(monthlyRevenue);
   const topRevenueEventsData = formatTopEventsData(
     topRevenueEvents,
-    'totalRevenue',
-    'eventName'
+    "totalRevenue",
+    "eventName"
   );
   const topParticipantsEventsData = formatTopEventsData(
     topParticipantsEvents,
-    'participantsCount',
-    'eventName'
+    "participantsCount",
+    "eventName"
   );
 
   const handleDownloadReport = async () => {
     try {
       const response = await generateEventStatisticsReport();
       const url = window.URL.createObjectURL(
-        new Blob([response], { type: 'application/pdf' })
+        new Blob([response], { type: "application/pdf" })
       );
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'StatisticsReport.pdf');
+      link.setAttribute("download", "StatisticsReport.pdf");
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to download report', error);
+      console.error("Failed to download report", error);
     }
   };
 
@@ -241,9 +241,9 @@ const Dashboard = () => {
     <div>
       <div className="app-container">
         <div className="app-header d-flex align-items-center">
-          <Header />
+          <HeaderAdmin />
         </div>
-        <Navbar />
+        <NavbarAdmin />
         <div className="dashboard-container">
           <div className="dashboard-grid">
             <div className="dashboard-card">
