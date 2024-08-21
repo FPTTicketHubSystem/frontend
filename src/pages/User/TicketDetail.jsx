@@ -69,6 +69,9 @@ const TicketDetail = () => {
               <Card.Body>
                 <Card.Title className="mb-2">Thông tin đặt vé</Card.Title>
                 <ListGroup variant="flush">
+                <ListGroup.Item>
+                    <strong>Mã vé:</strong> {ticket.ticketId}
+                  </ListGroup.Item>
                   <ListGroup.Item>
                     <strong>Loại vé:</strong> {ticket.typeName}
                   </ListGroup.Item>

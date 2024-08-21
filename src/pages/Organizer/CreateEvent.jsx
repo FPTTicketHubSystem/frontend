@@ -391,7 +391,7 @@ const CreateEvent = () => {
                     />
                   </Form.Item>
                   <Form.Item name="address" label="Địa chỉ">
-                    <LocationPicker onLocationChange={handleAddressChange} />
+                    <LocationPicker onLocationChange={handleAddressChange} rules={[{ required: true, message: 'Vui lòng chọn địa chỉ!' }]} />
                   </Form.Item>
                 </div>
               </div>
@@ -404,6 +404,7 @@ const CreateEvent = () => {
                   >
                     <DatePicker
                       showTime
+                      format="DD/MM/YYYY HH:mm"
                       disabledDate={(current) => current && current < startOfDay}
                       // disabledTime={() => ({
                       //   disabledHours: () => now.hour() < 23 ? [...Array(now.hour()).keys()] : [],
@@ -448,6 +449,7 @@ const CreateEvent = () => {
                   >
                     <DatePicker
                       showTime
+                      format="DD/MM/YYYY HH:mm"
                       disabledDate={(current) => {
                         const startTime = formData.startTime ? moment(formData.startTime) : null;
                         return current && startTime && current.isBefore(startTime, 'day');

@@ -236,7 +236,7 @@ const CheckinTicket = () => {
           <div style={{ padding: '16px' }}>
             <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
               <Col span={24}>
-                <Text type="danger">Lưu ý: Bạn chỉ có thể check-in vé từ các sự kiện sau. Thời gian sớm nhất để check-in là trước 2 tiếng diễn ra sự kiện, và muộn nhất sau 45 phút.</Text>
+                <Text type="danger">Lưu ý: Bạn chỉ có thể check-in vé từ các sự kiện sau. Thời gian sớm nhất để check-in là trước 2 tiếng diễn ra sự kiện.</Text>
               </Col>
             </Row>
             {events.map(event => (

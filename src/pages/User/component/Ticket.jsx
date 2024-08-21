@@ -36,7 +36,7 @@ const Ticket = ({ orderCode, eventName, status, ticketType, date, time, endDate,
                             <h4 className="card-title mb-1" style={{ color: "white" }}>{eventName}</h4>
                             <div className="btn btn-success mb-2 py-1" style={{ borderRadius: "20px" }}>{status}</div>
                             <div className="btn btn-secondary mb-2 py-1" style={{ borderRadius: "20px", marginLeft: "4px" }}>{ticketType}</div>
-                            <p className="card-text mb-1"><IdcardOutlined style={{ marginRight: "4px", color: "white" }} /><strong>Order code:</strong> {orderCode}</p>
+                            <p className="card-text mb-1"><IdcardOutlined style={{ marginRight: "4px", color: "white" }} /><strong>Mã order:</strong> {orderCode}</p>
                             <p className="card-text mb-1"><FieldTimeOutlined style={{ marginRight: "4px", color: "white" }} /><strong>{time}, {date} - {endTime}, {endDate}</strong></p>
                             <p className="card-text mb-1"><PushpinFilled style={{ marginRight: "4px", color: "white" }} /><strong>Địa điểm:</strong> {location}</p>
                             <p className="card-text">{fullLocation}</p>

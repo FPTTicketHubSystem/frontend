@@ -76,6 +76,7 @@ const CustomSwitch = styled(Switch)`
 
 const EditEvent = () => {
   const { user } = useContext(UserContext);
+  // const {userId} = useState(user?.accountId);
   const { encodedId } = useParams();
   const [eventId, setEventId] = useState(decodeId(encodedId));
   //const eventId = decodeId(encodedId);
@@ -132,7 +133,7 @@ const EditEvent = () => {
     const response = await GetEventForEdit(eventId);
     if (response.accountId !== user?.accountId) {
       toast.error('Không có quyền truy cập!')
-      navigate('/organizer/events');
+      navigate('/404');
     }
     if (response) {
       setFormData((prevFormData) => ({
@@ -180,7 +181,10 @@ const EditEvent = () => {
         toast.success('Tạo loại vé thành công!');
         setTicketTypes([...ticketTypes, response.newTicketType]);
         setIsCreateTicketModalVisible(false);
-      } else {
+      } if (response.status === 400 && response.message === "TicketTypeIsExist") {
+        toast.error ('Tên loại vé đã tồn tại');
+      }  
+      else {
         toast.error('Có lỗi xảy ra khi tạo loại vé.');
       }
     } catch (error) {
@@ -191,7 +195,7 @@ const EditEvent = () => {
 
   const handleCreateDiscountCode = async () => {
     if (!newDiscountCode.code || newDiscountCode.discountAmount <= 0 || newDiscountCode.quantity <= 0) {
-      message.error('Vui lòng điền đầy đủ thông tin và kiểm tra giá trị giảm và số lượng.');
+      toast.error('Vui lòng điền đầy đủ thông tin và kiểm tra giá trị giảm và số lượng.');
       return;
     }
     try {
@@ -201,7 +205,10 @@ const EditEvent = () => {
         toast.success('Tạo mã giảm giá thành công!');
         setDiscountCodes([...discountCodes, response.newDiscountCode]);
         setIsCreateDiscountModalVisible(false);
-      } else {
+      } if (response.status === 400 && response.message === "DiscountCodeIsExist") {
+        toast.error ('Mã giảm giá đã tồn tại');
+      }
+      else {
         toast.error('Có lỗi xảy ra khi tạo mã giảm giá.');
       }
     } catch (error) {
@@ -218,9 +225,11 @@ const EditEvent = () => {
       return;
     }
     try {
+      console.log('accountid', user.accountId)
       HandleGetEventForEdit();
       HandleGetTicketType();
       HandleGetDiscountCode();
+      
     }
     catch (e) {
       console.error('error', e);
@@ -228,6 +237,14 @@ const EditEvent = () => {
 
   }, [user.accountId]);
 
+  useEffect(() => {
+    if (user.accountId) {
+      setNewDiscountCode(prevState => ({
+        ...prevState,
+        accountId: user.accountId
+      }));
+    }
+  }, [user.accountId]);
 
   // useEffect(() => {
   //   console.log('response', formData);
@@ -421,7 +438,10 @@ const EditEvent = () => {
           )
         );
         setIsModalVisible(false);
-      } else {
+      } if (response.result.result.status === 400 && response.result.result.message === "InvalidQuantity") {
+        toast.error ("Số lượng thay đổi không hợp lệ");
+      } 
+      else {
         message.error("Có lỗi xảy ra khi cập nhật số lượng vé.");
       }
     } catch (error) {
@@ -450,7 +470,10 @@ const EditEvent = () => {
           )
         );
         setIsDiscountModalVisible(false);
-      } else {
+      } if (response.result.result.status === 400 && response.result.result.message === "InvalidQuantity") {
+        toast.error("Số lượng thay đổi không hợp lệ");
+      }
+       else {
         toast.error("Có lỗi xảy ra khi cập nhật số lượng mã giảm giá.");
       }
     } catch (error) {
@@ -568,6 +591,7 @@ const EditEvent = () => {
               <Col span={12}>
                 <Form.Item label="Thời gian bắt đầu">
                   <DatePicker
+                    format="DD/MM/YYYY HH:mm"
                     showTime
                     value={formData.startTime ? moment(formData.startTime) : null}
                     onChange={(value) => handleDateChange('startTime', value)}
@@ -577,6 +601,7 @@ const EditEvent = () => {
               <Col span={12}>
                 <Form.Item label="Thời gian kết thúc">
                   <DatePicker
+                    format="DD/MM/YYYY HH:mm"
                     showTime
                     value={formData.endTime ? moment(formData.endTime) : null}
                     onChange={(value) => handleDateChange('endTime', value)}
@@ -638,7 +663,8 @@ const EditEvent = () => {
                 />
               </Table>
             </Form.Item>
-            <Form.Item label="Mã giảm giá">
+            {formData.status == "Đã duyệt" && (
+              <Form.Item label="Mã giảm giá">
               <CustomButton
                 type="primary"
                 onClick={() => setIsCreateDiscountModalVisible(true)}
@@ -664,6 +690,7 @@ const EditEvent = () => {
                 />
               </Table>
             </Form.Item>
+            )}
           </Form>
         </div>
       </div>
@@ -727,14 +754,24 @@ const EditEvent = () => {
       <Modal
         title="Tạo mã giảm giá"
         open={isCreateDiscountModalVisible}
-        onCancel={() => setIsCreateDiscountModalVisible(false)}
+        onCancel={() => {
+          setNewDiscountCode({
+            accountId: user.accountId,
+            eventId: eventId,
+            code: '',
+            discountAmount: 0,
+            quantity: 0,
+            status: ''
+          });
+          setIsCreateDiscountModalVisible(false);
+        }}
         footer={[
           <CustomButton key="submit" type="primary" onClick={handleCreateDiscountCode}>
             Tạo
           </CustomButton>,
         ]}
       >
-        <Form layout="vertical">
+        <Form layout="vertical" onFinish={handleCreateDiscountCode}>
           <Form.Item label="Mã giảm giá" name="code" rules={[
             { required: true, message: 'Vui lòng nhập mã giảm giá' },
             { pattern: /^[A-Z0-9]+$/, message: 'Mã giảm giá phải viết in hoa và không có khoảng trắng' },
@@ -754,7 +791,10 @@ const EditEvent = () => {
             <Input
               type="number"
               value={newDiscountCode.discountAmount}
-              onChange={(e) => setNewDiscountCode({ ...newDiscountCode, discountAmount: e.target.value })}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                setNewDiscountCode({ ...newDiscountCode, discountAmount: value });
+              }}
               placeholder="Nhập giá trị giảm"
             />
           </Form.Item>
