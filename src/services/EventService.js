@@ -305,3 +305,19 @@ export const GetEventsUserService = async () => {
         return e;
     }
 }
+
+export const AddTicketTypeService = async (data) => {
+    try {
+        const response = await request({
+            method: "post",
+            url: "event/addTicketType",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            data: JSON.stringify(data),
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+}
