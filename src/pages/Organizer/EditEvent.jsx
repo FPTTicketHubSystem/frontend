@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { Form, Input, Button, DatePicker, Select, Table, Upload, message, Modal, Row, Col, Switch } from 'antd';
 import { UserContext } from '../../context/UserContext';
-import { AddEventService, GetEventForEdit, GetTicketTypeByEventService, UpdateEventService, UpdateTicketQuantityService } from '../../services/EventService';
+import { AddEventService, GetEventForEdit, GetTicketTypeByEventService, UpdateEventService, UpdateTicketQuantityService, AddTicketTypeService, GetDiscountCodeByEventService, AddDiscountCodeService, UpdateDiscountQuantityService } from '../../services/EventService';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from '../../firebase';
 import { v4 } from "uuid";
@@ -97,14 +97,36 @@ const EditEvent = () => {
     endTime: null,
     //ticketQuantity: 0,
     status: '',
-    eventImages: [],
-    ticketTypes: [],
-    discountCodes: []
+    // eventImages: [],
+    // ticketTypes: [],
+    // discountCodes: []
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDiscountModalVisible, setIsDiscountModalVisible] = useState(false);
   const [selectedTicketTypeId, setSelectedTicketTypeId] = useState(null);
+  const [isCreateTicketModalVisible, setIsCreateTicketModalVisible] = useState(false);
+  const [newTicketType, setNewTicketType] = useState({
+    eventId: eventId,
+    typeName: '',
+    price: 0,
+    quantity: 0,
+    status: ''
+  });
+  const [newDiscountCode, setNewDiscountCode] = useState({
+    accountId: user?.accountId,
+    eventId: eventId,
+    code: '',
+    discountAmount: 0,
+    quantity: 0,
+    status: ''
+  });
+  const [isCreateDiscountModalVisible, setIsCreateDiscountModalVisible] = useState(false);
+
   const [addQuantity, setAddQuantity] = useState(0);
+  const [selectedDiscountCodeId, setSelectedDiscountCodeId] = useState(null);
+  const [discountQuantity, setDiscountQuantity] = useState(0);
   const [ticketTypes, setTicketTypes] = useState([]);
+  const [discountCodes, setDiscountCodes] = useState([]);
 
   const HandleGetEventForEdit = async () => {
     const response = await GetEventForEdit(eventId);
@@ -134,6 +156,59 @@ const EditEvent = () => {
     }
   };
 
+  const HandleGetDiscountCode = async () => {
+    const response = await GetDiscountCodeByEventService(eventId);
+    try {
+      if (response) {
+        setDiscountCodes(response.result.result || []);
+      }
+    }
+    catch (e) {
+      console.error('error', e);
+    }
+  };
+
+  const handleCreateTicketType = async () => {
+    if (!newTicketType.typeName || newTicketType.price <= 0 || newTicketType.quantity <= 0) {
+      message.error('Vui lòng điền đầy đủ thông tin và kiểm tra giá và số lượng.');
+      return;
+    }
+
+    try {
+      const response = await AddTicketTypeService(newTicketType);
+      if (response.status === 200) {
+        toast.success('Tạo loại vé thành công!');
+        setTicketTypes([...ticketTypes, response.newTicketType]);
+        setIsCreateTicketModalVisible(false);
+      } else {
+        toast.error('Có lỗi xảy ra khi tạo loại vé.');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Đã xảy ra lỗi khi tạo loại vé.');
+    }
+  };
+
+  const handleCreateDiscountCode = async () => {
+    if (!newDiscountCode.code || newDiscountCode.discountAmount <= 0 || newDiscountCode.quantity <= 0) {
+      message.error('Vui lòng điền đầy đủ thông tin và kiểm tra giá trị giảm và số lượng.');
+      return;
+    }
+    try {
+      const response = await AddDiscountCodeService(newDiscountCode);
+      console.log('discount submit', newDiscountCode);
+      if (response.status === 200) {
+        toast.success('Tạo mã giảm giá thành công!');
+        setDiscountCodes([...discountCodes, response.newDiscountCode]);
+        setIsCreateDiscountModalVisible(false);
+      } else {
+        toast.error('Có lỗi xảy ra khi tạo mã giảm giá.');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Đã xảy ra lỗi khi tạo mã giảm giá.');
+    }
+  };
 
 
   useEffect(() => {
@@ -145,6 +220,7 @@ const EditEvent = () => {
     try {
       HandleGetEventForEdit();
       HandleGetTicketType();
+      HandleGetDiscountCode();
     }
     catch (e) {
       console.error('error', e);
@@ -153,9 +229,9 @@ const EditEvent = () => {
   }, [user.accountId]);
 
 
-  useEffect(() => {
-    console.log('response', formData);
-  }, [formData]);
+  // useEffect(() => {
+  //   console.log('response', formData);
+  // }, [formData]);
 
 
   const handleChange = useCallback((e) => {
@@ -287,10 +363,15 @@ const EditEvent = () => {
   // };
   const showAddQuantityModal = (ticketTypeId) => {
     setSelectedTicketTypeId(ticketTypeId);
-    setAddQuantity(0); // Reset the quantity input
+    setAddQuantity(0);
     setIsModalVisible(true);
   };
 
+  const showAddDiscountQuantityModal = (discountCodeId) => {
+    setSelectedDiscountCodeId(discountCodeId);
+    setDiscountQuantity(0);
+    setIsDiscountModalVisible(true);
+  };
 
   const handleSubmit = async () => {
     try {
@@ -301,7 +382,10 @@ const EditEvent = () => {
         ...formData,
         startTime,
         endTime,
+        ticketTypes: []
       };
+
+      console.log('submitdata', eventData);
 
       const response = await UpdateEventService(eventData);
       if (response.status === 200) {
@@ -343,6 +427,35 @@ const EditEvent = () => {
     } catch (error) {
       console.error(error);
       message.error("An error occurred while updating the ticket quantity.");
+    }
+  };
+
+  const handleAddDiscountQuantity = async () => {
+    if (isNaN(discountQuantity) || discountQuantity <= 0) {
+      toast.error("Vui lòng nhập số lượng hợp lệ.");
+      return;
+    }
+
+    try {
+      const response = await UpdateDiscountQuantityService(selectedDiscountCodeId, discountQuantity);
+      console.log('discountcode id', selectedDiscountCodeId);
+      console.log('discountquantity', discountQuantity);
+      if (response.result.result.status === 200) {
+        toast.success("Đã cập nhật số lượng mã giảm giá thành công!");
+        setDiscountCodes((prevDiscountCodes) =>
+          prevDiscountCodes.map((discount) =>
+            discount.discountCodeId === selectedDiscountCodeId
+              ? { ...discount, quantity: discount.quantity + discountQuantity }
+              : discount
+          )
+        );
+        setIsDiscountModalVisible(false);
+      } else {
+        toast.error("Có lỗi xảy ra khi cập nhật số lượng mã giảm giá.");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Đã xảy ra lỗi khi cập nhật số lượng mã giảm giá.");
     }
   };
 
@@ -478,25 +591,6 @@ const EditEvent = () => {
                 onChange={handleCKEditorChange}
               />
             </Form.Item>
-            <Form.Item label="Các loại vé">
-              <Table dataSource={ticketTypes} rowKey="ticketTypeId" pagination={false}>
-                <Column title="Tên loại vé" dataIndex="typeName" key="typeName" />
-                <Column title="Giá" dataIndex="price" key="price" render={(price) => `${price.toLocaleString()} VND`} />
-                <Column title="Số lượng" dataIndex="quantity" key="quantity" />
-                <Column
-                  title="Hành động"
-                  key="action"
-                  render={(_, record) => (
-                    <CustomButton
-                      type="primary"
-                      onClick={() => showAddQuantityModal(record.ticketTypeId)}
-                    >
-                      Thêm số lượng
-                    </CustomButton>
-                  )}
-                />
-              </Table>
-            </Form.Item>
             <Form.Item name="status" label="Trạng thái" className='mt-3'>
               {formData.status === 'Nháp' && (
                 <CustomSwitch
@@ -517,6 +611,58 @@ const EditEvent = () => {
               <CustomButton type="primary" onClick={handleSubmit}>
                 Lưu thay đổi
               </CustomButton>
+            </Form.Item>
+            <Form.Item label="Các loại vé">
+              <CustomButton
+                type="primary"
+                onClick={() => setIsCreateTicketModalVisible(true)}
+                className='mb-2'
+              >
+                Tạo loại vé <i class="bi bi-plus-circle"></i>
+              </CustomButton>
+              <Table dataSource={ticketTypes} rowKey="ticketTypeId" pagination={false}>
+                <Column title="Tên loại vé" dataIndex="typeName" key="typeName" />
+                <Column title="Giá (VND)" dataIndex="price" key="price" render={(price) => `${price.toLocaleString()}`} />
+                <Column title="Số lượng" dataIndex="quantity" key="quantity" />
+                <Column
+                  title="Hành động"
+                  key="action"
+                  render={(_, record) => (
+                    <CustomButton
+                      type="primary"
+                      onClick={() => showAddQuantityModal(record.ticketTypeId)}
+                    >
+                      <i class="bi bi-plus-lg"></i> Số lượng
+                    </CustomButton>
+                  )}
+                />
+              </Table>
+            </Form.Item>
+            <Form.Item label="Mã giảm giá">
+              <CustomButton
+                type="primary"
+                onClick={() => setIsCreateDiscountModalVisible(true)}
+                className='mb-2'
+              >
+                Tạo mã <i class="bi bi-plus-circle"></i>
+              </CustomButton>
+              <Table dataSource={discountCodes} rowKey="discountCodeId" pagination={false}>
+                <Column title="Mã" dataIndex="code" key="code" />
+                <Column title="Giá trị giảm (%)" dataIndex="discountAmount" key="discountAmount" />
+                <Column title="Số lượng" dataIndex="quantity" key="quantity" />
+                <Column
+                  title="Hành động"
+                  key="action"
+                  render={(_, record) => (
+                    <CustomButton
+                      type="primary"
+                      onClick={() => showAddDiscountQuantityModal(record.discountCodeId)}
+                    >
+                      <i class="bi bi-plus-lg"></i> Số lượng
+                    </CustomButton>
+                  )}
+                />
+              </Table>
             </Form.Item>
           </Form>
         </div>
@@ -541,7 +687,106 @@ const EditEvent = () => {
           placeholder="Nhập số lượng vé muốn thêm"
         />
       </Modal>
-
+      <Modal
+        title="Thêm loại vé"
+        open={isCreateTicketModalVisible}
+        onCancel={() => setIsCreateTicketModalVisible(false)}
+        footer={[
+          <CustomButton key="submit" type="primary" onClick={handleCreateTicketType}>
+            Tạo
+          </CustomButton>,
+        ]}
+      >
+        <Form layout="vertical">
+          <Form.Item label="Tên loại vé">
+            <Input
+              value={newTicketType.typeName}
+              onChange={(e) => setNewTicketType({ ...newTicketType, typeName: e.target.value })}
+              placeholder="Nhập tên loại vé"
+            />
+          </Form.Item>
+          <Form.Item label="Giá (VND)">
+            <Input
+              type="number"
+              value={newTicketType.price}
+              onChange={(e) => setNewTicketType({ ...newTicketType, price: e.target.value })}
+              placeholder="Nhập giá"
+            />
+          </Form.Item>
+          <Form.Item label="Số lượng">
+            <Input
+              type="number"
+              min={1}
+              value={newTicketType.quantity}
+              onChange={(e) => setNewTicketType({ ...newTicketType, quantity: parseInt(e.target.value, 10) })}
+              placeholder="Nhập số lượng"
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="Tạo mã giảm giá"
+        open={isCreateDiscountModalVisible}
+        onCancel={() => setIsCreateDiscountModalVisible(false)}
+        footer={[
+          <CustomButton key="submit" type="primary" onClick={handleCreateDiscountCode}>
+            Tạo
+          </CustomButton>,
+        ]}
+      >
+        <Form layout="vertical">
+          <Form.Item label="Mã giảm giá" name="code" rules={[
+            { required: true, message: 'Vui lòng nhập mã giảm giá' },
+            { pattern: /^[A-Z0-9]+$/, message: 'Mã giảm giá phải viết in hoa và không có khoảng trắng' },
+            { max: 10, message: 'Mã giảm giá không vượt quá 10 ký tự' }
+          ]}>
+            <Input
+              value={newDiscountCode.code}
+              onChange={(e) => setNewDiscountCode({ ...newDiscountCode, code: e.target.value })}
+              placeholder="Nhập mã giảm giá"
+            />
+          </Form.Item>
+          <Form.Item label="Giá trị giảm (%)" name="discountAmount"
+            rules={[
+              { required: true, message: 'Vui lòng nhập giá trị giảm' },
+              { type: 'number', min: 1, max: 100, message: 'Giá trị giảm phải lớn hơn 1 và nhỏ hơn 100' }
+            ]}>
+            <Input
+              type="number"
+              value={newDiscountCode.discountAmount}
+              onChange={(e) => setNewDiscountCode({ ...newDiscountCode, discountAmount: e.target.value })}
+              placeholder="Nhập giá trị giảm"
+            />
+          </Form.Item>
+          <Form.Item label="Số lượng" name="quantity" rules={[{ required: true, message: 'Vui lòng nhập số lượng' }]}>
+            <Input
+              type="number"
+              min={1}
+              value={newDiscountCode.quantity}
+              onChange={(e) => setNewDiscountCode({ ...newDiscountCode, quantity: e.target.value })}
+              placeholder="Nhập số lượng"
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="Thêm số lượng mã giảm giá"
+        open={isDiscountModalVisible}
+        onCancel={() => setIsDiscountModalVisible(false)}
+        footer={[
+          <CustomButton key="submit" type="primary" onClick={handleAddDiscountQuantity}>
+            Thêm
+          </CustomButton>,
+        ]}
+      >
+        <Input
+          type="number"
+          min={1}
+          value={discountQuantity}
+          onChange={(e) => setDiscountQuantity(parseInt(e.target.value, 10))}
+          placeholder="Nhập số lượng mã giảm giá muốn thêm"
+        />
+      </Modal>
     </div>
   );
 };
