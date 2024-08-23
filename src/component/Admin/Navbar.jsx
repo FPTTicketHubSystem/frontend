@@ -75,15 +75,6 @@ const NavbarAdmin = () => {
                 Forum
               </a>
             </li>
-            <li className={`nav-item ${isActive('/login')}`}>
-              <a
-                className="nav-link"
-                href="#"
-                onClick={() => handleNavigate('/login')}
-              >
-                Login
-              </a>
-            </li>
           </ul>
         </div>
       </div>

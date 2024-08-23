@@ -184,11 +184,11 @@ export const GetTicketTypeByEventService = async (id) => {
     }
 };
 
-export const UpdateTicketQuantityService = async (ticketTypeId, addQuantity) => {
+export const UpdateTicketQuantityService = async (ticketTypeId, addQuantity, addOrRemove) => {
     try {
         const response = await request({
             method: "put",
-            url: `event/updateTicketQuantity?ticketTypeId=${ticketTypeId}&addQuantity=${addQuantity}`,
+            url: `event/updateTicketQuantity?ticketTypeId=${ticketTypeId}&addQuantity=${addQuantity}&addOrRemove=${addOrRemove}`,
             headers: {
                 "Content-Type": "application/json",
             },

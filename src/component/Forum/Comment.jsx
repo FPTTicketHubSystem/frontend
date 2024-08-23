@@ -87,7 +87,7 @@ export default function Comment({
           <span className="comment-name">{fullName}</span>
 
           <p
-            className="comment-description"
+            className="comment-description text-white"
             ref={contentRef}
             contentEditable={isEditing}
             suppressContentEditableWarning={true}

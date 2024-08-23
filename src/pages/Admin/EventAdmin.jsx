@@ -256,34 +256,40 @@ const EventAdmin = () => {
                   <div className="d-flex">
                     <div className="btn-group me-3">
                       <button
-                        className={`btn ${
-                          filterStatus === 'All'
+                        className={`btn ${filterStatus === 'All'
                             ? 'btn-primary'
                             : 'btn-outline-primary'
-                        }`}
+                          }`}
                         onClick={() => handleFilterChange('All')}
                       >
                         All
                       </button>
                       <button
-                        className={`btn ${
-                          filterStatus === 'Đã duyệt'
+                        className={`btn ${filterStatus === 'Đã duyệt'
                             ? 'btn-primary'
                             : 'btn-outline-primary'
-                        }`}
+                          }`}
                         onClick={() => handleFilterChange('Đã duyệt')}
                       >
                         Đã duyệt
                       </button>
                       <button
-                        className={`btn ${
-                          filterStatus === 'Chờ duyệt'
+                        className={`btn ${filterStatus === 'Chờ duyệt'
                             ? 'btn-primary'
                             : 'btn-outline-primary'
-                        }`}
+                          }`}
                         onClick={() => handleFilterChange('Chờ duyệt')}
                       >
                         Chờ duyệt
+                      </button>
+                      <button
+                        className={`btn ${filterStatus === 'Từ chối'
+                            ? 'btn-primary'
+                            : 'btn-outline-primary'
+                          }`}
+                        onClick={() => handleFilterChange('Từ chối')}
+                      >
+                        Từ chối
                       </button>
                     </div>
                     <div className="search-bar">
@@ -322,8 +328,8 @@ const EventAdmin = () => {
                                     ? column.render(null, event)
                                     : column.dataIndex === 'startTime' ||
                                       column.dataIndex === 'endTime'
-                                    ? formatDate(event[column.dataIndex])
-                                    : event[column.dataIndex]}
+                                      ? formatDate(event[column.dataIndex])
+                                      : event[column.dataIndex]}
                                 </td>
                               ))}
                             </tr>
@@ -345,9 +351,8 @@ const EventAdmin = () => {
                     aria-label="Pagination"
                   >
                     <li
-                      className={`page-item ${
-                        currentPage === 1 ? 'disabled' : ''
-                      }`}
+                      className={`page-item ${currentPage === 1 ? 'disabled' : ''
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -363,9 +368,8 @@ const EventAdmin = () => {
                     ].map((number) => (
                       <li
                         key={number}
-                        className={`page-item ${
-                          currentPage === number + 1 ? 'active' : ''
-                        }`}
+                        className={`page-item ${currentPage === number + 1 ? 'active' : ''
+                          }`}
                       >
                         <button
                           className="page-link"
@@ -376,12 +380,11 @@ const EventAdmin = () => {
                       </li>
                     ))}
                     <li
-                      className={`page-item ${
-                        currentPage ===
-                        Math.ceil(filteredEvents.length / eventsPerPage)
+                      className={`page-item ${currentPage ===
+                          Math.ceil(filteredEvents.length / eventsPerPage)
                           ? 'disabled'
                           : ''
-                      }`}
+                        }`}
                     >
                       <button
                         className="page-link"
@@ -415,9 +418,8 @@ const EventAdmin = () => {
               <ul className="nav nav-tabs1">
                 <li className="nav-item1">
                   <button
-                    className={`nav-link1 ${
-                      activeTab === 'details' ? 'active' : ''
-                    }`}
+                    className={`nav-link1 ${activeTab === 'details' ? 'active' : ''
+                      }`}
                     onClick={() => setActiveTab('details')}
                   >
                     Details
@@ -425,9 +427,8 @@ const EventAdmin = () => {
                 </li>
                 <li className="nav-item1">
                   <button
-                    className={`nav-link1 ${
-                      activeTab === 'ratings' ? 'active' : ''
-                    }`}
+                    className={`nav-link1 ${activeTab === 'ratings' ? 'active' : ''
+                      }`}
                     onClick={() => setActiveTab('ratings')}
                   >
                     Ratings
@@ -490,7 +491,7 @@ const EventAdmin = () => {
                         {currentEvent.tickettypes.map((ticketType) => (
                           <tr key={ticketType.ticketTypeId}>
                             <td>{ticketType.typeName}</td>
-                            <td>{ticketType.price} VNĐ</td>
+                            <td>{ticketType.price.toLocaleString("vi")} đ</td>
                             <td>{ticketType.quantity}</td>
                           </tr>
                         ))}
@@ -504,31 +505,28 @@ const EventAdmin = () => {
                   <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="btn-group">
                       <button
-                        className={`btn ${
-                          ratingFilterStatus === 'All'
+                        className={`btn ${ratingFilterStatus === 'All'
                             ? 'btn-primary'
                             : 'btn-outline-primary'
-                        }`}
+                          }`}
                         onClick={() => setRatingFilterStatus('All')}
                       >
                         All
                       </button>
                       <button
-                        className={`btn ${
-                          ratingFilterStatus === 'Active'
+                        className={`btn ${ratingFilterStatus === 'Active'
                             ? 'btn-primary'
                             : 'btn-outline-primary'
-                        }`}
+                          }`}
                         onClick={() => setRatingFilterStatus('Active')}
                       >
                         Active
                       </button>
                       <button
-                        className={`btn ${
-                          ratingFilterStatus === 'Pending'
+                        className={`btn ${ratingFilterStatus === 'Pending'
                             ? 'btn-primary'
                             : 'btn-outline-primary'
-                        }`}
+                          }`}
                         onClick={() => setRatingFilterStatus('Pending')}
                       >
                         Pending
@@ -600,9 +598,8 @@ const EventAdmin = () => {
                     <nav>
                       <ul className="pagination">
                         <li
-                          className={`page-item ${
-                            ratingCurrentPage === 1 ? 'disabled' : ''
-                          }`}
+                          className={`page-item ${ratingCurrentPage === 1 ? 'disabled' : ''
+                            }`}
                         >
                           <button
                             className="page-link"
@@ -620,9 +617,8 @@ const EventAdmin = () => {
                         ].map((number) => (
                           <li
                             key={number}
-                            className={`page-item ${
-                              ratingCurrentPage === number + 1 ? 'active' : ''
-                            }`}
+                            className={`page-item ${ratingCurrentPage === number + 1 ? 'active' : ''
+                              }`}
                           >
                             <button
                               className="page-link"
@@ -633,12 +629,11 @@ const EventAdmin = () => {
                           </li>
                         ))}
                         <li
-                          className={`page-item ${
-                            ratingCurrentPage ===
-                            Math.ceil(filteredRatings.length / ratingsPerPage)
+                          className={`page-item ${ratingCurrentPage ===
+                              Math.ceil(filteredRatings.length / ratingsPerPage)
                               ? 'disabled'
                               : ''
-                          }`}
+                            }`}
                         >
                           <button
                             className="page-link"

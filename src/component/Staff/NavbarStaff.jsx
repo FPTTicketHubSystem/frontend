@@ -122,7 +122,7 @@ export default function NavbarStaff() {
                         <hr className="dropdown-divider" />
                       </li>
                       <li>
-                        <a className="dropdown-item" onClick={handleLogout}>
+                        <a className="dropdown-item" onClick={handleLogout} style={{cursor:"pointer"}}>
                           <span>
                             <i className="bi bi-box-arrow-right"></i>
                           </span>{" "}

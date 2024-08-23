@@ -192,6 +192,8 @@ const EditNewsForm = ({ newsId }) => {
           name="title" 
           value={formData.title} 
           onChange={(e) => setFormData({ ...formData, title: e.target.value })} 
+          maxLength={150}
+          showCount
         />
       </Form.Item>
       <Form.Item name="subtitle" label="Tiêu đề phụ" rules={[{ required: true, message: 'Vui lòng nhập tiêu đề phụ!' }]}>
@@ -199,6 +201,8 @@ const EditNewsForm = ({ newsId }) => {
           name="subtitle" 
           value={formData.subtitle} 
           onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })} 
+          maxLength={300}
+          showCount
         />
       </Form.Item>
       <Form.Item name="content" label="Nội dung bài viết" rules={[{ required: true, message: 'Vui lòng nhập nội dung!' }]}>

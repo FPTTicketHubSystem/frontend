@@ -33,9 +33,14 @@ function ChooseTicket() {
   const [quantities, setQuantities] = useState(ticketList.map(() => 0));
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     const checkOrderOrNot = async () => {
       try {
+        console.log("accountid from context", user.accountId);
         const resultCheck = await CheckOrderdOfUser(user.accountId, event.eventId);
+        console.log("resultCheck", resultCheck);
         return resultCheck;
       } catch (error) {
         console.error('Error checking order:', error);
@@ -44,10 +49,8 @@ function ChooseTicket() {
     };
   
     const revertOrderIfNecessary = async () => {
-      if (user) {
-        return;
-      }
       try {
+        console.log("accountid from user context", user.accountId);
         const result = await CancelOrderOfUser(user.accountId);
         if (result.status === 200) {
           console.log('Order successfully reverted');

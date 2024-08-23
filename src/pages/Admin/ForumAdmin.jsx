@@ -114,7 +114,7 @@ const ForumAdmin = () => {
   };
 
   const handleReject = (postId) => {
-    handleStatusChange(postId, 'Chưa duyệt');
+    handleStatusChange(postId, 'Chờ duyệt');
   };
 
   return (
@@ -158,11 +158,11 @@ const ForumAdmin = () => {
               </button>
               <button
                 className={`${styles.filterBtn} ${
-                  filterStatus === 'Chưa duyệt' ? styles.active : ''
+                  filterStatus === 'Chờ duyệt' ? styles.active : ''
                 }`}
-                onClick={() => handleFilterChange('Chưa duyệt')}
+                onClick={() => handleFilterChange('Chờ duyệt')}
               >
-                Chưa duyệt
+                Chờ duyệt
               </button>
             </div>
             <div className={styles.forumAdminSearch}>
@@ -180,7 +180,7 @@ const ForumAdmin = () => {
               <div key={post.postId} className={styles.forumPostCard}>
                 <div className={styles.postHeader}>
                   <div className={styles.avatar}>
-                    <img src={post.avatar || ''} alt="User avatar" />
+                    <img src={post.avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"} alt="User avatar" />
                   </div>
                   <h3>
                     {post.fullName} •<span>{formatDate(post.createDate)}</span>
@@ -201,7 +201,7 @@ const ForumAdmin = () => {
                   )}
                 </div>
                 <div className={styles.postActions}>
-                  {post.status === 'Chưa duyệt' && (
+                  {post.status === 'Chờ duyệt' && (
                     <button
                       className={styles.approveBtn}
                       onClick={() => handleApprove(post.postId)}

@@ -60,9 +60,6 @@ const CustomSwitch = styled(Switch)`
   &:hover.ant-switch-checked:not(.ant-switch-disabled) {
     background-color: #b74f18;
   }
-  &:hover:not(.ant-switch-disabled) {
-    background-color: #d85a1a;
-  }
   .ant-switch-inner {
     font-size: 16px;
   }
@@ -265,6 +262,8 @@ const CreateEvent = () => {
         toast.error('Vui lòng nhập loại vé!');
       } else if (response.status === 400 && response.message === "Description is required") {
         toast.error('Vui lòng nhập mô tả!');
+      } else if (response.status === 400 && response.message === "Image is required") {
+        toast.error('Vui lòng tải lên hình ảnh!');
       }
        else if (response.status === 400 && response.message === "Add Event Fail") {
         toast.error('Có lỗi xảy ra, vui lòng thử lại!');
@@ -479,7 +478,7 @@ const CreateEvent = () => {
                 >
                   <Option value="1">Nghệ thuật</Option>
                   <Option value="2">Giáo dục</Option>
-                  <Option value="3">Thể thao</Option>
+                  <Option value="3">Workshop</Option>
                   <Option value="4">Sự kiện khác</Option>
                 </Select>
               </Form.Item>
@@ -523,7 +522,7 @@ const CreateEvent = () => {
                   )}
                 />
                 <Column
-                  title="Giá"
+                  title="Giá (VND)"
                   dataIndex="price"
                   key="price"
                   render={(text, record, index) => (
@@ -534,6 +533,8 @@ const CreateEvent = () => {
                       value={text}
                       name="price"
                       onChange={(e) => handleTicketTypeChange(index, e)}
+                      min={0}
+                      onWheel={(e) => e.target.blur()}
                     />
                   )}
                 />
@@ -544,6 +545,7 @@ const CreateEvent = () => {
                   render={(text, record, index) => (
                     <Input
                       type="number"
+                      min={1}
                       placeholder="Số lượng"
                       value={text}
                       name="quantity"
@@ -649,13 +651,13 @@ const CreateEvent = () => {
                   <Option value="Chờ duyệt">Gửi xét duyệt</Option>
                 </Select>
               </Form.Item> */}
-              <Form.Item name="status" label="Trạng thái" className='mt-3'>
+              {/* <Form.Item name="status" label="Trạng thái" className='mt-3'>
                 <CustomSwitch
                   checkedChildren="Chờ duyệt"
                   unCheckedChildren="Nháp"
                   onChange={(checked) => setFormData({ ...formData, status: checked ? "Chờ duyệt" : "Nháp" })}
                 />
-              </Form.Item>
+              </Form.Item> */}
 
               <Form.Item className="mt-4 pb-4">
                 <CustomButton type="primary" htmlType="submit">

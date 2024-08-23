@@ -60,6 +60,7 @@ const HeaderAdmin = () => {
                 <a
                   onClick={handleLogout}
                   class="dropdown-item d-flex align-items-center py-2"
+                  style={{cursor:"pointer"}}
                 >
                   <i class="icon-log-out fs-4 me-3"></i>Đăng xuất
                 </a>

@@ -30,8 +30,11 @@ const NewsDetails = () => {
     <div>
       <Header />
       <div style={styles.container}>
-        <button style={styles.backButton} onClick={() => navigate(-1)}>
-          &larr; Quay lại trang trước
+        <button style={styles.backButton} onClick={() => navigate("/")}>
+          &larr; Trang chủ
+        </button>
+        <button style={styles.backButton} onClick={() => navigate("/news")}>
+          Tất cả tin tức &rarr;
         </button>
         <img
           src={news.coverImage}
@@ -68,6 +71,7 @@ const styles = {
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
+    marginRight: "20px"
   },
   coverImage: {
     width: "100%",

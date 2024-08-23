@@ -156,7 +156,7 @@ export default function Header() {
                         <hr className="dropdown-divider" />
                       </li>
                       <li>
-                        <a className="dropdown-item" onClick={handleLogout}>
+                        <a className="dropdown-item" style={{cursor:"pointer"}} onClick={handleLogout}>
                           <span>
                             <i className="bi bi-box-arrow-right"></i>
                           </span>{" "}

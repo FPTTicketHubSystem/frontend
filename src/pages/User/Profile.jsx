@@ -40,6 +40,10 @@ const CustomButton = styled(Button)`
 function Profile() {
 
     const { user, setUser, onSetRender } = useContext(UserContext);
+    const [errors, setErrors] = useState({
+        fullName: '',
+        phone: '',
+    });
 
     const renderNavbar = () => {
         if (user) {
@@ -57,6 +61,39 @@ function Profile() {
             }
         }
     };
+
+    const validate = () => {
+        let isValid = true;
+        let errors = {};
+    
+        const nameRegex = /^[a-zA-Zàáảãạèéẻẽẹìíỉĩịòóỏõọùúủũụỳýỷỹỵ\s]+$/;
+    
+        const trimmedFullName = userInfo.fullName.trim();
+    
+        if (trimmedFullName !== userInfo.fullName) {
+            errors.fullName = 'Tên không hợp lệ';
+            isValid = false;
+        } else if (/\s{2,}/.test(userInfo.fullName)) {
+            errors.fullName = 'Tên không hợp lệ';
+            isValid = false;
+        } else if (!trimmedFullName) {
+            errors.fullName = 'Tên không được để trống.';
+            isValid = false;
+        } else if (!nameRegex.test(trimmedFullName)) {
+            errors.fullName = 'Tên không hợp lệ';
+            isValid = false;
+        }
+    
+        if (!/^\d{0,10}$/.test(userInfo.phone)) {
+            errors.phone = 'Số điện thoại tối đa 10 chữ số';
+            isValid = false;
+        }
+    
+        setErrors(errors);
+        return isValid;
+    };
+    
+    
 
     const [userInfo, setUserInfo] = useState({
         fullName: user.fullName || '',
@@ -106,6 +143,7 @@ function Profile() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUserInfo({ ...userInfo, [name]: value });
+        validate();
     };
 
     // const handleDateChange = (date) => {
@@ -157,6 +195,9 @@ function Profile() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validate()) {
+            return;
+        }
         const data = {
             accountId: user.accountId,
             fullName: userInfo.fullName,
@@ -186,7 +227,7 @@ function Profile() {
         }
     };
 
-    
+
 
     // const radioCheckStyle = {
     //     border: '#EC6C21',
@@ -242,7 +283,11 @@ function Profile() {
                             name="fullName"
                             value={userInfo.fullName}
                             onChange={handleChange}
+                            isInvalid={!!errors.fullName}
                         />
+                        <Form.Control.Feedback type="invalid">
+        {errors.fullName}
+    </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formPhoneNumber">
                         {
@@ -257,6 +302,7 @@ function Profile() {
                             name="phone"
                             value={userInfo.phone}
                             onChange={handleChange}
+                            isInvalid={!!errors.phone}
                         />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formEmail">
@@ -268,6 +314,9 @@ function Profile() {
                             value={user.email}
                             disabled
                         />
+                        <Form.Control.Feedback type="invalid">
+        {errors.phone}
+    </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formPassword">
                         <Form.Label style={{ fontWeight: 'bold' }}>Mật khẩu</Form.Label>

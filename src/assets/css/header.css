@@ -137,6 +137,8 @@
   .event__item__text {
     text-align: center;
     padding: 45px 10px 25px;
+    height: 150px;
+    overflow: hidden;
   }
   
   .event__item__text h4 {

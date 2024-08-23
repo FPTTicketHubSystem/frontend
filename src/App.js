@@ -74,7 +74,7 @@ function App() {
         <Route path="/payment-success/:orderId" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
         <Route path="/news" element={<NewsListPage />}/>
         <Route path="/newsdetail/:newsId" element={<NewsDetails />} />
-        <Route path="/forum" element={<PostProvider><CommentProvider><Forum/></CommentProvider></PostProvider>}></Route>
+        <Route path="/forum" element={<ProtectedRoute element={<PostProvider><CommentProvider><Forum/></CommentProvider></PostProvider>} allowedRoles={[2]} />} />
         <Route path="/403" element={<Status403/>}/>
         <Route path="/500" element={<Status500/>}/>
         <Route path="*" element={<Status404/>}/>

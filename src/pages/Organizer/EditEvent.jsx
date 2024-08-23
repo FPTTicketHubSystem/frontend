@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { Form, Input, Button, DatePicker, Select, Table, Upload, message, Modal, Row, Col, Switch } from 'antd';
+import { Form, Input, Button, DatePicker, Select, Table, Upload, message, Modal, Row, Col, Switch, Checkbox } from 'antd';
 import { UserContext } from '../../context/UserContext';
 import { AddEventService, GetEventForEdit, GetTicketTypeByEventService, UpdateEventService, UpdateTicketQuantityService, AddTicketTypeService, GetDiscountCodeByEventService, AddDiscountCodeService, UpdateDiscountQuantityService } from '../../services/EventService';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -61,9 +61,6 @@ const CustomSwitch = styled(Switch)`
   }
   &:hover.ant-switch-checked:not(.ant-switch-disabled) {
     background-color: #b74f18;
-  }
-  &:hover:not(.ant-switch-disabled) {
-    background-color: #d85a1a;
   }
   .ant-switch-inner {
     font-size: 16px;
@@ -128,6 +125,8 @@ const EditEvent = () => {
   const [discountQuantity, setDiscountQuantity] = useState(0);
   const [ticketTypes, setTicketTypes] = useState([]);
   const [discountCodes, setDiscountCodes] = useState([]);
+  const [isConfirmChecked, setIsConfirmChecked] = useState(false);
+  const [addOrRemove, setAddOrRemove] = useState(1);
 
   const HandleGetEventForEdit = async () => {
     const response = await GetEventForEdit(eventId);
@@ -170,22 +169,27 @@ const EditEvent = () => {
   };
 
   const handleCreateTicketType = async () => {
-    if (!newTicketType.typeName || newTicketType.price <= 0 || newTicketType.quantity <= 0) {
-      message.error('Vui lòng điền đầy đủ thông tin và kiểm tra giá và số lượng.');
+    if (!isConfirmChecked) {
+      toast.error('Bạn chưa xác nhận');
       return;
     }
-
     try {
       const response = await AddTicketTypeService(newTicketType);
       if (response.status === 200) {
         toast.success('Tạo loại vé thành công!');
         setTicketTypes([...ticketTypes, response.newTicketType]);
+        setNewTicketType({eventId: eventId,
+          typeName: '',
+          price: 0,
+          quantity: 0,
+          status: ''});
+          setIsConfirmChecked(false);
         setIsCreateTicketModalVisible(false);
       } if (response.status === 400 && response.message === "TicketTypeIsExist") {
         toast.error ('Tên loại vé đã tồn tại');
-      }  
-      else {
-        toast.error('Có lỗi xảy ra khi tạo loại vé.');
+      }
+      if (response.status === 400 && response.message === "Add TicketType Fail") {
+        toast.error ('Có lỗi xảy ra, vui lòng thử lại');
       }
     } catch (error) {
       console.error(error);
@@ -207,9 +211,6 @@ const EditEvent = () => {
         setIsCreateDiscountModalVisible(false);
       } if (response.status === 400 && response.message === "DiscountCodeIsExist") {
         toast.error ('Mã giảm giá đã tồn tại');
-      }
-      else {
-        toast.error('Có lỗi xảy ra khi tạo mã giảm giá.');
       }
     } catch (error) {
       console.error(error);
@@ -422,22 +423,35 @@ const EditEvent = () => {
 
   const handleAddQuantity = async () => {
     if (isNaN(addQuantity) || addQuantity <= 0) {
-      message.error("Vui lòng nhập số lượng hợp lệ.");
+      toast.error("Vui lòng nhập số lượng hợp lệ.");
       return;
     }
 
     try {
-      const response = await UpdateTicketQuantityService(selectedTicketTypeId, addQuantity);
+      const response = await UpdateTicketQuantityService(selectedTicketTypeId, addQuantity, addOrRemove);
       if (response.result.result.status === 200) {
         toast.success("Đã cập nhật số lượng vé thành công!");
-        setTicketTypes((prevTicketTypes) =>
-          prevTicketTypes.map((ticket) =>
-            ticket.ticketTypeId === selectedTicketTypeId
-              ? { ...ticket, quantity: ticket.quantity + addQuantity }
-              : ticket
-          )
-        );
+        if (addOrRemove === 1) {
+          setTicketTypes((prevTicketTypes) =>
+            prevTicketTypes.map((ticket) =>
+              ticket.ticketTypeId === selectedTicketTypeId
+                ? { ...ticket, quantity: ticket.quantity + addQuantity }
+                : ticket
+            )
+          );
+        }
+        else if (addOrRemove === 0) {
+          setTicketTypes((prevTicketTypes) =>
+            prevTicketTypes.map((ticket) =>
+              ticket.ticketTypeId === selectedTicketTypeId
+                ? { ...ticket, quantity: ticket.quantity - addQuantity }
+                : ticket
+            )
+          );
+        }
         setIsModalVisible(false);
+        setAddQuantity(0);
+        setAddOrRemove(1);
       } if (response.result.result.status === 400 && response.result.result.message === "InvalidQuantity") {
         toast.error ("Số lượng thay đổi không hợp lệ");
       } 
@@ -563,26 +577,35 @@ const EditEvent = () => {
               <Col span={12}>
                 <Form.Item label="Tên sự kiện">
                   <Input
+                    disabled
                     id="eventName"
                     value={formData.eventName}
                     onChange={handleChange}
                     placeholder="Nhập tên sự kiện"
+                    maxLength={80}
+                    showCount
                   />
                 </Form.Item>
                 <Form.Item label="Tên địa điểm">
                   <Input
+                    disabled
                     id="location"
                     value={formData.location}
                     onChange={handleChange}
                     placeholder="Nhập tên địa điểm"
+                    maxLength={80}
+                    showCount
                   />
                 </Form.Item>
                 <Form.Item label="Địa chỉ">
                   <Input
+                    disabled
                     id="address"
                     value={formData.address}
                     onChange={handleChange}
                     placeholder="Nhập địa chỉ"
+                    maxLength={200}
+                    showCount
                   />
                 </Form.Item>
               </Col>
@@ -591,6 +614,7 @@ const EditEvent = () => {
               <Col span={12}>
                 <Form.Item label="Thời gian bắt đầu">
                   <DatePicker
+                    disabled
                     format="DD/MM/YYYY HH:mm"
                     showTime
                     value={formData.startTime ? moment(formData.startTime) : null}
@@ -601,6 +625,7 @@ const EditEvent = () => {
               <Col span={12}>
                 <Form.Item label="Thời gian kết thúc">
                   <DatePicker
+                    disabled
                     format="DD/MM/YYYY HH:mm"
                     showTime
                     value={formData.endTime ? moment(formData.endTime) : null}
@@ -617,7 +642,7 @@ const EditEvent = () => {
               />
             </Form.Item>
             <Form.Item name="status" label="Trạng thái" className='mt-3'>
-              {formData.status === 'Nháp' && (
+              {/* {formData.status === 'Nháp' && (
                 <CustomSwitch
                   checked={formData.status === 'Chờ duyệt'}
                   onChange={(checked) => setFormData({ ...formData, status: checked ? 'Chờ duyệt' : 'Nháp' })}
@@ -630,13 +655,15 @@ const EditEvent = () => {
               )}
               {formData.status === 'Đã duyệt' && (
                 <span>Đã duyệt</span>
-              )}
+              )} */}
+              <span>{formData.status}</span>
             </Form.Item>
             <Form.Item>
               <CustomButton type="primary" onClick={handleSubmit}>
                 Lưu thay đổi
               </CustomButton>
             </Form.Item>
+            <hr/>
             <Form.Item label="Các loại vé">
               <CustomButton
                 type="primary"
@@ -647,7 +674,7 @@ const EditEvent = () => {
               </CustomButton>
               <Table dataSource={ticketTypes} rowKey="ticketTypeId" pagination={false}>
                 <Column title="Tên loại vé" dataIndex="typeName" key="typeName" />
-                <Column title="Giá (VND)" dataIndex="price" key="price" render={(price) => `${price.toLocaleString()}`} />
+                <Column title="Giá (VND)" dataIndex="price" key="price" render={(price) => price === 0 ? 'Miễn phí' : `${price.toLocaleString()}`} />
                 <Column title="Số lượng" dataIndex="quantity" key="quantity" />
                 <Column
                   title="Hành động"
@@ -657,13 +684,13 @@ const EditEvent = () => {
                       type="primary"
                       onClick={() => showAddQuantityModal(record.ticketTypeId)}
                     >
-                      <i class="bi bi-plus-lg"></i> Số lượng
+                      <i class="bi bi-pen"></i> Số lượng
                     </CustomButton>
                   )}
                 />
               </Table>
             </Form.Item>
-            {formData.status == "Đã duyệt" && (
+            {/* {formData.status == "Đã duyệt" && (
               <Form.Item label="Mã giảm giá">
               <CustomButton
                 type="primary"
@@ -690,28 +717,36 @@ const EditEvent = () => {
                 />
               </Table>
             </Form.Item>
-            )}
+            )} */}
           </Form>
         </div>
       </div>
       <Footer />
       <Modal
-        title="Thêm số lượng vé"
+        title="Thay đổi số lượng vé"
         open={isModalVisible}
         //onOk={handleAddQuantity}
         onCancel={() => setIsModalVisible(false)}
         footer={[
           <CustomButton key="submit" type="primary" onClick={handleAddQuantity}>
-            Thêm
+            Lưu
           </CustomButton>,
         ]}
       >
+        <CustomSwitch
+          checked={addOrRemove === 1}
+          onChange={(checked) => setAddOrRemove(checked ? 1 : 0)}
+          checkedChildren="Tăng"
+          unCheckedChildren="Giảm"
+          className='mb-3 mt-2'
+        />
         <Input
           type="number"
           min={1}
           value={addQuantity}
           onChange={(e) => setAddQuantity(parseInt(e.target.value, 10))}
-          placeholder="Nhập số lượng vé muốn thêm"
+          placeholder="Nhập số lượng vé thay đổi"
+          onWheel={(e) => e.target.blur()}
         />
       </Modal>
       <Modal
@@ -730,14 +765,27 @@ const EditEvent = () => {
               value={newTicketType.typeName}
               onChange={(e) => setNewTicketType({ ...newTicketType, typeName: e.target.value })}
               placeholder="Nhập tên loại vé"
+              name="typeName"
+              maxLength={20}
+              showCount
             />
           </Form.Item>
           <Form.Item label="Giá (VND)">
             <Input
               type="number"
               value={newTicketType.price}
-              onChange={(e) => setNewTicketType({ ...newTicketType, price: e.target.value })}
+              
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (value >= 0 && value <= 100000000) {
+                  setNewTicketType({ ...newTicketType, price: value });
+                }
+              }}
               placeholder="Nhập giá"
+              min={0}
+              max={100000000}
+              addonAfter='đ'
+              onWheel={(e) => e.target.blur()}
             />
           </Form.Item>
           <Form.Item label="Số lượng">
@@ -747,11 +795,17 @@ const EditEvent = () => {
               value={newTicketType.quantity}
               onChange={(e) => setNewTicketType({ ...newTicketType, quantity: parseInt(e.target.value, 10) })}
               placeholder="Nhập số lượng"
+              onWheel={(e) => e.target.blur()}
             />
+          </Form.Item>
+          <Form.Item>
+            <Checkbox checked={isConfirmChecked} onChange={(e) => setIsConfirmChecked(e.target.checked)}>
+              Loại vé không được thay đổi sau khi tạo, vui lòng kiểm tra kỹ thông tin
+            </Checkbox>
           </Form.Item>
         </Form>
       </Modal>
-      <Modal
+      {/* <Modal
         title="Tạo mã giảm giá"
         open={isCreateDiscountModalVisible}
         onCancel={() => {
@@ -781,6 +835,8 @@ const EditEvent = () => {
               value={newDiscountCode.code}
               onChange={(e) => setNewDiscountCode({ ...newDiscountCode, code: e.target.value })}
               placeholder="Nhập mã giảm giá"
+              maxLength={20}
+              showCount
             />
           </Form.Item>
           <Form.Item label="Giá trị giảm (%)" name="discountAmount"
@@ -826,7 +882,7 @@ const EditEvent = () => {
           onChange={(e) => setDiscountQuantity(parseInt(e.target.value, 10))}
           placeholder="Nhập số lượng mã giảm giá muốn thêm"
         />
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
