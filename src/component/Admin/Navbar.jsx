@@ -39,6 +39,16 @@ const NavbarAdmin = () => {
                 </a>
               </li>
             </li>
+            <li className={`nav-item dropdown ${isActive("/")}`}>
+              <li className={`nav-item ${isActive("/admin/event-statistic")}`}>
+                <button
+                  className="nav-link btn btn-link"
+                  onClick={() => handleNavigate("/admin/event-statistic")}
+                >
+                  Event Statistic
+                </button>
+              </li>
+            </li>
             <li className={`nav-item ${isActive('/admin/manage-news')}`}>
               <a
                 className="nav-link"
