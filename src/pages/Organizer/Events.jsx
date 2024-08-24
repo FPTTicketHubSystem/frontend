@@ -102,23 +102,23 @@ const Events = () => {
     };
 
     const filterEvents = (filter, search) => {
-        const now = new Date();
+        const now = moment.utc();
         let filtered = events;
-
+    
         if (filter === 'SẮP DIỄN RA') {
-            filtered = filtered.filter(event => new Date(event.startTime) > now && event.status === 'Đã duyệt');
+            filtered = filtered.filter(event => moment.utc(event.startTime).isAfter(now) && event.status === 'Đã duyệt');
         } else if (filter === 'ĐÃ QUA') {
-            filtered = filtered.filter(event => new Date(event.endTime) < now && event.status === 'Đã duyệt');
+            filtered = filtered.filter(event => moment.utc(event.endTime).isBefore(now) && event.status === 'Đã duyệt');
         } else if (filter === 'CHỜ DUYỆT') {
             filtered = filtered.filter(event => event.status === 'Chờ duyệt');
         } else if (filter === 'TỪ CHỐI') {
             filtered = filtered.filter(event => event.status === 'Từ chối');
         }
-
+    
         if (search) {
             filtered = filtered.filter(event => event.eventName.toLowerCase().includes(search.toLowerCase()));
         }
-
+    
         setFilteredEvents(filtered);
     };
 
