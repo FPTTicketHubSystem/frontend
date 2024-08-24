@@ -38,6 +38,7 @@ import Status403 from './pages/Error/403';
 import Status404 from './pages/Error/404';
 import Status500 from './pages/Error/500';
 import NewsListPage from './pages/NewsListPage';
+import EventStatisticAdmin from './pages/Admin/EventStatisticAdmin';
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
         <Route path="/staff/checkin-history" element={<ProtectedRoute element={<CheckinHistory />} allowedRoles={[4]} />} />
         <Route path="/search" element={<Search />} />
         <Route path="/admin/manage-news" element={<ProtectedRoute element={<ManageNews />} allowedRoles={[1]} />} />
+        <Route path="/admin/event-statistic" element={<ProtectedRoute element={<EventStatisticAdmin />} allowedRoles={[1]} />} />
         <Route path="/admin/news/news-detail/:newsId" element={<NewsDetail />} />
         <Route path="/event-statistics/:encodedId" element={<ProtectedRoute element={<EventStatistics />} allowedRoles={[3]} />} />
         <Route path="/payment-success" element={<ProtectedRoute element={<PaymentSuccess />} allowedRoles={[2]} />} />
