@@ -290,6 +290,7 @@ const ManageStaff = () => {
           dataSource={filteredEvents}
           rowKey="eventId"
           loading={loading}
+          pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '15']}}
           expandable={{
             expandedRowRender,
             onExpand: handleExpand,
@@ -310,7 +311,7 @@ const ManageStaff = () => {
         ]}
       >
         <Form layout="vertical">
-          <Form.Item label="Email" rules={[
+          <Form.Item label="Email" name="email" rules={[
             { required: true, message: 'Vui lòng nhập email' },
             { type: 'email', message: 'Email không hợp lệ' }
           ]}>

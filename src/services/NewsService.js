@@ -138,3 +138,18 @@ export const GetLastestNewsService = async () => {
     }
 };
 
+export const GetNewsByIdUserService = async (newsId) => {
+    try {
+        const response = await request({
+            method: 'get',
+            url: `news/getNewsByIdUser?newsId=${newsId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response;
+    } catch (e) {
+        return e;
+    }
+};
+

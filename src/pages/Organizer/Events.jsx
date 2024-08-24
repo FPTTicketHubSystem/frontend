@@ -111,8 +111,8 @@ const Events = () => {
             filtered = filtered.filter(event => new Date(event.endTime) < now && event.status === 'Đã duyệt');
         } else if (filter === 'CHỜ DUYỆT') {
             filtered = filtered.filter(event => event.status === 'Chờ duyệt');
-        } else if (filter === 'NHÁP') {
-            filtered = filtered.filter(event => event.status === 'Nháp');
+        } else if (filter === 'TỪ CHỐI') {
+            filtered = filtered.filter(event => event.status === 'Từ chối');
         }
 
         if (search) {
@@ -210,7 +210,7 @@ const Events = () => {
                     </div>
                     <div className="col-md-4">
                         <CustomSegmented
-                            options={['TẤT CẢ', 'SẮP DIỄN RA', 'ĐÃ QUA', 'CHỜ DUYỆT', 'NHÁP']}
+                            options={['TẤT CẢ', 'SẮP DIỄN RA', 'ĐÃ QUA', 'CHỜ DUYỆT', 'TỪ CHỐI']}
                             style={{ width: '100%' }}
                             onChange={handleSegmentedChange}
                             value={filter}

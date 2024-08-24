@@ -169,7 +169,7 @@ const User = () => {
       key: 'fullName',
       render: (user) => (
         <>
-          <img src={user.avatar} className="me-2 img-3x rounded-3" alt="avt" />
+          <img src={user.avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"} className="me-2 img-3x rounded-3" alt="avt" />
           {user.fullName}
         </>
       ),
@@ -419,7 +419,7 @@ const User = () => {
                   <center>
                     <img
                       className="circle responsive-img"
-                      src={currentUser.avatar}
+                      src={currentUser.avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"}
                       alt={`Profile picture of ${currentUser.fullName}`}
                     />
                     <span className="btn-tooltip" title="Add Friend"></span>

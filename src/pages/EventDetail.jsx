@@ -14,6 +14,7 @@ function EventDetail() {
   const [event, setEvent] = useState([]);
   const { encodedId } = useParams();
   const navigate = useNavigate();
+  const updatedDescription = convertOembedToIframe(event.eventDescription);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -52,7 +53,7 @@ function EventDetail() {
   const isBookingStopped = () => {
     const now = moment.utc();
     const eventStartTime = moment.utc(event.startTime);
-    return now.isAfter(eventStartTime.subtract(1, 'day'));
+    return now.isAfter(eventStartTime.subtract(2, 'hours'));
   };
 
   // xử lý so sánh ngày
@@ -97,6 +98,38 @@ function EventDetail() {
     }
   };
   //#endregion
+
+  function convertOembedToIframe(html) {
+    // Tạo một div tạm thời để chứa nội dung HTML
+    const div = document.createElement('div');
+    div.innerHTML = html;
+  
+    // Tìm tất cả các thẻ <oembed> và thay thế chúng bằng thẻ <iframe>
+    const oembeds = div.querySelectorAll('oembed');
+    oembeds.forEach(oembed => {
+      const url = oembed.getAttribute('url');
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('width', '1120');
+        iframe.setAttribute('height', '630');
+        iframe.setAttribute('src', `https://www.youtube.com/embed/${getYouTubeVideoId(url)}`);
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+        iframe.setAttribute('allowfullscreen', true);
+        
+        oembed.parentNode.replaceChild(iframe, oembed);
+      }
+    });
+  
+    return div.innerHTML;
+  }
+  
+  function getYouTubeVideoId(url) {
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+    const matches = url.match(regex);
+    return matches ? matches[1] : null;
+  }
+  
 
   return (
     <>
@@ -157,7 +190,7 @@ function EventDetail() {
             <div className="card-header">Giới thiệu </div>
             <div className="about-content">
               <div
-                dangerouslySetInnerHTML={{ __html: event.eventDescription }}
+                dangerouslySetInnerHTML={{ __html: updatedDescription }}
               />
             </div>
             {isAboutCollapsed ? (

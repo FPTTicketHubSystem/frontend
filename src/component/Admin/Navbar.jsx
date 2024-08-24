@@ -1,12 +1,12 @@
-import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const NavbarAdmin = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const isActive = (path) => {
-    return location.pathname === path ? "active-link" : "";
+    return location.pathname === path ? 'active-link' : '';
   };
 
   const handleNavigate = (path) => {
@@ -28,15 +28,15 @@ const NavbarAdmin = () => {
             </button>
           </div>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className={`nav-item dropdown ${isActive("/")}`}>
-              <li className={`nav-item ${isActive("/admin/dashboard")}`}>
-                <button
+            <li className={`nav-item dropdown ${isActive('/')}`}>
+              <li className={`nav-item ${isActive('/admin/dashboard')}`}>
+                <a
                   className="nav-link"
                   href="#"
-                  onClick={() => handleNavigate("/admin/dashboard")}
+                  onClick={() => handleNavigate('/admin/dashboard')}
                 >
                   Dashboard
-                </button>
+                </a>
               </li>
             </li>
             <li className={`nav-item dropdown ${isActive("/")}`}>
@@ -49,50 +49,41 @@ const NavbarAdmin = () => {
                 </button>
               </li>
             </li>
-            <li className={`nav-item ${isActive("/admin/manage-news")}`}>
-              <button
+            <li className={`nav-item ${isActive('/admin/manage-news')}`}>
+              <a
                 className="nav-link"
                 href="#"
-                onClick={() => handleNavigate("/admin/manage-news")}
+                onClick={() => handleNavigate('/admin/manage-news')}
               >
                 News
-              </button>
+              </a>
             </li>
-            <li className={`nav-item ${isActive("/admin/events")}`}>
-              <button
+            <li className={`nav-item ${isActive('/admin/events')}`}>
+              <a
                 className="nav-link"
                 href="#"
-                onClick={() => handleNavigate("/admin/events")}
+                onClick={() => handleNavigate('/admin/events')}
               >
                 Event
-              </button>
+              </a>
             </li>
-            <li className={`nav-item ${isActive("/admin/user")}`}>
-              <button
+            <li className={`nav-item ${isActive('/admin/user')}`}>
+              <a
                 className="nav-link"
                 href="#"
-                onClick={() => handleNavigate("/admin/user")}
+                onClick={() => handleNavigate('/admin/user')}
               >
                 User
-              </button>
+              </a>
             </li>
-            <li className={`nav-item ${isActive("/admin/forum")}`}>
-              <button
+            <li className={`nav-item ${isActive('/admin/forum')}`}>
+              <a
                 className="nav-link"
                 href="#"
-                onClick={() => handleNavigate("/admin/forum")}
+                onClick={() => handleNavigate('/admin/forum')}
               >
                 Forum
-              </button>
-            </li>
-            <li className={`nav-item ${isActive("/login")}`}>
-              <button
-                className="nav-link"
-                href="#"
-                onClick={() => handleNavigate("/login")}
-              >
-                Login
-              </button>
+              </a>
             </li>
           </ul>
         </div>

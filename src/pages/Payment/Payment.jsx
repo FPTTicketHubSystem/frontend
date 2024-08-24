@@ -222,7 +222,7 @@ const Payment = () => {
                   </div>
                 );
               })}
-              <div className="discount-code">
+              {/* <div className="discount-code">
                 <label htmlFor="discount">Mã khuyến mãi</label>
                 <div className="input-wrapper">
                   <input
@@ -244,12 +244,12 @@ const Payment = () => {
                 {discountError && (
                   <p className="error-message">{discountError}</p>
                 )}
-              </div>
+              </div> */}
 
-              <div className="ticket-row total">
+              {/* <div className="ticket-row total">
                 <span>Tạm tính</span>
                 <span>{totalPrice.toLocaleString()} đ</span>
-              </div>
+              </div> */}
               {discountAmount > 0 && (
                 <div className="ticket-row discount">
                   <span>Giảm giá</span>

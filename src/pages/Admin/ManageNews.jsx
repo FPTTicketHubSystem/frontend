@@ -105,6 +105,7 @@ export default function ManageNews() {
           href={`/admin/news/news-detail/${record.newsId}`}
           target="_blank"
           rel="noopener noreferrer"
+          style={{textDecoration: 'none'}}
         >
           {text}
         </a>

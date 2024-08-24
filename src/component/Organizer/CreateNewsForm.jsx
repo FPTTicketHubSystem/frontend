@@ -58,7 +58,7 @@ const CreateNewsForm = () => {
         title: '',
         subtitle: '',
         content: '',
-        createDate: new Date().toISOString(),
+        createDate: '',
         status: ''
     });
 
@@ -207,10 +207,10 @@ const CreateNewsForm = () => {
                     </Dragger>
                 </Form.Item>
                 <Form.Item name="title" label="Tiêu đề" rules={[{ required: true, message: 'Vui lòng nhập tiêu đề!' }]}>
-                    <Input name="title" value={formData.title} onChange={handleChange} />
+                    <Input name="title" value={formData.title} onChange={handleChange} maxLength={150} showCount/>
                 </Form.Item>
                 <Form.Item name="subtitle" label="Tiêu đề phụ" rules={[{ required: true, message: 'Vui lòng nhập tiêu đề phụ!' }]}>
-                    <Input name="subtitle" value={formData.subtitle} onChange={handleChange} />
+                    <Input name="subtitle" value={formData.subtitle} onChange={handleChange} maxLength={300} showCount/>
                 </Form.Item>
                 <Form.Item name="content" label="Nội dung bài viết" rules={[{ required: true, message: 'Vui lòng nhập nội dung!' }]}>
                     <CKEditor

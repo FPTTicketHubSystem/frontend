@@ -133,7 +133,7 @@ const MyTicket = () => {
                                 style={{ textDecoration: "none", color: "inherit" }}
                             >
                                 <Ticket
-                                    orderCode={ticket.ticketId.toString()}
+                                    orderCode={ticket.orderCode}
                                     eventName={ticket.eventName}
                                     status={ticket.isCheckedIn ? "Đã sử dụng" : "Chưa sử dụng"}
                                     ticketType={ticket.typeName}

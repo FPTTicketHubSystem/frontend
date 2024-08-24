@@ -49,16 +49,14 @@ const News = () => {
                 />
                 <div className="card-body">
                   <p className="card-text">
-                    {capitalizeFirstLetter(moment(item.createDate).locale('vi').format('dddd, DD/MM/YYYY'))}
+                    {capitalizeFirstLetter(moment.utc(item.createDate).locale('vi').format('dddd, DD/MM/YYYY'))}
                   </p>
                   <h5 className="card-title text-truncate" style={{ color: "white", maxWidth: "200px", marginBottom: "8px" }}>
                     {item.title}
                   </h5>
-                  {item.subtitle && (
-                    <h6 className="card-subtitle" style={{ color: "gray", maxWidth: "200px" }}>
+                  <h6 className="card-subtitle text-truncate" style={{ color: "gray", maxWidth: "200px" }}>
                       {item.subtitle}
-                    </h6>
-                  )}
+                  </h6>
                 </div>
               </div>
             </Link>

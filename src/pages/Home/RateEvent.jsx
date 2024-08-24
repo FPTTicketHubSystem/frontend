@@ -5,7 +5,18 @@ import '../../assets/css/RateEvent.css';
 import Header from '../../component/Header';
 import { EditEventRatingService, GetRatingByRatingIdService, CheckRatingStatusService } from '../../services/EventRatingService';
 import { UserContext } from '../../context/UserContext';
+import styled from 'styled-components';
 
+
+const CustomButton = styled(Button)`
+  background-color: #EC6C21;
+  border-color: #EC6C21;
+
+  &:hover {
+    background-color: #81360b !important;
+    border-color: #81360b !important;
+  }
+`;
 const { Title } = Typography;
 const { TextArea } = Input;
 
@@ -154,12 +165,14 @@ const RateEvent = () => {
                   placeholder="Nhập đánh giá của bạn"
                   value={existingRating.review}
                   onChange={(e) => setExistingRating(prev => ({ ...prev, review: e.target.value }))}
+                  maxLength={100}
+                  showCount
                 />
               </div>
 
-              <Button type="primary" onClick={handleSubmit}>
+              <CustomButton type="primary" onClick={handleSubmit}>
                 {existingRating.eventRatingId ? 'Cập nhật đánh giá' : 'Gửi đánh giá'}
-              </Button>
+              </CustomButton>
             </>
           ) : (
             <div>

@@ -34,6 +34,9 @@ function HomePage() {
   //   navigate("/login");
   //   toast.success("Đã đăng xuất!");
   // };
+  const handleForumClick = () => {
+    navigate("/forum");
+  };
 
   return (
     <div>
@@ -64,17 +67,14 @@ function HomePage() {
       </section>
 
       <Upcoming />
-      <div
+        <div
         className="forum mb-5"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+        onClick={(handleForumClick)}
       >
         <img
           className="forum-img rounded"
-          style={{ width: "85%", height: "180px", borderRadius: "12px" }}
+          style={{ width: "85%", height: "208px", borderRadius: "12px", cursor: "pointer" }}
           src={forumSrc}
           alt=""
         />
