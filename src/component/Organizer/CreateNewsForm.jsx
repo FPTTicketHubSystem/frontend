@@ -58,7 +58,7 @@ const CreateNewsForm = () => {
         title: '',
         subtitle: '',
         content: '',
-        createDate: '',
+        //createDate: null,
         status: ''
     });
 
