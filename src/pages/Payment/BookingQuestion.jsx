@@ -4,6 +4,7 @@ import "../../assets/css/BookingQuestion.css";
 import { UserContext } from "../../context/UserContext";
 import Header from "../../component/Header";
 import Footer from "../../component/Footer";
+import { Spin } from "antd";
 
 const BookingQuestion = () => {
   const location = useLocation();
@@ -43,7 +44,7 @@ const BookingQuestion = () => {
   };
 
   if (!event) {
-    return <div>Loading...</div>; // Handle the case where event is not available
+    return <div><Spin size="large" fullscreen/></div>; // Handle the case where event is not available
   }
 
   const handleBack = () => {

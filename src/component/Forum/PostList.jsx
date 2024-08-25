@@ -79,7 +79,7 @@ const PostList = ({ posts }) => {
                 Xóa bài
               </Button>
             )}
-            {statusQueryParams === "Chờ duyệt" && user.roleId === 4 && (
+            {statusQueryParams === "Chờ duyệt" && user.roleId === 2 && (
               <Button
                 className="delete-post-btn"
                 type="primary"

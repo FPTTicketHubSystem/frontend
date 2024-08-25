@@ -11,6 +11,7 @@ import { storage } from '../../firebase';
 import { v4 } from "uuid";
 import { toast } from "react-toastify";
 import { AddNewsService } from '../../services/NewsService';
+import { useNavigate } from 'react-router-dom';
 
 const { Dragger } = Upload;
 const { Option } = Select;
@@ -61,6 +62,7 @@ const CreateNewsForm = () => {
         //createDate: null,
         status: ''
     });
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (user?.accountId) {

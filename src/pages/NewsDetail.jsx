@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Header from "../component/Header";
 import Footer from "../component/Footer";
 import { GetNewsByIdUserService } from "../services/NewsService";
+import { Spin } from "antd";
 import moment from "moment/moment";
 
 const NewsDetails = () => {
@@ -23,7 +24,7 @@ const NewsDetails = () => {
   }, [newsId]);
 
   if (!news) {
-    return <div>Loading...</div>;
+    return <div><Spin size="large" fullscreen/></div>;
   }
 
   return (

@@ -9,6 +9,7 @@ import { GetTicketByIdService } from "../../services/TicketService";
 import { UserContext } from "../../context/UserContext";
 import moment from "moment/moment";
 import { toast } from "react-toastify";
+import { Spin } from "antd";
 
 const TicketDetail = () => {
   const { user } = useContext(UserContext);
@@ -40,7 +41,7 @@ const TicketDetail = () => {
   }, [id, user?.accountId]);
 
   if (!ticket) {
-    return <div>Loading...</div>;
+    return <div><Spin size="large" fullscreen/></div>;
   }
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { GetLastestNewsService } from '../../services/NewsService';
+import { Spin } from 'antd';
 import moment from 'moment';
 import 'moment/locale/vi';
 
@@ -30,7 +31,7 @@ const News = () => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p><Spin size="large" fullscreen/></p>;
   if (error) return <p>{error}</p>;
 
   return (

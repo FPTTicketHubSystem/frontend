@@ -12,6 +12,7 @@ import { CheckOrderdOfUser, DeleteTimeOutOrder } from "../../services/PaymentSer
 import { ReturnPaymentUrl } from "../../services/PaymentService";
 import { CheckInputCoupon } from "../../services/PaymentService";
 import moment from "moment";
+import {Spin} from "antd";
 
 const Payment = () => {
   const location = useLocation();
@@ -117,7 +118,7 @@ const Payment = () => {
   // }
 
   if (!event) {
-    return <div>Loading...</div>; // Handle the case where event is not available
+    return <div><Spin size="large" fullscreen/></div>; // Handle the case where event is not available
   }
 
   const handleBack = () => {

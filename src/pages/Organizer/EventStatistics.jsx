@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Card, List, Statistic, Row, Col, Rate, Table } from 'antd';
+import { Card, List, Statistic, Row, Col, Rate, Table, Spin } from 'antd';
 import { GetEventStatisticsService } from '../../services/EventService';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from "../../component/Organizer/Navbar";
@@ -129,7 +129,7 @@ const EventStatistics = () => {
   ];
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><Spin size="large" fullscreen/></div>;
   }
 
   return (
