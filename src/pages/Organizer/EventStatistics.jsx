@@ -124,7 +124,7 @@ const EventStatistics = () => {
       title: 'Ngày đánh giá',
       dataIndex: 'ratingDate',
       key: 'ratingDate',
-      render: (text) => moment(text).local().format('DD/MM/YYYY HH:mm'),
+      render: (text) => moment.utc(text).local().format('DD/MM/YYYY HH:mm'),
     },
   ];
 

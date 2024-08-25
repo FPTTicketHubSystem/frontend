@@ -194,8 +194,6 @@ const ForumAdmin = () => {
                       src={post.postFile}
                       alt="ContentIMG"
                       className={styles.contentImg}
-                      width="1000"
-                      height="300"
                       style={{ cursor: 'pointer' }}
                     />
                   )}

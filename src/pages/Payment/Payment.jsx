@@ -40,7 +40,7 @@ const Payment = () => {
     }
   };
 
-  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 20 });
+  const [timeLeft, setTimeLeft] = useState({ minutes: 9, seconds: 59 });
   const [timeLeft2, setTimeLeft2] = useState({ minutes: 9, seconds: 59  });
   const [timeUp, setTimeUp] = useState(false); // State to control the popup
   const { user } = useContext(UserContext);
