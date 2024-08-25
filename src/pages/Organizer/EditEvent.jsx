@@ -454,9 +454,6 @@ const EditEvent = () => {
         setAddOrRemove(1);
       } if (response.result.result.status === 400 && response.result.result.message === "InvalidQuantity") {
         toast.error ("Số lượng thay đổi không hợp lệ");
-      } 
-      else {
-        message.error("Có lỗi xảy ra khi cập nhật số lượng vé.");
       }
     } catch (error) {
       console.error(error);

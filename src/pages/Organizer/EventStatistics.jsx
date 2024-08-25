@@ -79,7 +79,7 @@ const EventStatistics = () => {
     try {
       const response = await GetRateByEventIdService(eventId);
       if (response.status === 200) {
-        const activeRatings = response.ratings.filter(rating => rating.status === 'Active');
+        const activeRatings = response.ratings.filter(rating => rating.status.trim() === 'Active');
         setRatings(activeRatings.length > 0 ? activeRatings : sampleRatings);
       }
     } catch (error) {

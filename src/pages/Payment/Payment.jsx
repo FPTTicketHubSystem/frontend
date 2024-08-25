@@ -8,7 +8,7 @@ import vnpayLogo from "../../assets/images/logo/vnpay.jpg";
 import payOS from "../../assets/images/logo/payOS.png";
 import { Button, Modal } from "antd";
 import qrCodeImage from "../../assets/images/qrcode.png";
-import { DeleteTimeOutOrder } from "../../services/PaymentService";
+import { CheckOrderdOfUser, DeleteTimeOutOrder } from "../../services/PaymentService";
 import { ReturnPaymentUrl } from "../../services/PaymentService";
 import { CheckInputCoupon } from "../../services/PaymentService";
 import moment from "moment";
@@ -40,7 +40,7 @@ const Payment = () => {
     }
   };
 
-  const [timeLeft, setTimeLeft] = useState({ minutes: 9, seconds: 59 });
+  const [timeLeft, setTimeLeft] = useState({ minutes: 0, seconds: 20 });
   const [timeLeft2, setTimeLeft2] = useState({ minutes: 9, seconds: 59  });
   const [timeUp, setTimeUp] = useState(false); // State to control the popup
   const { user } = useContext(UserContext);
@@ -48,6 +48,7 @@ const Payment = () => {
   useEffect(() => {
     const savedStartTime = sessionStorage.getItem("startTime");
     const currentTime = new Date().getTime();
+    console.log('paymentdto', paymentDTO);
 
     if (savedStartTime) {
       const elapsedTime = Math.floor((currentTime - savedStartTime) / 1000);
@@ -77,7 +78,8 @@ const Payment = () => {
           const newMinutes = prevTime.minutes - 1;
           if (newMinutes < 0) {
             clearInterval(countdown);
-            setTimeUp(true); // Show popup when time is up
+            setTimeUp(true);
+            CheckOrderdOfUser(paymentDTO.accountId, paymentDTO.eventId);
             return { minutes: 0, seconds: 0 };
           }
           return { minutes: newMinutes, seconds: 59 };
@@ -93,11 +95,10 @@ const Payment = () => {
             setTimeUp(true); // Show popup when time is up
             return { minutes: 0, seconds: 0 };
           }
-          return { minutes: newMinutes, seconds: 59 };
+          return { minutes: newMinutes, seconds: 30 };
         }
         return { ...prevTime, seconds: newSeconds };
       });
-      const result = await CallDeleteTimeOutOrder(paymentDTO);
     }, 1000);
 
     return () => {
@@ -106,14 +107,14 @@ const Payment = () => {
     };
   }, []);
 
-  async function CallDeleteTimeOutOrder(paymentDTO) {
-    try {
-      const response = await DeleteTimeOutOrder(paymentDTO);
-    } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      return null;
-    }
-  }
+  // function CallDeleteTimeOutOrder(paymentDTO) {
+  //   try {
+  //     DeleteTimeOutOrder(paymentDTO);
+  //   } catch (error) {
+  //     console.error('There was a problem with the fetch operation:', error);
+  //     return null;
+  //   }
+  // }
 
   if (!event) {
     return <div>Loading...</div>; // Handle the case where event is not available
@@ -140,7 +141,7 @@ const Payment = () => {
         //var url = `/payment-success/${data.orderId}`;
         //window.location.href = url;
         navigate(`/payment-success/${data.orderId}`);
-      } 
+      }
     }
     // setIsModalOpen(true);
   };
@@ -182,6 +183,15 @@ const Payment = () => {
         <div className="row">
           <div className="question-table col-lg-8 col-md-10 col-sm-10">
             <h3>Thông tin nhận vé</h3>
+            <div className="form-group">
+              <label>Tên người đặt vé</label>
+              <input
+                style={{ cursor: "not-allowed" }}
+                type="text"
+                value={user.fullName}
+                disabled
+              />
+            </div>
             <div className="form-group">
               <label>Số điện thoại</label>
               <input

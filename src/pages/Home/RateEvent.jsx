@@ -3,11 +3,15 @@ import { Rate, Input, Button, Typography, message, Spin } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../assets/css/RateEvent.css';
 import Header from '../../component/Header';
-import { EditEventRatingService, GetRatingByRatingIdService, CheckRatingStatusService } from '../../services/EventRatingService';
+import {
+  EditEventRatingService,
+  GetRatingByRatingIdService,
+} from '../../services/EventRatingService';
 import { UserContext } from '../../context/UserContext';
 import styled from 'styled-components';
 
-
+const { Title } = Typography;
+const { TextArea } = Input;
 const CustomButton = styled(Button)`
   background-color: #EC6C21;
   border-color: #EC6C21;
@@ -17,8 +21,6 @@ const CustomButton = styled(Button)`
     border-color: #81360b !important;
   }
 `;
-const { Title } = Typography;
-const { TextArea } = Input;
 
 const RateEvent = () => {
   const { ratingid } = useParams();
@@ -26,8 +28,7 @@ const RateEvent = () => {
   const [existingRating, setExistingRating] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [eventName, setEventName] = useState('');
-  const [canRate, setCanRate] = useState(true);
+  const [ratingDate, setRatingDate] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,8 +39,8 @@ const RateEvent = () => {
     } else if (user && user.accountId && ratingid) {
       fetchExistingRating();
     } else {
-      setError('Thiếu thông tin người dùng hoặc ID đánh giá');
-      setIsLoading(false);
+      //setError('Thiếu thông tin người dùng hoặc ID đánh giá');
+      setIsLoading(true);
     }
   }, [token, user, ratingid, navigate]);
 
@@ -47,39 +48,23 @@ const RateEvent = () => {
     setIsLoading(true);
     setError(null);
     try {
-      // Kiểm tra trạng thái đánh giá
-      const statusResponse = await CheckRatingStatusService(ratingid);
-      console.log('Status check response:', statusResponse);
-
-      if (statusResponse && statusResponse.status === 200 && statusResponse.ratingStatus) {
-        const ratingStatus = statusResponse.ratingStatus.trim().toLowerCase();
-        if (ratingStatus === 'active') {
-          setCanRate(false);
-          message.info('Bạn đã đánh giá sự kiện này và không thể đánh giá lại.');
-        } else {
-          setCanRate(true);
-        }
-      } else {
-        console.warn('Unexpected response structure from CheckRatingStatusService:', statusResponse);
-        // Nếu không có thông tin status, giả định là có thể đánh giá
-        setCanRate(true);
-      }
-
-      // Lấy thông tin đánh giá hiện tại
-      const ratingResponse = await GetRatingByRatingIdService(ratingid, user.accountId);
+      const ratingResponse = await GetRatingByRatingIdService(
+        ratingid,
+        user.accountId
+      );
       console.log('Rating info response:', ratingResponse);
 
-      if (ratingResponse.status === 200 && ratingResponse.data) {
-        const ratingData = ratingResponse.data;
+      if (ratingResponse.status === 200 && ratingResponse.rating) {
+        const ratingData = ratingResponse.rating;
         setExistingRating(ratingData);
-        setEventName(ratingData.eventName || '');
+        setRatingDate(new Date(ratingData.ratingDate));
       } else if (ratingResponse.status === 200 && !ratingResponse.data) {
         setExistingRating({ eventRatingId: ratingid, rating: 0, review: '' });
-        setEventName('');
+        setRatingDate(null);
       } else if (ratingResponse.status === 403) {
         setError('Bạn không có quyền xem đánh giá này.');
         message.error('Bạn không có quyền xem đánh giá này.');
-        setTimeout(() => navigate('/'),);
+        setTimeout(() => navigate('/'), 3000);
       } else {
         throw new Error('Không thể lấy thông tin đánh giá');
       }
@@ -87,15 +72,22 @@ const RateEvent = () => {
       console.error('Error:', error);
       setError(`Có lỗi xảy ra: ${error.message}`);
       message.error(`Có lỗi xảy ra: ${error.message}`);
-      setTimeout(() => navigate('/'),);
+      setTimeout(() => navigate('/'), 3000);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const canEditRating = () => {
+    if (!ratingDate) return true; // Nếu chưa có đánh giá, cho phép đánh giá
+    const now = new Date();
+    const diffHours = (now - ratingDate) / (1000 * 60 * 60);
+    return diffHours <= 24;
+  };
+
   const handleSubmit = async () => {
-    if (!canRate) {
-      message.error('Bạn không thể đánh giá lại sự kiện này.');
+    if (!canEditRating()) {
+      message.error('Không thể chỉnh sửa đánh giá sau 24 giờ.');
       return;
     }
 
@@ -119,10 +111,10 @@ const RateEvent = () => {
 
       if (response.status === 200) {
         message.success('Đánh giá đã được gửi thành công');
-        onSetRender(); 
+        onSetRender();
         navigate('/');
       } else {
-        message.error('Có lỗi xảy ra khi gửi đánh giá');
+        message.error(response.message || 'Có lỗi xảy ra khi gửi đánh giá');
       }
     } catch (error) {
       console.error('Error submitting rating:', error);
@@ -147,14 +139,19 @@ const RateEvent = () => {
       <Header />
       <div className="rate-event-container">
         <div className="rate-event-content">
-          <Title level={2}>Đánh giá sự kiện: {eventName}</Title>
-          {canRate ? (
+          <Title level={2}>Đánh giá sự kiện: {existingRating.eventName}</Title>
+          {canEditRating() ? (
             <>
               <div style={{ marginBottom: '20px' }}>
                 <Title level={4}>Rating:</Title>
-                <Rate 
-                  value={existingRating.rating} 
-                  onChange={(value) => setExistingRating(prev => ({ ...prev, rating: value }))}
+                <Rate
+                  value={existingRating.rating}
+                  onChange={(value) =>
+                    setExistingRating((prev) => ({
+                      ...prev,
+                      rating: value,
+                    }))
+                  }
                 />
               </div>
 
@@ -164,22 +161,25 @@ const RateEvent = () => {
                   rows={4}
                   placeholder="Nhập đánh giá của bạn"
                   value={existingRating.review}
-                  onChange={(e) => setExistingRating(prev => ({ ...prev, review: e.target.value }))}
+                  onChange={(e) =>
+                    setExistingRating((prev) => ({
+                      ...prev,
+                      review: e.target.value,
+                    }))
+                  }
                   maxLength={100}
                   showCount
                 />
               </div>
 
               <CustomButton type="primary" onClick={handleSubmit}>
-                {existingRating.eventRatingId ? 'Cập nhật đánh giá' : 'Gửi đánh giá'}
+                {existingRating.eventRatingId
+                  ? 'Cập nhật đánh giá'
+                  : 'Gửi đánh giá'}
               </CustomButton>
             </>
           ) : (
-            <div>
-              <p>Bạn đã đánh giá sự kiện này và không thể đánh giá lại.</p>
-              <p>Rating: <Rate disabled value={existingRating.rating} /></p>
-              <p>Review: {existingRating.review}</p>
-            </div>
+            <p>Bạn không thể chỉnh sửa đánh giá sau 24 giờ.</p>
           )}
         </div>
       </div>
